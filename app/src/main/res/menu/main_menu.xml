@@ -12,13 +12,13 @@
     <item
         android:id="@+id/action_order"
         android:icon="@drawable/ic_shopping_cart_white_24dp"
-        android:title="Order"
+        android:title="@string/action_order"
         app:showAsAction="ifRoom" />
 
     <!-- Settings, should always be in the overflow -->
     <item
         android:id="@+id/action_settings"
-        android:title="Settings"
+        android:title="@string/action_settings"
         app:showAsAction="never" />
 
 </menu>

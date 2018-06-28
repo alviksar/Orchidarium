@@ -6,6 +6,9 @@
         <item name="colorPrimary">@color/primaryDarkColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">#FF4081</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+
     </style>
 
 

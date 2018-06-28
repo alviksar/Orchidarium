@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Orchidarium</string>
 
+    <string name="action_settings">Settings</string>
+    <string name="action_order">Order</string>
+
     // Filer modes in MainActivity
     <string name="mode_all">All</string>
     <string name="mode_my_cart_only">My cart only</string>
@@ -13,5 +16,7 @@
     <string name="mock_description">Phragmipedium besseae is a warm growing litophyte/terrestrial species come from the wet montane forests on the eastern slopes of the Colombian, Ecuadorian and Peruvian Andes where it grows at altitudes of 100 to 1500 meters. It is pretty compact but the inflorescence is quite tall, measuring about 40 cm and presents up to 6 flowers in succession. Phrag. besseae is a fairly new discovery, described by Dodson in 1981, and it is accredited with the resurgence of interest for the genus in cultivation. Three people actually found the species but Elizabeth Besse, one of the three, inspired its name.
 
 Phragmipedium require the use of really good water quality in order to do well. I use RO water for all my orchids, but you could also use rain water. Since this genus love water I grow all mine in semi-hydro culture with volcanic rocks. No complicated setup, just a clear plastic pot placed on a saucer with about 2 cm of water. That way they have access to constant and even moisture. They can be a bit sensitive to fertilizer however so it is very important not to use too strong concentration and to flush out the pots regularly with pure water. </string>
+
+
 
 </resources>

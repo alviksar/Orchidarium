@@ -62,6 +62,17 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+            startActivity(startSettingsActivity);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void startDetailActivity(View view) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
     //    movieDetailIntent.putExtra(getString(R.string.movie_parcel_key), movie);

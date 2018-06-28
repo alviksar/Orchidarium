@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--EditTextPreference
+        android:id="@+id/pref_font_size"
+        android:defaultValue="@integer/def_font_size_sp"
+        android:digits="1234567890"
+        android:inputType="numberDecimal"
+        android:key="@string/pref_key_font_size"
+        android:maxLength="2"
+        android:title="@string/pref_title_font_size" /-->
+</PreferenceScreen>
