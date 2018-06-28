@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/spinner"
+        android:background="@color/colorGray100"
+        android:title=""
+        app:actionViewClass="android.widget.Spinner"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_order"
         android:icon="@drawable/ic_shopping_cart_white_24dp"
         android:title="Order"

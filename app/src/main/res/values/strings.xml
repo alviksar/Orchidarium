@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Orchidarium</string>
 
+    // Filer modes in MainActivity
+    <string name="mode_all">All</string>
+    <string name="mode_my_cart_only">My cart only</string>
+    <string name="pref_mode_default">All</string>
+
+    <string name="pref_mode_key" translatable="false">pref_mode_key</string>
+
+
     <string name="mock_detail_title">Phragmipedium besseae</string>
     <string name="mock_description">Phragmipedium besseae is a warm growing litophyte/terrestrial species come from the wet montane forests on the eastern slopes of the Colombian, Ecuadorian and Peruvian Andes where it grows at altitudes of 100 to 1500 meters. It is pretty compact but the inflorescence is quite tall, measuring about 40 cm and presents up to 6 flowers in succession. Phrag. besseae is a fairly new discovery, described by Dodson in 1981, and it is accredited with the resurgence of interest for the genus in cultivation. Three people actually found the species but Elizabeth Besse, one of the three, inspired its name.
 
