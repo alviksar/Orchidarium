@@ -16,7 +16,7 @@ public class OrchidariumPreferences {
         public static void setMode(Context context, String mode) {
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = sp.edit();
-            editor.putString(context.getString(R.string.pref_mode_key), mode);
+            editor.putString(context.getString(R.string.pref_key_mode), mode);
             editor.apply();
         }
 
@@ -28,7 +28,7 @@ public class OrchidariumPreferences {
          */
         public static String getMode(Context context) {
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-            return sp.getString(context.getString(R.string.pref_mode_key),
+            return sp.getString(context.getString(R.string.pref_key_mode),
                     context.getString(R.string.pref_mode_default));
         }
 }
