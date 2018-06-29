@@ -11,16 +11,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.constraint.ConstraintLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="120dp">
-
-        </android.support.constraint.ConstraintLayout>
+        <include layout="@layout/layout_input_data" />
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/iv_nice_photo"
                 android:layout_width="match_parent"
@@ -37,14 +33,16 @@
                 android:layout_margin="8dp"
                 android:text="@string/add_change_nice_photo" />
         </FrameLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+            android:background="@android:color/darker_gray" />
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/iv_real_photo"
                 android:layout_width="match_parent"
