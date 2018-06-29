@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 if (mSpinner.getSelectedItem() != null) {
                     String mode = (String) mSpinner.getSelectedItem();
                     OrchidariumPreferences.setMode(getApplicationContext(), mode);
-                   // TODO: updateList(mode);
+                    // TODO: updateList(mode);
                 }
             }
 
@@ -69,12 +69,19 @@ public class MainActivity extends AppCompatActivity {
             Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
             startActivity(startSettingsActivity);
             return true;
+        } else if (id == R.id.action_add_new) {
+            Intent intent = new Intent(MainActivity.this, StoreAdminActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void startDetailActivity(View view) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-    //    movieDetailIntent.putExtra(getString(R.string.movie_parcel_key), movie);
-        startActivity(intent);    }
+        //    movieDetailIntent.putExtra(getString(R.string.movie_parcel_key), movie);
+        startActivity(intent);
+    }
+
+
 }

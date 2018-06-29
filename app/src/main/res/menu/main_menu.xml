@@ -10,12 +10,17 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_order"
-        android:icon="@drawable/ic_shopping_cart_white_24dp"
-        android:title="@string/action_order"
+        android:id="@+id/action_make_order"
+        android:icon="@drawable/ic_add_white_24dp"
+        android:title="@string/action_make_order"
         app:showAsAction="ifRoom" />
 
-    <!-- Settings, should always be in the overflow -->
+    <item
+        android:id="@+id/action_add_new"
+        android:icon="@drawable/ic_shopping_cart_white_24dp"
+        android:title="@string/action_add_new"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"

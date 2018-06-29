@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.StoreAdminActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.constraint.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="120dp">
+
+        </android.support.constraint.ConstraintLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_nice_photo"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:contentDescription="@string/the_nice_image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/phragmipedium_besseae_nice" />
+
+            <Button
+                android:id="@+id/add_nice_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="8dp"
+                android:text="@string/add_change_nice_photo" />
+        </FrameLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_real_photo"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:contentDescription="@string/the_real_image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/phragmipedium_besseae_real" />
+
+            <Button
+                android:id="@+id/add_real_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="8dp"
+                android:text="@string/add_change_nice_photo" />
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/tv_description"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1" />
+    </LinearLayout>
+</ScrollView>
