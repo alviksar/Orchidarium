@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="196dp" />
+        app:layout_constraintGuide_begin="183dp" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/til_lot_id"
@@ -26,12 +27,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="6"
-            android:hint="@string/hint_id" />
+            android:hint="@string/hint_id"
+            android:text="234567" />
     </android.support.design.widget.TextInputLayout>
 
     <Switch
         android:id="@+id/switch1"
-        android:layout_width="120dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
@@ -52,6 +54,7 @@
         android:ems="16"
         android:hint="@string/name"
         android:inputType="text"
+        android:text="Phragmipedium besseae"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,37 +65,48 @@
         android:id="@+id/et_seller_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:ems="8"
+        android:ems="6"
         android:hint="@string/seller_price"
         android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="$28.00"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/et_name" />
+
+
+    <TextView
+        android:id="@+id/tv_retail_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/retail_price"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBaseline_toBaselineOf="@+id/et_retail_price"
+        app:layout_constraintEnd_toStartOf="@+id/guideline" />
 
     <EditText
         android:id="@+id/et_retail_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:ems="8"
+        android:ems="6"
         android:hint="Retail Price"
         android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="$29.98"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/et_seller_price" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tv_seller_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/et_name" />
+        android:layout_marginEnd="16dp"
+        android:text="@string/seller_price"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBaseline_toBaselineOf="@+id/et_seller_price"
+        app:layout_constraintEnd_toStartOf="@+id/guideline" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
@@ -110,7 +124,8 @@
             android:layout_height="wrap_content"
             android:ems="300"
             android:hint="@string/description"
-            android:singleLine="false" />
+            android:singleLine="false"
+            android:text="Phragmipedium besseae is a warm growing litophyte/terrestrial species come from the wet montane forests on the eastern slopes of the Colombian," />
     </android.support.design.widget.TextInputLayout>
 
 </android.support.constraint.ConstraintLayout>
