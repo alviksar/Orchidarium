@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mock_activity_main);
+        setContentView(R.layout.mock_activity_main_2);
     }
 
     @Override
