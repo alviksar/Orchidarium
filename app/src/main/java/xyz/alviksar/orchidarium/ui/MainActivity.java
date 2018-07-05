@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         MenuItem item = menu.findItem(R.id.spinner);
         mSpinner = (Spinner) item.getActionView();
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.spinner_list_item_array, R.layout.spinner_item);
+                R.array.maint_activity_menu_spinner_items, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);
 
@@ -45,10 +45,11 @@ public class MainActivity extends AppCompatActivity {
 
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (mSpinner.getSelectedItem() != null) {
-                    String mode = (String) mSpinner.getSelectedItem();
-                    OrchidariumPreferences.setMode(getApplicationContext(), mode);
+                //    String mode = (String) mSpinner.getSelectedItem();
+               //     int position = mSpinner.getSelectedItemPosition();
+                 //   OrchidariumPreferences.setMode(getApplicationContext(), mode);
                     // TODO: updateList(mode);
                 }
             }
