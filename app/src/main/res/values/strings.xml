@@ -40,7 +40,7 @@
     <string name="label_hidden">Hidden</string>
     <string name="label_available_for_order">Available</string>
     <string name="label_name">Name</string>
-    <string name="hint_id">Lot ID/#</string>
+    <string name="hint_id">Code/#</string>
     <string name="label_description">Description</string>
     <string name="label_plant_age">Plant Age</string>
     <string name="label_pot_size">Pot Size</string>

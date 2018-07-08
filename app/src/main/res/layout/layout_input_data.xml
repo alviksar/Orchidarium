@@ -23,7 +23,7 @@
         app:layout_constraintGuide_begin="112dp" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/til_lot_id"
+        android:id="@+id/til_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -75,7 +75,7 @@
         android:hint="@string/label_name"
         android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_lot_id"
+        app:layout_constraintTop_toBottomOf="@+id/til_code"
         tools:text="Phragmipedium besseae" />
 
     <Spinner

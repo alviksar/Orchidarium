@@ -7,7 +7,7 @@
     <string name="label_available_for_order">Доступно для заказа</string>
     <string name="label_hidden">Скрыто</string>
     <string name="label_name">Название</string>
-    <string name="hint_id">Номер</string>
+    <string name="hint_id">Код товара</string>
     <string name="label_description">Описание</string>
     <string name="btn_add_change_nice_photo">Добавить/Заменить фото</string>
     <string name="btn_add_change_real_photo">Добавить/Заменить фото</string>
