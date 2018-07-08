@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Orchidarium</string>
-    <string name="the_nice_image">Цветущий вид</string>
-    <string name="the_real_image">Реальный вид</string>
-    <string name="appearance">Выставить на продажу</string>
-    <string name="available_for_order">Доступно для заказа</string>
-    <string name="hidden">Скрыто</string>
-    <string name="name">Название</string>
+    <string name="label_nice_image">Цветущий вид</string>
+    <string name="label_real_image">Реальный вид</string>
+    <string name="label_appearance">Выставить на продажу</string>
+    <string name="label_available_for_order">Доступно для заказа</string>
+    <string name="label_hidden">Скрыто</string>
+    <string name="label_name">Название</string>
     <string name="hint_id">Номер</string>
-    <string name="description">Описание</string>
-    <string name="add_change_nice_photo">Добавить/Заменить фото</string>
-    <string name="add_change_real_photo">Добавить/Заменить фото</string>
+    <string name="label_description">Описание</string>
+    <string name="btn_add_change_nice_photo">Добавить/Заменить фото</string>
+    <string name="btn_add_change_real_photo">Добавить/Заменить фото</string>
     <string name="pref_sum_notification_is_on">Подписка на сообщения включена</string>
     <string name="pref_sum_notification_is_off">Сообщения отключены</string>
-    <string name="notify_me">Присылать сообщения о новых поступлениях</string>
-    <string name="descending_price">по убыванию цены</string>
-    <string name="ascending_price">по возрастанию цены</string>
-    <string name="new_at_the_end">новые в конце</string>
-    <string name="first_new">сначала новые</string>
+    <string name="label_notify_me">Присылать сообщения о новых поступлениях</string>
+    <string name="sort_descending_price">по убыванию цены</string>
+    <string name="sort_ascending_price">по возрастанию цены</string>
+    <string name="sort_new_at_the_end">новые в конце</string>
+    <string name="sort_first_new">сначала новые</string>
     <string name="pref_mode_default">Все</string>
-    <string name="mode_my_cart_only">Только отобранные</string>
-    <string name="mode_all">Все</string>
+    <string name="pref_mode_my_cart_only">Корзина</string>
+    <string name="pref_mode_all">Все</string>
     <string name="action_add_new">Добавить</string>
     <string name="action_make_order">Оформить заказ</string>
     <string name="action_settings">Настройки</string>
-    <string name="retail_price">Розничная цена</string>
+    <string name="label_retail_price">Розничная цена</string>
 
     <string name="plant_age_two_years_before">2–3 года до цветения</string>
     <string name="plant_age_one_years_before">1 год до цветения</string>
     <string name="plant_age_flowering">возраст цветения</string>
     <string name="plant_age_blooming">цветущий</string>
+    <string name="label_plant_age">Возраст</string>
+    <string name="label_pot_size">Горшочек</string>
 
 </resources>

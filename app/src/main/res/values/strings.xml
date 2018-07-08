@@ -7,17 +7,17 @@
     <string name="action_add_new">Add new</string>
 
     <!-- Filer modes in MainActivity -->
-    <string name="mode_all">All</string>
-    <string name="mode_my_cart_only">My cart only</string>
+    <string name="pref_mode_all">All</string>
+    <string name="pref_mode_my_cart_only">My cart only</string>
     <string name="pref_mode_default">All</string>
 
     <!-- Preferences -->
-    <string name="first_new">first new</string>
-    <string name="new_at_the_end">new at the end</string>
-    <string name="ascending_price">ascending price</string>
-    <string name="descending_price">descending price</string>
+    <string name="sort_first_new">first new</string>
+    <string name="sort_new_at_the_end">new at the end</string>
+    <string name="sort_ascending_price">ascending price</string>
+    <string name="sort_descending_price">descending price</string>
 
-    <string name="notify_me">Notify me of new orchids</string>
+    <string name="label_notify_me">Notify me of new orchids</string>
     <string name="pref_key_notify_me" translatable="false">pref_key_notify_me</string>
 
     <string name="pref_key_mode" translatable="false">pref_key_mode</string>
@@ -25,25 +25,26 @@
     <string name="pref_sum_notification_is_off">Notification is off</string>
 
     <!-- StoreAdminActivity -->
-    <string name="the_nice_image">The nice image</string>
-    <string name="add_change_nice_photo">Add/Change nice photo</string>
-    <string name="the_real_image">The real image</string>
-    <string name="add_change_real_photo">Add/Change real photo</string>
+    <string name="label_nice_image">The nice image</string>
+    <string name="label_real_image">The real image</string>
+    <!-- Button which load a nice image. [CHAR LIMIT=30] -->
+    <string name="btn_add_change_nice_photo">Add/Change nice photo</string>
+    <!-- Button which load real images. [CHAR LIMIT=30] -->
+    <string name="btn_add_change_real_photo"  >Add/Change real photo</string>
 
     <!-- Mocks -->
     <string name="mock_detail_title" translatable="false">Phragmipedium besseae</string>
-    <string name="mock_description" translatable="false">Phragmipedium besseae is a warm growing litophyte/terrestrial species come from the wet montane forests on the eastern slopes of the Colombian, Ecuadorian and Peruvian Andes where it grows at altitudes of 100 to 1500 meters. It is pretty compact but the inflorescence is quite tall, measuring about 40 cm and presents up to 6 flowers in succession. Phrag. besseae is a fairly new discovery, described by Dodson in 1981, and it is accredited with the resurgence of interest for the genus in cultivation. Three people actually found the species but Elizabeth Besse, one of the three, inspired its name.
+    <string name="mock_description" translatable="false">Phragmipedium besseae is a warm growing litophyte/terrestrial species come from the wet montane forests on the eastern slopes of the Colombian, Ecuadorian and Peruvian Andes where it grows at altitudes of 100 to 1500 meters.</string>
 
-Phragmipedium require the use of really good water quality in order to do well. I use RO water for all my orchids, but you could also use rain water. Since this genus love water I grow all mine in semi-hydro culture with volcanic rocks. No complicated setup, just a clear plastic pot placed on a saucer with about 2 cm of water. That way they have access to constant and even moisture. They can be a bit sensitive to fertilizer however so it is very important not to use too strong concentration and to flush out the pots regularly with pure water. </string>
-
-    <string name="appearance">Put up for sale</string>
-    <string name="hidden">Hidden</string>
-    <string name="available_for_order">Available for order</string>
-    <string name="name">Name</string>
+    <string name="label_appearance">Put up for sale</string> 
+    <string name="label_hidden">Hidden</string>
+    <string name="label_available_for_order">Available</string>
+    <string name="label_name">Name</string>
     <string name="hint_id">Lot ID/#</string>
-    <string name="description">Description</string>
-    <string name="seller_price">Seller Price</string>
-    <string name="retail_price">Retail price</string>
+    <string name="label_description">Description</string>
+    <string name="label_plant_age">Plant Age</string>
+    <string name="label_pot_size">Pot Size</string>
+    <string name="label_retail_price">Retail price</string>
 
     <string name="pot_size_1_7" translatable="false">1,7"</string>
     <string name="pot_size_2_5" translatable="false">2,5"</string>
@@ -52,6 +53,7 @@ Phragmipedium require the use of really good water quality in order to do well. 
     <string name="plant_age_two_years_before">2–3 years before flowering</string>     
     <string name="plant_age_one_years_before">1 year before flowering</string>     
     <string name="plant_age_flowering">flowering age</string>     
-    <string name="plant_age_blooming">blooming</string> 
+    <string name="plant_age_blooming">blooming</string>
+
 
 </resources>

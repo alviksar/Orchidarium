@@ -21,7 +21,7 @@
                 android:id="@+id/iv_nice_photo"
                 android:layout_width="match_parent"
                 android:layout_height="320dp"
-                android:contentDescription="@string/the_nice_image"
+                android:contentDescription="@string/label_nice_image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/phragmipedium_besseae_nice" />
 
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="8dp"
-                android:text="@string/add_change_nice_photo" />
+                android:text="@string/btn_add_change_nice_photo" />
         </FrameLayout>
 
         <View
@@ -47,7 +47,7 @@
                 android:id="@+id/iv_real_photo"
                 android:layout_width="match_parent"
                 android:layout_height="320dp"
-                android:contentDescription="@string/the_real_image"
+                android:contentDescription="@string/label_real_image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/phragmipedium_besseae_real" />
 
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="8dp"
-                android:text="@string/add_change_nice_photo" />
+                android:text="@string/btn_add_change_nice_photo" />
         </FrameLayout>
 
         <EditText

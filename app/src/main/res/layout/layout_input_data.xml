@@ -6,12 +6,21 @@
     android:layout_height="wrap_content">
 
 
+    <TextView
+        android:id="@+id/tv_pot_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/label_pot_size"
+        app:layout_constraintBaseline_toBaselineOf="@+id/sp_pot_size"
+        app:layout_constraintEnd_toStartOf="@+id/guideline" />
+
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="183dp" />
+        app:layout_constraintGuide_begin="112dp" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/til_lot_id"
@@ -28,62 +37,70 @@
             android:layout_height="wrap_content"
             android:ems="6"
             android:hint="@string/hint_id"
-            android:text="234567" />
+            tools:text="234567" />
     </android.support.design.widget.TextInputLayout>
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/sw_put_up_for_sale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
         android:checked="false"
-        android:text="@string/appearance"
-        android:textOff="@string/hidden"
-        android:textOn="@string/available_for_order"
+        android:contentDescription="@string/label_appearance"
+        android:text="@string/label_appearance"
+        android:textOff="@string/label_hidden"
+        android:textOn="@string/label_available_for_order"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/label_hidden"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sw_put_up_for_sale" />
 
     <EditText
         android:id="@+id/et_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:ems="16"
-        android:hint="@string/name"
+        android:hint="@string/label_name"
         android:inputType="text"
-        android:text="Phragmipedium besseae"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_lot_id" />
+        app:layout_constraintTop_toBottomOf="@+id/til_lot_id"
+        tools:text="Phragmipedium besseae" />
 
-
-    <EditText
-        android:id="@+id/et_seller_price"
+    <Spinner
+        android:id="@+id/sp_plant_age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:ems="6"
-        android:hint="@string/seller_price"
-        android:inputType="numberDecimal"
-        android:text="$28.00"
+        android:entries="@array/plant_ages"
+        android:hint="@string/label_plant_age"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/et_name" />
+        app:layout_constraintTop_toBottomOf="@+id/et_name"
+        tools:text="@string/plant_age_two_years_before" />
 
-
-    <TextView
-        android:id="@+id/tv_retail_price"
+    <Spinner
+        android:id="@+id/sp_pot_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="@string/retail_price"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBaseline_toBaselineOf="@+id/et_retail_price"
-        app:layout_constraintEnd_toStartOf="@+id/guideline" />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:entries="@array/pot_sizes"
+        android:hint="@string/label_pot_size"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/sp_plant_age"
+        tools:text="@string/pot_size_3_5" />
 
     <EditText
         android:id="@+id/et_retail_price"
@@ -91,30 +108,33 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:ems="6"
-        android:hint="Retail Price"
+        android:ems="8"
+        android:hint="@string/label_retail_price"
         android:inputType="numberDecimal"
-        android:text="$29.98"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/et_seller_price" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sp_pot_size"
+        tools:text="1750" />
 
     <TextView
-        android:id="@+id/tv_seller_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="@string/seller_price"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBaseline_toBaselineOf="@+id/et_seller_price"
-        app:layout_constraintEnd_toStartOf="@+id/guideline" />
-
-    <android.support.design.widget.TextInputLayout
+        android:id="@+id/tv_plant_age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:text="@string/label_plant_age"
+        app:layout_constraintBaseline_toBaselineOf="@+id/sp_plant_age"
+        app:layout_constraintEnd_toStartOf="@+id/guideline" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="164dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_retail_price">
 
@@ -122,10 +142,15 @@
             android:id="@+id/et_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:gravity="top"
+            android:ellipsize="end"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
             android:ems="300"
-            android:hint="@string/description"
+            android:hint="@string/label_description"
+            android:lines="5"
             android:singleLine="false"
-            android:text="Phragmipedium besseae is a warm growing litophyte/terrestrial species come from the wet montane forests on the eastern slopes of the Colombian," />
+            tools:text="Phragmipedium besseae is a warm growing litophyte/terrestrial species come from the wet montane forests on the eastern slopes of the Colombian," />
     </android.support.design.widget.TextInputLayout>
 
 </android.support.constraint.ConstraintLayout>

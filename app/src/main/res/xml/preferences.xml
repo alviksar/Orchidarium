@@ -11,5 +11,5 @@
         android:key="@string/pref_key_notify_me"
         android:summaryOn="@string/pref_sum_notification_is_on"
         android:summaryOff="@string/pref_sum_notification_is_off"
-        android:title="@string/notify_me" />
+        android:title="@string/label_notify_me" />
 </PreferenceScreen>

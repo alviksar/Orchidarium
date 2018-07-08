@@ -2,8 +2,8 @@
 <resources>
 
     <string-array name="maint_activity_menu_spinner_items">
-        <item>@string/mode_all</item>
-        <item>@string/mode_my_cart_only</item>
+        <item>@string/pref_mode_all</item>
+        <item>@string/pref_mode_my_cart_only</item>
     </string-array>
 
     <string-array name="pot_sizes">
@@ -20,10 +20,10 @@
     </string-array>
 
     <string-array name="pref_order_list_entries">
-        <item>@string/first_new</item>
-        <item>@string/new_at_the_end</item>
-        <item>@string/ascending_price</item>
-        <item>@string/descending_price</item>
+        <item>@string/sort_first_new</item>
+        <item>@string/sort_new_at_the_end</item>
+        <item>@string/sort_ascending_price</item>
+        <item>@string/sort_descending_price</item>
     </string-array>
 
     <string-array name="pref_order_list_values">
