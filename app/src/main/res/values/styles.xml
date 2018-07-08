@@ -3,11 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/primaryDarkColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorAccent">#FF4081</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="colorPrimary">@color/purple900</item>
+        <item name="colorPrimaryDark">@color/purple900</item>
+        <item name="colorAccent">@color/purple800</item>
 
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
 

@@ -4,20 +4,20 @@
 
     <item
         android:id="@+id/spinner"
-        android:background="@color/colorGray100"
+        android:background="@color/gray100"
         android:title=""
         app:actionViewClass="android.widget.Spinner"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_make_order"
-        android:icon="@drawable/ic_add_white_24dp"
+        android:icon="@drawable/ic_shopping_cart_white_24dp"
         android:title="@string/action_make_order"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_add_new"
-        android:icon="@drawable/ic_shopping_cart_white_24dp"
+        android:icon="@drawable/ic_add_white_24dp"
         android:title="@string/action_add_new"
         app:showAsAction="ifRoom" />
 

@@ -40,7 +40,7 @@
             tools:text="234567" />
     </android.support.design.widget.TextInputLayout>
 
-    <Switch
+    <android.support.v7.widget.SwitchCompat
         android:id="@+id/sw_put_up_for_sale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
         android:text="@string/label_appearance"
         android:textOff="@string/label_hidden"
         android:textOn="@string/label_available_for_order"
-        android:visibility="visible"
+        app:showText="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

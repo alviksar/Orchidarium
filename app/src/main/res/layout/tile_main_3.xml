@@ -23,7 +23,7 @@
             android:padding="2dp"
             android:background="#000"
             android:text="$29.98"
-            android:textColor="@color/colorYellow500" />
+            android:textColor="@color/yellow500" />
 
         <ImageView
             android:layout_width="24dp"
@@ -37,7 +37,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/secondaryDarkColor">
+        android:background="@color/lightGreen800">
 
         <TextView
             android:id="@+id/tv_name"

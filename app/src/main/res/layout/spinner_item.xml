@@ -6,6 +6,6 @@
     android:text="@string/pref_mode_default"
     android:textSize="16sp"
     android:gravity="start"
-    android:textColor="@color/colorGray100"
+    android:textColor="@color/gray100"
     android:padding="4dp"
     />
