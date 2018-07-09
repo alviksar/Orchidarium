@@ -3,59 +3,72 @@ package xyz.alviksar.orchidarium.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Orchid implements Parcelable {
-    private int id;
+public class OrchidEntity implements Parcelable {
+
+    // String to pass an orchid entity to activity as parcelable
+    public static final String EXTRA_ORCHID = "extra_orchid";
+
+    // Four ages of orchids
+    public static final int AGE_TWO_YEARS_BEFORE = 3;
+    public static final int AGE_ONE_YEARS_BEFORE = 2;
+    public static final int AGE_FLOWERING = 1;
+    public static final int AGE_BLOOMING = 0;
+    public static final int AGE_UNKNOWN = -1;
+
+    private String id;
     private String code;
     private String name;
     private int age;
-    private float potSizeInches;
+    private String potSize;
     private double retailPrice;
+    private String description;
     private String nicePhoto;
     private String[] realPhotos;
     private int isVisibleForSale;
 
-    public Orchid() {
+    public OrchidEntity() {
         setIsVisibleForSale(false);
     }
 
-    public Orchid(String code, String name, int age, float potSize, double price) {
+    public OrchidEntity(String code, String name, int age, String potSize, double price) {
         this.code = code;
         this.name = name;
         this.age = age;
-        this.potSizeInches = potSize;
+        this.potSize = potSize;
         this.retailPrice = price;
     }
 
     // Constructor from Parcel
-    private Orchid(Parcel in) {
-        id = in.readInt();
+    private OrchidEntity(Parcel in) {
+        id = in.readString();
         code = in.readString();
         name = in.readString();
         age = in.readInt();
-        potSizeInches = in.readFloat();
+        potSize = in.readString();
         retailPrice = in.readDouble();
+        setDescription(in.readString());
         nicePhoto = in.readString();
         in.readStringArray(realPhotos);
         isVisibleForSale = in.readInt();
     }
 
-    public static final Creator<Orchid> CREATOR = new Creator<Orchid>() {
+    public static final Creator<OrchidEntity> CREATOR = new Creator<OrchidEntity>() {
         @Override
-        public Orchid createFromParcel(Parcel in) {
-            return new Orchid(in);
+        public OrchidEntity createFromParcel(Parcel in) {
+            return new OrchidEntity(in);
         }
 
         @Override
-        public Orchid[] newArray(int size) {
-            return new Orchid[size];
+        public OrchidEntity[] newArray(int size) {
+            return new OrchidEntity[size];
         }
     };
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -83,12 +96,12 @@ public class Orchid implements Parcelable {
         this.age = age;
     }
 
-    public float getPotSizeInches() {
-        return potSizeInches;
+    public String getPotSizeInches() {
+        return potSize;
     }
 
-    public void setPotSizeInches(float potSizeInches) {
-        this.potSizeInches = potSizeInches;
+    public void setPotSizeInches(String potSizeInches) {
+        this.potSize = potSizeInches;
     }
 
     public double getRetailPrice() {
@@ -97,6 +110,14 @@ public class Orchid implements Parcelable {
 
     public void setRetailPrice(double retailPrice) {
         this.retailPrice = retailPrice;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getNicePhoto() {
@@ -133,12 +154,13 @@ public class Orchid implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
+        parcel.writeString(id);
         parcel.writeString(code);
         parcel.writeString(name);
         parcel.writeInt(age);
-        parcel.writeFloat(potSizeInches);
+        parcel.writeString(potSize);
         parcel.writeDouble(retailPrice);
+        parcel.writeString(description);
         parcel.writeString(nicePhoto);
         parcel.writeStringArray(realPhotos);
         parcel.writeInt(isVisibleForSale);

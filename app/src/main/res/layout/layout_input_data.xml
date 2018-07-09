@@ -5,16 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
-    <TextView
-        android:id="@+id/tv_pot_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="@string/label_pot_size"
-        app:layout_constraintBaseline_toBaselineOf="@+id/sp_pot_size"
-        app:layout_constraintEnd_toStartOf="@+id/guideline" />
-
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
@@ -32,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/et_lot_id"
+            android:id="@+id/et_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="6"
@@ -51,9 +41,9 @@
         android:text="@string/label_appearance"
         android:textOff="@string/label_hidden"
         android:textOn="@string/label_available_for_order"
-        app:showText="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:showText="false" />
 
     <TextView
         android:id="@+id/tv_state"
@@ -78,6 +68,15 @@
         app:layout_constraintTop_toBottomOf="@+id/til_code"
         tools:text="Phragmipedium besseae" />
 
+    <TextView
+        android:id="@+id/tv_plant_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/label_plant_age"
+        app:layout_constraintBaseline_toBaselineOf="@+id/sp_plant_age"
+        app:layout_constraintEnd_toStartOf="@+id/guideline" />
+
     <Spinner
         android:id="@+id/sp_plant_age"
         android:layout_width="wrap_content"
@@ -89,6 +88,16 @@
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/et_name"
         tools:text="@string/plant_age_two_years_before" />
+
+
+    <TextView
+        android:id="@+id/tv_pot_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/label_pot_size"
+        app:layout_constraintBaseline_toBaselineOf="@+id/sp_pot_size"
+        app:layout_constraintEnd_toStartOf="@+id/guideline" />
 
     <Spinner
         android:id="@+id/sp_pot_size"
@@ -115,15 +124,6 @@
         app:layout_constraintTop_toBottomOf="@+id/sp_pot_size"
         tools:text="1750" />
 
-    <TextView
-        android:id="@+id/tv_plant_age"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="@string/label_plant_age"
-        app:layout_constraintBaseline_toBaselineOf="@+id/sp_plant_age"
-        app:layout_constraintEnd_toStartOf="@+id/guideline" />
-
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayout"
         android:layout_width="wrap_content"
@@ -143,13 +143,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:gravity="top"
             android:ellipsize="end"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
             android:ems="300"
+            android:gravity="top"
             android:hint="@string/label_description"
             android:lines="5"
             android:singleLine="false"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
             tools:text="Phragmipedium besseae is a warm growing litophyte/terrestrial species come from the wet montane forests on the eastern slopes of the Colombian," />
     </android.support.design.widget.TextInputLayout>
 

@@ -5,6 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="action_make_order">Order</string>
     <string name="action_add_new">Add new</string>
+    <string name="action_save_orchid">Save</string>
+    <string name="action_delete_orchid">Delete</string>
 
     <!-- Filer modes in MainActivity -->
     <string name="pref_mode_all">All</string>
@@ -54,6 +56,14 @@
     <string name="plant_age_one_years_before">1 year before flowering</string>     
     <string name="plant_age_flowering">flowering age</string>     
     <string name="plant_age_blooming">blooming</string>
+    <string name="title_new_orchid">New orchid</string>
+    <string name="title_edit_orchid">Change data</string>
+    <string name="msg_delete_dialog">Delete orchid?</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="msg_unsaved_changes_dialog">Discard your changes and quit editing?</string>
+    <string name="btn_discard">Discard</string>
+    <string name="btn_keep_editing">Keep editing</string>
 
 
 </resources>
