@@ -18,6 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.alviksar.orchidarium.R;
@@ -54,6 +57,8 @@ public class StoreAdminActivity extends AppCompatActivity {
 
     private int mPlantAge;
 
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +67,6 @@ public class StoreAdminActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mOrchid = getIntent().getParcelableExtra(OrchidEntity.EXTRA_ORCHID);
-
         if (mOrchid == null) {
             setTitle(R.string.title_new_orchid);
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
@@ -70,6 +74,9 @@ public class StoreAdminActivity extends AppCompatActivity {
         } else {
             setTitle(R.string.title_edit_orchid);
         }
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference().child("orchids");
 
         mCodeEditText.setOnTouchListener(mTouchListener);
         mPutOnForSaleSwitch.setOnTouchListener(mTouchListener);
@@ -185,13 +192,17 @@ public class StoreAdminActivity extends AppCompatActivity {
         if (mOrchid == null) {
             mOrchid = new OrchidEntity();
         }
+
         mOrchid.setIsVisibleForSale(mPutOnForSaleSwitch.isChecked());
         mOrchid.setCode(mCodeEditText.getText().toString().trim());
         mOrchid.setName(mNameEditText.getText().toString().trim());
         mOrchid.setAge(mPlantAge);
-        mOrchid.setPotSizeInches(mPotSizeSpinner.getSelectedItem().toString().trim());
+        mOrchid.setPotSize(mPotSizeSpinner.getSelectedItem().toString().trim());
         mOrchid.setRetailPrice(Double.valueOf(mRetaPriceEditText.getText().toString().trim()));
         mOrchid.setDescription(mDescriptionEditText.getText().toString().trim());
+
+//        mOrchid = DummyData.getOrchid(22);
+        mDatabaseReference.push().setValue(mOrchid);
     }
 
     /**

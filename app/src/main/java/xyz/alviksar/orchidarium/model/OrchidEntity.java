@@ -96,12 +96,12 @@ public class OrchidEntity implements Parcelable {
         this.age = age;
     }
 
-    public String getPotSizeInches() {
+    public String getPotSize() {
         return potSize;
     }
 
-    public void setPotSizeInches(String potSizeInches) {
-        this.potSize = potSizeInches;
+    public void setPotSize(String potSize) {
+        this.potSize = potSize;
     }
 
     public double getRetailPrice() {

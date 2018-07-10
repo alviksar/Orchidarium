@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import xyz.alviksar.orchidarium.R;
-import xyz.alviksar.orchidarium.util.OrchidariumPreferences;
+import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
 
 public class MainActivity extends AppCompatActivity {
 

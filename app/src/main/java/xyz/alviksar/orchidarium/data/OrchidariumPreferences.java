@@ -1,4 +1,4 @@
-package xyz.alviksar.orchidarium.util;
+package xyz.alviksar.orchidarium.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
