@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="1dp"
-    android:onClick="startDetailActivity"
     android:orientation="vertical">
 
     <FrameLayout
@@ -11,27 +11,33 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/iv_nice_photo"
             android:layout_width="match_parent"
             android:layout_height="180dp"
+            android:contentDescription="@string/desc_nice_orchid_photo"
             android:scaleType="centerCrop"
-            android:src="@drawable/stanophea_tigrina" />
+            tools:src="@drawable/phragmipedium_besseae_nice" />
 
         <TextView
+            android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
+            android:layout_margin="8dp"
+            android:background="@color/back"
             android:padding="2dp"
-            android:background="#000"
-            android:text="$29.98"
-            android:textColor="@color/yellow500" />
+            android:textColor="@color/yellow500"
+            tools:text="$29.98" />
 
         <ImageView
+            android:id="@+id/iv_in_cart"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_margin="4dp"
             android:layout_gravity="top|end"
+            android:layout_margin="8dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_add_shopping_cart_gray_24dp" />
+            android:src="@drawable/ic_shopping_cart_yellow_24dp"
+            android:visibility="invisible"
+            android:contentDescription="@string/desc_selected_for_purchase" />
     </FrameLayout>
 
     <RelativeLayout
@@ -41,21 +47,22 @@
 
         <TextView
             android:id="@+id/tv_name"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:text="Stanophea tigrina"
-            android:textColor="#FFF" />
+            android:layout_margin="8dp"
+            tools:text="Phragmipedium besseae"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/white" />
 
         <TextView
+            android:id="@+id/tv_beginning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_name"
-            android:layout_margin="4dp"
-            android:text="1 day ago"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="8dp"
+            tools:text="1 day ago"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-            android:textColor="#FFE0E0E0" />
+            android:textColor="@color/gray100" />
 
     </RelativeLayout>
 </LinearLayout>

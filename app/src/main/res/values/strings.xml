@@ -64,6 +64,8 @@
     <string name="msg_unsaved_changes_dialog">Discard your changes and quit editing?</string>
     <string name="btn_discard">Discard</string>
     <string name="btn_keep_editing">Keep editing</string>
+    <string name="desc_nice_orchid_photo">The nice orchid photo</string>
+    <string name="desc_selected_for_purchase">Selected for purchase</string>
 
 
 </resources>

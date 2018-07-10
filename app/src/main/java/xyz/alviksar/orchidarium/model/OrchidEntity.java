@@ -25,6 +25,7 @@ public class OrchidEntity implements Parcelable {
     private String nicePhoto;
     private String[] realPhotos;
     private int isVisibleForSale;
+    // TODO: Add private Date showDate;
 
     public OrchidEntity() {
         setIsVisibleForSale(false);
