@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -52,25 +53,9 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
     }
 
     public void bindOrchid(OrchidEntity orchid) {
-//        ImageView restaurantImageView = (ImageView) mView.findViewById(R.id.restaurantImageView);
-//        TextView nameTextView = (TextView) mView.findViewById(R.id.restaurantNameTextView);
-//        TextView categoryTextView = (TextView) mView.findViewById(R.id.categoryTextView);
-//        TextView ratingTextView = (TextView) mView.findViewById(R.id.ratingTextView);
-
-        /*
-        Picasso.with(mContext)
-                .load(restaurant.getImageUrl())
-                .resize(MAX_WIDTH, MAX_HEIGHT)
-                .centerCrop()
-                .into(restaurantImageView);
-                */
-
-//        nameTextView.setText(restaurant.getName());
-//        categoryTextView.setText(restaurant.getCategories().get(0));
-//        ratingTextView.setText("Rating: " + restaurant.getRating() + "/5");
-
         mNameTextView.setText(orchid.getName());
-        mPriceTextView.setText(String.valueOf(orchid.getRetailPrice()));
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+        mPriceTextView.setText(currencyFormat.format(orchid.getRetailPrice()));
     }
 
     @Override

@@ -67,5 +67,8 @@
     <string name="desc_nice_orchid_photo">The nice orchid photo</string>
     <string name="desc_selected_for_purchase">Selected for purchase</string>
 
+    <string name="msg_no_connection_error">No Internet connection.</string>
+    <string name="msg_error_getting_data">Error getting data.</string>
+
 
 </resources>

@@ -1,6 +1,9 @@
 package xyz.alviksar.orchidarium.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -98,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 // Create a new instance of the ViewHolder, in this case we are using a custom
                 // layout called R.layout.message for each item
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_list_orchid, parent, false);
+                        .inflate(R.layout.list_item_orchid, parent, false);
 
                 return new OrchidViewHolder(view);
             }
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChanged() {
                 // Called each time there is a new data snapshot. You may want to use this method
                 // to hide a loading spinner or check for the "no documents" state and update your UI.
+                showData();
                 if (mSavedRecyclerLayoutState != null) {
                     mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
                 }
@@ -123,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 // Called when there is an error getting data. You may want to update
                 // your UI to display an error message to the user.
                 // ...
+                showErrorMessage(R.string.msg_error_getting_data);
             }
         };
         mRecyclerView.setAdapter(mFirebaseRecyclerAdapter);
@@ -130,6 +135,18 @@ public class MainActivity extends AppCompatActivity {
                 new GridLayoutManager(this, columns);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+
+        // Check network connection
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        // If there is a network connection, fetch data
+        if (networkInfo != null && networkInfo.isConnected()) {
+            showLoading();
+        } else {
+            // Set no connection error message
+            showErrorMessage(R.string.msg_no_connection_error);
+        }
     }
 
     @Override
@@ -177,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
         MenuItem item = menu.findItem(R.id.sp_filter);
         mFilterSpinner = (Spinner) item.getActionView();
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.maint_activity_menu_spinner_items, R.layout.spinner_item);
+                R.array.maint_activity_menu_spinner_items, R.layout.menu_item_spinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mFilterSpinner.setAdapter(adapter);
 
@@ -226,6 +243,33 @@ public class MainActivity extends AppCompatActivity {
         //    movieDetailIntent.putExtra(getString(R.string.movie_parcel_key), movie);
         startActivity(intent);
     }
+    /**
+     * This method will hide everything except the TextView error message
+     * and set the appropriate text to it.
+     */
+    private void showErrorMessage(int msgResId) {
+        mLoadingIndicator.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.GONE);
+        mErrorMessage.setVisibility(View.VISIBLE);
+        mErrorMessage.setText(msgResId);
+    }
 
-
+    /**
+     * This method will make the loading indicator visible and hide the RecyclerView and error
+     * message.
+     */
+    private void showLoading() {
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+        mErrorMessage.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
+    }
+    /**
+     * This method will make the RecyclerView visible and hide the error message and
+     * loading indicator.
+     */
+    private void showData() {
+        mLoadingIndicator.setVisibility(View.GONE);
+        mErrorMessage.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
 }
