@@ -95,11 +95,13 @@ public class MainActivity extends AppCompatActivity {
                         .setQuery(query, OrchidEntity.class)
                         .build();
 
-        mFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<OrchidEntity, OrchidViewHolder>(options) {
+        mFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<OrchidEntity,
+                OrchidViewHolder>(options) {
+            @NonNull
             @Override
-            public OrchidViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            public OrchidViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 // Create a new instance of the ViewHolder, in this case we are using a custom
-                // layout called R.layout.message for each item
+                // layout called R.layout.list_item_orchid for each item
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_orchid, parent, false);
 
@@ -107,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onBindViewHolder(OrchidViewHolder holder, int position, @NonNull OrchidEntity model) {
+            protected void onBindViewHolder(@NonNull OrchidViewHolder holder, int position,
+                                            @NonNull OrchidEntity model) {
                 // Bind the OrchidEntity object to the OrchidViewHolder
                 holder.bindOrchid(model);
             }
