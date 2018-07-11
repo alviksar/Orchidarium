@@ -37,8 +37,12 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-database:16.0.1'
-//    implementation 'com.firebaseui:firebase-ui-database:4.1.0'
+//    implementation 'com.google.firebase:firebase-database:16.0.1'
+    implementation 'com.firebaseui:firebase-ui-database:4.1.0'
+
+    // https://github.com/firebase/FirebaseUI-Android/issues/1357
+    implementation "android.arch.core:runtime:1.1.1"
+    implementation "android.arch.core:common:1.1.1"
 
 }
 
