@@ -2,7 +2,9 @@ package xyz.alviksar.orchidarium.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private ChildEventListener mChildEventListener;
 
     private FirebaseRecyclerAdapter mFirebaseRecyclerAdapter;
+    private Parcelable mSavedRecyclerLayoutState = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +92,13 @@ public class MainActivity extends AppCompatActivity {
                         .setQuery(query, OrchidEntity.class)
                         .build();
 
-         mFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<OrchidEntity, OrchidViewHolder>(options) {
+        mFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<OrchidEntity, OrchidViewHolder>(options) {
             @Override
             public OrchidViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 // Create a new instance of the ViewHolder, in this case we are using a custom
                 // layout called R.layout.message for each item
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_orchid_list, parent, false);
+                        .inflate(R.layout.item_list_orchid, parent, false);
 
                 return new OrchidViewHolder(view);
             }
@@ -103,6 +107,22 @@ public class MainActivity extends AppCompatActivity {
             protected void onBindViewHolder(OrchidViewHolder holder, int position, @NonNull OrchidEntity model) {
                 // Bind the OrchidEntity object to the OrchidViewHolder
                 holder.bindOrchid(model);
+            }
+
+            @Override
+            public void onDataChanged() {
+                // Called each time there is a new data snapshot. You may want to use this method
+                // to hide a loading spinner or check for the "no documents" state and update your UI.
+                if (mSavedRecyclerLayoutState != null) {
+                    mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
+                }
+            }
+
+            @Override
+            public void onError(DatabaseError e) {
+                // Called when there is an error getting data. You may want to update
+                // your UI to display an error message to the user.
+                // ...
             }
         };
         mRecyclerView.setAdapter(mFirebaseRecyclerAdapter);
@@ -124,6 +144,26 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseRecyclerAdapter.stopListening();
     }
 
+    private static final String BUNDLE_RECYCLER_LAYOUT = "MainActivity.mRecyclerView.layout";
+
+    /**
+     * https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll-position-using-recyclerview-state
+     */
+    @Override
+    public void onRestoreInstanceState(@Nullable Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(BUNDLE_RECYCLER_LAYOUT))
+                mSavedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+        }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mRecyclerView.getLayoutManager().onSaveInstanceState());
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -164,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
