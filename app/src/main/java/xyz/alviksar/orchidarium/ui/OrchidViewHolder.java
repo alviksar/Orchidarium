@@ -49,13 +49,14 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
         itemView.setOnClickListener(this);
     }
 
-    public void bindOrchid(OrchidEntity orchid) {
+    public void bindOrchid(OrchidEntity orchid, String key) {
         mNameTextView.setText(orchid.getName());
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
         mPriceTextView.setText(currencyFormat.format(orchid.getRetailPrice()));
         if (orchid.getForSaleTime() > 0)
             mFoeSaleTimeTextView.setText(DateFormatter.timeFrom(orchid.getForSaleTime()));
         mOrchidItem = orchid;
+        mOrchidItem.setId(key);
     }
 //    public void onClick(View v) {
 //        Toast.makeText(v.getContext(), "Delete icon has been clicked", Toast.LENGTH_LONG).show();

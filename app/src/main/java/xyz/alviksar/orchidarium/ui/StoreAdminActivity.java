@@ -239,7 +239,13 @@ public class StoreAdminActivity extends AppCompatActivity {
         mOrchid.setDescription(mDescriptionEditText.getText().toString().trim());
 
 //        mOrchid = DummyData.getOrchid(22);
-        mDatabaseReference.push().setValue(mOrchid);
+        if (TextUtils.isEmpty(mOrchid.getId())) {
+            // Add new data
+            mDatabaseReference.push().setValue(mOrchid);
+        } else {
+            // Replace existing data
+            mDatabaseReference.child(mOrchid.getId()).setValue(mOrchid);
+        }
     }
 
     /**
@@ -284,8 +290,8 @@ public class StoreAdminActivity extends AppCompatActivity {
      * Perform the deletion of the orchid in the database.
      */
     private void deleteOrchid() {
-        if (mOrchid != null) {
-            // TODO: delete orchid
+        if (mOrchid != null && !TextUtils.isEmpty(mOrchid.getId())) {
+            mDatabaseReference.child(mOrchid.getId()).removeValue();
         }
     }
 

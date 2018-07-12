@@ -112,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull OrchidViewHolder holder, int position,
                                             @NonNull OrchidEntity model) {
                 // Bind the OrchidEntity object to the OrchidViewHolder
-                holder.bindOrchid(model);
+                String key = getRef(position).getKey();
+                holder.bindOrchid(model, key);
             }
 
             @Override
