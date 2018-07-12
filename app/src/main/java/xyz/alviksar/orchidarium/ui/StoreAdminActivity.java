@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -20,6 +21,8 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,13 +63,25 @@ public class StoreAdminActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
 
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(OrchidEntity.EXTRA_ORCHID, mOrchid);
+        super.onSaveInstanceState(outState);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_admin);
-        ButterKnife.bind(this);
 
-        mOrchid = getIntent().getParcelableExtra(OrchidEntity.EXTRA_ORCHID);
+        if (savedInstanceState == null || !savedInstanceState.containsKey(OrchidEntity.EXTRA_ORCHID)) {
+            mOrchid = getIntent().getParcelableExtra(OrchidEntity.EXTRA_ORCHID);
+        } else {
+            mOrchid = savedInstanceState.getParcelable(OrchidEntity.EXTRA_ORCHID);
+        }
         if (mOrchid == null) {
             setTitle(R.string.title_new_orchid);
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
@@ -74,6 +89,27 @@ public class StoreAdminActivity extends AppCompatActivity {
         } else {
             setTitle(R.string.title_edit_orchid);
         }
+
+        ButterKnife.bind(this);
+
+        mCodeEditText.setText(mOrchid.getCode());
+        mNameEditText.setText(mOrchid.getName());
+        mPutOnForSaleSwitch.setChecked(mOrchid.getIsVisibleForSale());
+
+//        if (mOrchid.getAge() != null) {
+//            int spinnerPosition = adapter.getPosition(compareValue);
+//            mSpinner.setSelection(spinnerPosition);
+//        }
+//        mPlantAgeSpinner.getAdapter().
+
+        if(mOrchid.getPotSize() != null) {
+// http://qaru.site/questions/32545/how-to-set-selected-item-of-spinner-by-value-not-by-position
+            mPotSizeSpinner.setSelection(((ArrayAdapter<String>) mPotSizeSpinner.getAdapter())
+                    .getPosition(mOrchid.getPotSize()));
+        }
+        mRetaPriceEditText.setText(String.format(Locale.getDefault(),
+                "%.2f", mOrchid.getRetailPrice()));
+        mDescriptionEditText.setText(mOrchid.getDescription());
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("orchids");
@@ -198,7 +234,8 @@ public class StoreAdminActivity extends AppCompatActivity {
         mOrchid.setName(mNameEditText.getText().toString().trim());
         mOrchid.setAge(mPlantAge);
         mOrchid.setPotSize(mPotSizeSpinner.getSelectedItem().toString().trim());
-        mOrchid.setRetailPrice(Double.valueOf(mRetaPriceEditText.getText().toString().trim()));
+        mOrchid.setRetailPrice(Double.valueOf(mRetaPriceEditText.getText().toString().trim()
+                .replace(',','.')));
         mOrchid.setDescription(mDescriptionEditText.getText().toString().trim());
 
 //        mOrchid = DummyData.getOrchid(22);
@@ -223,7 +260,7 @@ public class StoreAdminActivity extends AppCompatActivity {
         builder.setMessage(R.string.msg_delete_dialog);
         builder.setPositiveButton(R.string.btn_delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Delete" button, so delete the pet.
+                // User clicked the "Delete" button, so delete the orchid.
                 deleteOrchid();
                 NavUtils.navigateUpFromSameTask(StoreAdminActivity.this);
             }
@@ -265,7 +302,7 @@ public class StoreAdminActivity extends AppCompatActivity {
         builder.setNegativeButton(R.string.btn_keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Keep editing" button, so dismiss the dialog
-                // and continue editing the pet.
+                // and continue editing.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -282,7 +319,7 @@ public class StoreAdminActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        // If the pet hasn't changed, continue with handling back button press
+        // If the orchid hasn't changed, continue with handling back button press
         if (!mDataHasChanged) {
             super.onBackPressed();
             return;

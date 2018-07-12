@@ -2,10 +2,12 @@ package xyz.alviksar.orchidarium.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateFormatter {
 
-    private static SimpleDateFormat sDateFormat = new SimpleDateFormat("dd MMM");
+    private static SimpleDateFormat sDateFormat
+            = new SimpleDateFormat("dd MMM", Locale.getDefault());
 
     private static final long MINUTE_MILLIS = 1000 * 60;
     private static final long HOUR_MILLIS = 60 * MINUTE_MILLIS;

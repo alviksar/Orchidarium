@@ -3,6 +3,9 @@ package xyz.alviksar.orchidarium.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OrchidEntity implements Parcelable {
 
     // String to pass an orchid entity to activity as parcelable
@@ -23,15 +26,19 @@ public class OrchidEntity implements Parcelable {
     private double retailPrice;
     private String description;
     private String nicePhoto;
-    private String[] realPhotos;
+    private List<String> realPhotos;
     private int isVisibleForSale;
-    // TODO: Add private Date showDate;
+    // The time when an orchid was shown for order
+    private long forSaleTime = 0;
 
     public OrchidEntity() {
+        realPhotos = new ArrayList<>();
         setIsVisibleForSale(false);
     }
 
     public OrchidEntity(String code, String name, int age, String potSize, double price) {
+        realPhotos = new ArrayList<>();
+        setIsVisibleForSale(false);
         this.code = code;
         this.name = name;
         this.age = age;
@@ -49,8 +56,9 @@ public class OrchidEntity implements Parcelable {
         retailPrice = in.readDouble();
         setDescription(in.readString());
         nicePhoto = in.readString();
-        in.readStringArray(realPhotos);
+        in.readList(realPhotos, null);
         isVisibleForSale = in.readInt();
+        forSaleTime = in.readLong();
     }
 
     public static final Creator<OrchidEntity> CREATOR = new Creator<OrchidEntity>() {
@@ -129,11 +137,11 @@ public class OrchidEntity implements Parcelable {
         this.nicePhoto = nicePhoto;
     }
 
-    public String[] getRealPhotos() {
+    public List<String> getRealPhotos() {
         return realPhotos;
     }
 
-    public void setRealPhotos(String[] realPhotos) {
+    public void setRealPhotos(List<String> realPhotos) {
         this.realPhotos = realPhotos;
     }
 
@@ -142,10 +150,17 @@ public class OrchidEntity implements Parcelable {
     }
 
     public void setIsVisibleForSale(boolean state) {
-        if (state)
+        if (state) {
             this.isVisibleForSale = 1;
-        else
+            forSaleTime = System.currentTimeMillis();
+        }
+        else {
             this.isVisibleForSale = 0;
+        }
+    }
+
+    public long getForSaleTime() {
+        return forSaleTime;
     }
 
     @Override
@@ -163,8 +178,9 @@ public class OrchidEntity implements Parcelable {
         parcel.writeDouble(retailPrice);
         parcel.writeString(description);
         parcel.writeString(nicePhoto);
-        parcel.writeStringArray(realPhotos);
+        parcel.writeList(realPhotos);
         parcel.writeInt(isVisibleForSale);
+        parcel.writeLong(forSaleTime);
     }
 
 

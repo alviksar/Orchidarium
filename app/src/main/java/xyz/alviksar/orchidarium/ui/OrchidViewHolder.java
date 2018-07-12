@@ -3,28 +3,17 @@ package xyz.alviksar.orchidarium.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
+import xyz.alviksar.orchidarium.util.DateFormatter;
 
 
 public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -46,10 +35,10 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
     @BindView(R.id.tv_name)
     TextView mNameTextView;
 
-    @BindView(R.id.tv_beginning)
-    TextView mBeginningTextView;
+    @BindView(R.id.tv_for_sale_time)
+    TextView mFoeSaleTimeTextView;
 
-    OrchidEntity orchidItem;
+    OrchidEntity mOrchidItem;
 
 
     public OrchidViewHolder(View itemView) {
@@ -64,7 +53,9 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
         mNameTextView.setText(orchid.getName());
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
         mPriceTextView.setText(currencyFormat.format(orchid.getRetailPrice()));
-        orchidItem = orchid;
+        if (orchid.getForSaleTime() > 0)
+            mFoeSaleTimeTextView.setText(DateFormatter.timeFrom(orchid.getForSaleTime()));
+        mOrchidItem = orchid;
     }
 //    public void onClick(View v) {
 //        Toast.makeText(v.getContext(), "Delete icon has been clicked", Toast.LENGTH_LONG).show();
@@ -88,11 +79,15 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
 
     @Override
     public void onClick(View view) {
-        Toast.makeText(mContext, orchidItem.getName(), Toast.LENGTH_LONG).show();
-        int itemPosition = getLayoutPosition();
 
         Intent intent = new Intent(mContext, StoreAdminActivity.class);
-  //      intent.putExtra("position", itemPosition + "");
+        intent.putExtra(OrchidEntity.EXTRA_ORCHID, mOrchidItem);
+        mContext.startActivity(intent);
+
+//        Toast.makeText(mContext, mOrchidItem.getName(), Toast.LENGTH_LONG).show();
+//        int itemPosition = getLayoutPosition();
+
+        //      intent.putExtra("position", itemPosition + "");
 //        OrchidEntity orchid =
 //
 //
