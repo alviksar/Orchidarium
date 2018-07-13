@@ -19,6 +19,13 @@
         <item>@string/plant_age_blooming</item>
     </string-array>
 
+    <string-array name="currency_signs">       
+        <item>@string/sign_rur</item>        
+        <item>@string/sign_eur</item>     
+        <item>@string/sign_usd</item>     
+        <item>@string/sign_bitcoin</item>
+    </string-array>
+
     <string-array name="pref_order_list_entries">
         <item>@string/sort_first_new</item>
         <item>@string/sort_new_at_the_end</item>

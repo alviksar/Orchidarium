@@ -70,5 +70,8 @@
     <string name="msg_no_connection_error">No Internet connection.</string>
     <string name="msg_error_getting_data">Error getting data.</string>
 
+    <string name="sign_usd">\u0024</string>
+    <string name="sign_eur">\u20AC</string>
+    <string name="sign_rur">\u20BD</string>
 
 </resources>
