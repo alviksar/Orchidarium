@@ -58,12 +58,13 @@ public class StoreAdminActivity extends AppCompatActivity {
     @BindView(R.id.et_description)
     EditText mDescriptionEditText;
 
+    @BindView(R.id.sp_currency)
+    Spinner mCurrencySymbol;
+
     private int mPlantAge;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
-
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -102,10 +103,14 @@ public class StoreAdminActivity extends AppCompatActivity {
 //        }
 //        mPlantAgeSpinner.getAdapter().
 
+        // http://qaru.site/questions/32545/how-to-set-selected-item-of-spinner-by-value-not-by-position
         if(mOrchid.getPotSize() != null) {
-// http://qaru.site/questions/32545/how-to-set-selected-item-of-spinner-by-value-not-by-position
             mPotSizeSpinner.setSelection(((ArrayAdapter<String>) mPotSizeSpinner.getAdapter())
                     .getPosition(mOrchid.getPotSize()));
+        }
+        if(mOrchid.getCurrencySymbol() != null) {
+            mCurrencySymbol.setSelection(((ArrayAdapter<String>) mCurrencySymbol.getAdapter())
+                    .getPosition(mOrchid.getCurrencySymbol()));
         }
         mRetaPriceEditText.setText(String.format(Locale.getDefault(),
                 "%.2f", mOrchid.getRetailPrice()));
@@ -237,7 +242,7 @@ public class StoreAdminActivity extends AppCompatActivity {
         mOrchid.setRetailPrice(Double.valueOf(mRetaPriceEditText.getText().toString().trim()
                 .replace(',','.')));
         mOrchid.setDescription(mDescriptionEditText.getText().toString().trim());
-
+        mOrchid.setCurrencySymbol(mCurrencySymbol.getSelectedItem().toString());
 //        mOrchid = DummyData.getOrchid(22);
         if (TextUtils.isEmpty(mOrchid.getId())) {
             // Add new data

@@ -30,20 +30,11 @@ public class OrchidEntity implements Parcelable {
     private int isVisibleForSale;
     // The time when an orchid was shown for order
     private long forSaleTime = 0;
+    private String currencySymbol;
 
     public OrchidEntity() {
         realPhotos = new ArrayList<>();
         setIsVisibleForSale(false);
-    }
-
-    public OrchidEntity(String code, String name, int age, String potSize, double price) {
-        realPhotos = new ArrayList<>();
-        setIsVisibleForSale(false);
-        this.code = code;
-        this.name = name;
-        this.age = age;
-        this.potSize = potSize;
-        this.retailPrice = price;
     }
 
     // Constructor from Parcel
@@ -59,6 +50,7 @@ public class OrchidEntity implements Parcelable {
         in.readList(realPhotos, null);
         isVisibleForSale = in.readInt();
         forSaleTime = in.readLong();
+        currencySymbol = in.readString();
     }
 
     public static final Creator<OrchidEntity> CREATOR = new Creator<OrchidEntity>() {
@@ -159,6 +151,15 @@ public class OrchidEntity implements Parcelable {
         }
     }
 
+
+    public String getCurrencySymbol() {
+        return currencySymbol;
+    }
+
+    public void setCurrencySymbol(String currencySymbol) {
+        this.currencySymbol = currencySymbol;
+    }
+
     public long getForSaleTime() {
         return forSaleTime;
     }
@@ -181,7 +182,7 @@ public class OrchidEntity implements Parcelable {
         parcel.writeList(realPhotos);
         parcel.writeInt(isVisibleForSale);
         parcel.writeLong(forSaleTime);
+        parcel.writeString(currencySymbol);
     }
-
 
 }

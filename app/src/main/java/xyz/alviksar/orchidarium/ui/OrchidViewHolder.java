@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +36,7 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
     TextView mNameTextView;
 
     @BindView(R.id.tv_for_sale_time)
-    TextView mFoeSaleTimeTextView;
+    TextView mForSaleTimeTextView;
 
     OrchidEntity mOrchidItem;
 
@@ -51,10 +51,16 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
 
     public void bindOrchid(OrchidEntity orchid, String key) {
         mNameTextView.setText(orchid.getName());
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-        mPriceTextView.setText(currencyFormat.format(orchid.getRetailPrice()));
+        if (orchid.getCurrencySymbol().equals(mContext.getString(R.string.sign_usd))) {
+            mPriceTextView.setText(String.format(Locale.getDefault(),
+                    "$ %.2f", orchid.getRetailPrice()));
+        } else {
+            mPriceTextView.setText(String.format(Locale.getDefault(),
+                    "%.2f %s", orchid.getRetailPrice(), orchid.getCurrencySymbol()));
+        }
+
         if (orchid.getForSaleTime() > 0)
-            mFoeSaleTimeTextView.setText(DateFormatter.timeFrom(orchid.getForSaleTime()));
+            mForSaleTimeTextView.setText(DateFormatter.timeFrom(orchid.getForSaleTime()));
         mOrchidItem = orchid;
         mOrchidItem.setId(key);
     }
