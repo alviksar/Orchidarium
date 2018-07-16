@@ -74,4 +74,6 @@
     <string name="sign_eur">\u20AC</string>
     <string name="sign_rur">\u20BD</string>
 
+    <string name="empty">""</string>
+
 </resources>

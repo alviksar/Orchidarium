@@ -3,9 +3,13 @@ package xyz.alviksar.orchidarium.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@IgnoreExtraProperties
 public class OrchidEntity implements Parcelable {
 
     // String to pass an orchid entity to activity as parcelable
@@ -18,8 +22,9 @@ public class OrchidEntity implements Parcelable {
     public static final int AGE_BLOOMING = 0;
     public static final int AGE_UNKNOWN = -1;
 
+    @Exclude
     private String id;
-    private String code;
+    private String code = "";
     private String name;
     private int age;
     private String potSize;
@@ -33,6 +38,8 @@ public class OrchidEntity implements Parcelable {
     private String currencySymbol;
 
     public OrchidEntity() {
+        age = OrchidEntity.AGE_UNKNOWN;
+        potSize = "";
         realPhotos = new ArrayList<>();
         setIsVisibleForSale(false);
     }
@@ -65,6 +72,7 @@ public class OrchidEntity implements Parcelable {
         }
     };
 
+    @Exclude
     public String getId() {
         return id;
     }

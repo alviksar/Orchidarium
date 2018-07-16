@@ -96,6 +96,21 @@ public class StoreAdminActivity extends AppCompatActivity {
         mCodeEditText.setText(mOrchid.getCode());
         mNameEditText.setText(mOrchid.getName());
         mPutOnForSaleSwitch.setChecked(mOrchid.getIsVisibleForSale());
+        String s = "";
+        switch (mOrchid.getAge()) {
+            case OrchidEntity.AGE_BLOOMING:
+                s = getResources().getString(R.string.plant_age_blooming); break;
+            case OrchidEntity.AGE_FLOWERING:
+                s = getResources().getString(R.string.plant_age_flowering); break;
+            case OrchidEntity.AGE_ONE_YEARS_BEFORE:
+                s = getResources().getString(R.string.plant_age_one_years_before); break;
+            case OrchidEntity.AGE_TWO_YEARS_BEFORE:
+                s = getResources().getString(R.string.plant_age_two_years_before); break;
+            default:
+                s = "";
+        }
+        mPlantAgeSpinner.setSelection(((ArrayAdapter<String>) mPlantAgeSpinner.getAdapter())
+                        .getPosition(s));
 
 //        if (mOrchid.getAge() != null) {
 //            int spinnerPosition = adapter.getPosition(compareValue);
@@ -108,10 +123,12 @@ public class StoreAdminActivity extends AppCompatActivity {
             mPotSizeSpinner.setSelection(((ArrayAdapter<String>) mPotSizeSpinner.getAdapter())
                     .getPosition(mOrchid.getPotSize()));
         }
+
         if(mOrchid.getCurrencySymbol() != null) {
             mCurrencySymbol.setSelection(((ArrayAdapter<String>) mCurrencySymbol.getAdapter())
                     .getPosition(mOrchid.getCurrencySymbol()));
         }
+
         mRetaPriceEditText.setText(String.format(Locale.getDefault(),
                 "%.2f", mOrchid.getRetailPrice()));
         mDescriptionEditText.setText(mOrchid.getDescription());

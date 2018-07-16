@@ -10,13 +10,15 @@
         <item>@string/pot_size_1_7</item>
         <item>@string/pot_size_2_5</item>
         <item>@string/pot_size_3_5</item>
+        <item>@string/empty</item>
     </string-array>
 
-    <string-array name="plant_ages">       
+    <string-array name="plant_ages">
         <item>@string/plant_age_two_years_before</item>        
         <item>@string/plant_age_one_years_before</item>     
         <item>@string/plant_age_flowering</item>     
         <item>@string/plant_age_blooming</item>
+        <item>@string/empty</item>
     </string-array>
 
     <string-array name="currency_signs">       

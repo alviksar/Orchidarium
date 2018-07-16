@@ -236,17 +236,13 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_add_new) {
             Intent intent = new Intent(MainActivity.this, StoreAdminActivity.class);
+            intent.putExtra(OrchidEntity.EXTRA_ORCHID, new OrchidEntity());
             startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void startDetailActivity(View view) {
-        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-        //    movieDetailIntent.putExtra(getString(R.string.movie_parcel_key), movie);
-        startActivity(intent);
-    }
     /**
      * This method will hide everything except the TextView error message
      * and set the appropriate text to it.
