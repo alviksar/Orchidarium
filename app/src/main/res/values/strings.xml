@@ -19,6 +19,9 @@
     <string name="sort_ascending_price">ascending price</string>
     <string name="sort_descending_price">descending price</string>
 
+    <string name="pref_key_currency_symbol" translatable="false">pref_key_currency_symbol</string>
+
+
     <string name="label_notify_me">Notify me of new orchids</string>
     <string name="pref_key_notify_me" translatable="false">pref_key_notify_me</string>
 

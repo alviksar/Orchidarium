@@ -27,6 +27,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.alviksar.orchidarium.R;
+import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 
 public class StoreAdminActivity extends AppCompatActivity {
@@ -95,36 +96,54 @@ public class StoreAdminActivity extends AppCompatActivity {
 
         mCodeEditText.setText(mOrchid.getCode());
         mNameEditText.setText(mOrchid.getName());
+
+        mPutOnForSaleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    mStateTextView.setText(R.string.label_available_for_order);
+                } else {
+                    mStateTextView.setText(R.string.label_hidden);
+                }
+            }
+        });
         mPutOnForSaleSwitch.setChecked(mOrchid.getIsVisibleForSale());
+
+        
         String s = "";
         switch (mOrchid.getAge()) {
             case OrchidEntity.AGE_BLOOMING:
-                s = getResources().getString(R.string.plant_age_blooming); break;
+                s = getResources().getString(R.string.plant_age_blooming);
+                break;
             case OrchidEntity.AGE_FLOWERING:
-                s = getResources().getString(R.string.plant_age_flowering); break;
+                s = getResources().getString(R.string.plant_age_flowering);
+                break;
             case OrchidEntity.AGE_ONE_YEARS_BEFORE:
-                s = getResources().getString(R.string.plant_age_one_years_before); break;
+                s = getResources().getString(R.string.plant_age_one_years_before);
+                break;
             case OrchidEntity.AGE_TWO_YEARS_BEFORE:
-                s = getResources().getString(R.string.plant_age_two_years_before); break;
+                s = getResources().getString(R.string.plant_age_two_years_before);
+                break;
             default:
                 s = "";
         }
         mPlantAgeSpinner.setSelection(((ArrayAdapter<String>) mPlantAgeSpinner.getAdapter())
-                        .getPosition(s));
+                .getPosition(s));
 
-//        if (mOrchid.getAge() != null) {
-//            int spinnerPosition = adapter.getPosition(compareValue);
-//            mSpinner.setSelection(spinnerPosition);
-//        }
-//        mPlantAgeSpinner.getAdapter().
 
         // http://qaru.site/questions/32545/how-to-set-selected-item-of-spinner-by-value-not-by-position
-        if(mOrchid.getPotSize() != null) {
+        if (mOrchid.getPotSize() != null) {
             mPotSizeSpinner.setSelection(((ArrayAdapter<String>) mPotSizeSpinner.getAdapter())
                     .getPosition(mOrchid.getPotSize()));
         }
 
-        if(mOrchid.getCurrencySymbol() != null) {
+        if (mOrchid.getCurrencySymbol() == null
+                || TextUtils.isEmpty(mOrchid.getCurrencySymbol())) {
+            // Take the last chosen currency symbol
+            String symbol = OrchidariumPreferences.getCurrencySymbol(this);
+            mCurrencySymbol.setSelection(((ArrayAdapter<String>) mCurrencySymbol.getAdapter())
+                    .getPosition(symbol));
+        } else {
             mCurrencySymbol.setSelection(((ArrayAdapter<String>) mCurrencySymbol.getAdapter())
                     .getPosition(mOrchid.getCurrencySymbol()));
         }
@@ -139,10 +158,11 @@ public class StoreAdminActivity extends AppCompatActivity {
         mCodeEditText.setOnTouchListener(mTouchListener);
         mPutOnForSaleSwitch.setOnTouchListener(mTouchListener);
         mNameEditText.setOnTouchListener(mTouchListener);
-        mPlantAgeSpinner.setOnTouchListener(mTouchListener);
-        mPotSizeSpinner.setOnTouchListener(mTouchListener);
         mRetaPriceEditText.setOnTouchListener(mTouchListener);
         mDescriptionEditText.setOnTouchListener(mTouchListener);
+        mPlantAgeSpinner.setOnTouchListener(mTouchListener);
+        mPotSizeSpinner.setOnTouchListener(mTouchListener);
+
 
         mPutOnForSaleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -257,7 +277,7 @@ public class StoreAdminActivity extends AppCompatActivity {
         mOrchid.setAge(mPlantAge);
         mOrchid.setPotSize(mPotSizeSpinner.getSelectedItem().toString().trim());
         mOrchid.setRetailPrice(Double.valueOf(mRetaPriceEditText.getText().toString().trim()
-                .replace(',','.')));
+                .replace(',', '.')));
         mOrchid.setDescription(mDescriptionEditText.getText().toString().trim());
         mOrchid.setCurrencySymbol(mCurrencySymbol.getSelectedItem().toString());
 //        mOrchid = DummyData.getOrchid(22);
@@ -268,6 +288,9 @@ public class StoreAdminActivity extends AppCompatActivity {
             // Replace existing data
             mDatabaseReference.child(mOrchid.getId()).setValue(mOrchid);
         }
+
+        // Save a chosen currency symbol
+        OrchidariumPreferences.setCurrencySymbol(this, mOrchid.getCurrencySymbol());
     }
 
     /**
