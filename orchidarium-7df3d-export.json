@@ -1,0 +1,127 @@
+{
+  "users": {
+     "Vt6yWuluoBVRrXrb67XCtk24aEE2": {
+       "admin": true
+     },
+     "t7URJr8XowYC1vjnc1fqos2RYFA3": {
+       "admin": false
+     },
+     "uid3": {
+       "admin": true
+     }
+	 },
+  "orchids": {
+    "-LH2e5pJivzDYPG521qO": {
+      "age": 1,
+      "code": "test1-2",
+      "currencySymbol": "€",
+      "description": "This orchid is added for test purpose only",
+      "forSaleTime": 1531938235619,
+      "isVisibleForSale": true,
+      "name": "Beautiful orchid",
+      "potSize": "2,5",
+      "retailPrice": 1234,
+      "saveTime": 1531938235619,
+      "writer": "asar@inbox.ru"
+    },
+    "-LH2fR4x2FjOlEU_AMh_": {
+      "age": 0,
+      "code": "141100",
+      "currencySymbol": "₽",
+      "description": "Ещё одна тестовая запись.",
+      "forSaleTime": 1531766010712,
+      "isVisibleForSale": false,
+      "name": "Прекрасная орхидея",
+      "potSize": "2,5",
+      "retailPrice": 2345,
+      "saveTime": 1531938244464,
+      "writer": "asar@inbox.ru"
+    },
+    "-LH3No2yA8nzD2oXpoMy": {
+      "age": 3,
+      "code": "n345",
+      "currencySymbol": "₽",
+      "description": "Просто для теста",
+      "forSaleTime": 1531938196094,
+      "isVisibleForSale": true,
+      "name": "Классная орха",
+      "potSize": "2,5",
+      "retailPrice": 4574,
+      "saveTime": 1531938196094,
+      "writer": "asar@inbox.ru"
+    },
+    "-LH7f1qTgA74AxkxXuVS": {
+      "age": 3,
+      "code": "345",
+      "currencySymbol": "₽",
+      "description": "тест",
+      "forSaleTime": 1531938275506,
+      "isVisibleForSale": true,
+      "name": "Новая орха",
+      "potSize": "1,7",
+      "retailPrice": 2589,
+      "saveTime": 1531938275506,
+      "writer": "asar@inbox.ru"
+    },
+    "-LH7mY6qIObtkYZRiumS": {
+      "age": 3,
+      "code": "45",
+      "currencySymbol": "$",
+      "description": "нет",
+      "forSaleTime": 1531854695077,
+      "isVisibleForSale": true,
+      "name": "New name for orchid",
+      "potSize": "1,7",
+      "retailPrice": 12
+    },
+    "-LH8XyTs9vBK2P-i8Ldu": {
+      "age": 3,
+      "code": "3",
+      "currencySymbol": "₽",
+      "description": "3",
+      "forSaleTime": 1531938202472,
+      "isVisibleForSale": true,
+      "name": "Орха #3",
+      "potSize": "1,7",
+      "retailPrice": 333,
+      "saveTime": 1531938202472,
+      "writer": "asar@inbox.ru"
+    },
+    "-LH8Y4fKrEqrI69jMsym": {
+      "age": 0,
+      "code": "44",
+      "currencySymbol": "$",
+      "description": "4",
+      "forSaleTime": 1531931803343,
+      "isVisibleForSale": true,
+      "name": "Орха #4",
+      "potSize": "1,7",
+      "retailPrice": 444,
+      "writer": "Test User"
+    },
+    "-LHDHgvbR9GfZBwLQtSs": {
+      "age": 3,
+      "code": "345-2",
+      "currencySymbol": "$",
+      "description": "тест 2",
+      "forSaleTime": 0,
+      "id": "-LHDHgvbR9GfZBwLQtSs",
+      "isVisibleForSale": false,
+      "name": "Новая орха 2",
+      "potSize": "2,5",
+      "retailPrice": 256
+    },
+    "-LHDlvOx29lbTrAoMgFx": {
+      "age": 3,
+      "code": "345-7",
+      "currencySymbol": "₽",
+      "description": "тест 12",
+      "forSaleTime": 0,
+      "id": "-LHDlvOx29lbTrAoMgFx",
+      "isVisibleForSale": false,
+      "name": "Новая орха 7",
+      "potSize": "1,7",
+      "retailPrice": 2589.12
+    }
+  }
+}

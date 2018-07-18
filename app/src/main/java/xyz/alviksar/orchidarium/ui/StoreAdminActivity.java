@@ -113,7 +113,7 @@ public class StoreAdminActivity extends AppCompatActivity {
                             .build(),
                     RC_SIGN_IN);
         } else {
-            mUserName = mFirebaseAuth.getCurrentUser().getDisplayName();
+            mUserName = mFirebaseAuth.getCurrentUser().getUid();
         }
 
 
@@ -311,7 +311,7 @@ public class StoreAdminActivity extends AppCompatActivity {
 
             // Successfully signed in
             if (resultCode == RESULT_OK && mFirebaseAuth.getCurrentUser() != null) {
-                mUserName = mFirebaseAuth.getCurrentUser().getDisplayName();
+                mUserName = mFirebaseAuth.getCurrentUser().getUid();
 
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
