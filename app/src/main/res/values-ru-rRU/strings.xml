@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Orchidarium</string>
+    <string name="app_name">Орхидариум</string>
     <string name="label_nice_image">Цветущий вид</string>
     <string name="label_real_image">Реальный вид</string>
     <string name="label_appearance">Выставить на продажу</string>
@@ -32,5 +32,19 @@
     <string name="plant_age_blooming">цветущий</string>
     <string name="label_plant_age">Возраст</string>
     <string name="label_pot_size">Горшочек</string>
+    <string name="msg_no_connection_error">Пожалуйста, проверьте подключение к Интернету.</string>
+    <string name="action_save_orchid">Сохранить</string>
+    <string name="action_delete_orchid">Удалить</string>
+    <string name="title_new_orchid">Новая</string>
+    <string name="title_edit_orchid">Исправить</string>
+    <string name="msg_delete_dialog">Удалить?</string>
+    <string name="btn_delete">Удалить</string>
+    <string name="btn_cancel">Отменить</string>
+    <string name="msg_unsaved_changes_dialog">Отменить изменения и закончить редактирование?</string>
+    <string name="btn_discard">Отменить изменения</string>
+    <string name="btn_keep_editing">Продолжить редактирование</string>
+    <string name="desc_nice_orchid_photo">Вид цветущей орхидеи</string>
+    <string name="desc_selected_for_purchase">Отобрана для заказа</string>
+    <string name="msg_error_getting_data">Ошибка загрузки данных.</string>
 
 </resources>

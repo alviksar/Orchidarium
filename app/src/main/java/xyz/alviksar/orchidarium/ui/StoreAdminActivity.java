@@ -109,7 +109,7 @@ public class StoreAdminActivity extends AppCompatActivity {
         });
         mPutOnForSaleSwitch.setChecked(mOrchid.getIsVisibleForSale());
 
-        
+
         String s = "";
         switch (mOrchid.getAge()) {
             case OrchidEntity.AGE_BLOOMING:
