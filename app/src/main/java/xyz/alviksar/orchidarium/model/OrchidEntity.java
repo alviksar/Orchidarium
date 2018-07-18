@@ -36,6 +36,10 @@ public class OrchidEntity implements Parcelable {
     // The time when an orchid was shown for order
     private long forSaleTime = 0;
     private String currencySymbol;
+    // Who wrote this data
+    private String writer;
+    // The time when it was written
+    private long saveTime;
 
     public OrchidEntity() {
         age = OrchidEntity.AGE_UNKNOWN;
@@ -58,6 +62,8 @@ public class OrchidEntity implements Parcelable {
         isVisibleForSale = in.readInt();
         forSaleTime = in.readLong();
         currencySymbol = in.readString();
+        writer = in.readString();
+        saveTime = in.readLong();
     }
 
     public static final Creator<OrchidEntity> CREATOR = new Creator<OrchidEntity>() {
@@ -149,16 +155,18 @@ public class OrchidEntity implements Parcelable {
         return isVisibleForSale == 1;
     }
 
+    public long getForSaleTime() {
+        return forSaleTime;
+    }
+
     public void setIsVisibleForSale(boolean state) {
         if (state) {
             this.isVisibleForSale = 1;
             forSaleTime = System.currentTimeMillis();
-        }
-        else {
+        } else {
             this.isVisibleForSale = 0;
         }
     }
-
 
     public String getCurrencySymbol() {
         return currencySymbol;
@@ -168,13 +176,25 @@ public class OrchidEntity implements Parcelable {
         this.currencySymbol = currencySymbol;
     }
 
-    public long getForSaleTime() {
-        return forSaleTime;
+    public long getSaveTime() {
+        return saveTime;
+    }
+
+    public void setSaveTime(long saveTime) {
+        this.saveTime = saveTime;
     }
 
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public String getWriter() {
+        return writer;
+    }
+
+    public void setWriter(String writer) {
+        this.writer = writer;
     }
 
     @Override
@@ -191,6 +211,10 @@ public class OrchidEntity implements Parcelable {
         parcel.writeInt(isVisibleForSale);
         parcel.writeLong(forSaleTime);
         parcel.writeString(currencySymbol);
+        parcel.writeString(writer);
+        parcel.writeLong(saveTime);
+
     }
+
 
 }

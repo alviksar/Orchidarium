@@ -64,14 +64,14 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReference;
     private ChildEventListener mChildEventListener;
 
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
+//    private FirebaseAuth mFirebaseAuth;
+//    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     private FirebaseRecyclerAdapter mFirebaseRecyclerAdapter;
     private Parcelable mSavedRecyclerLayoutState = null;
 
     // Choose an arbitrary request code value
-    private static final int RC_SIGN_IN = 123;
+//    private static final int RC_SIGN_IN = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("orchids");
-        mFirebaseAuth = FirebaseAuth.getInstance();
+//        mFirebaseAuth = FirebaseAuth.getInstance();
 //        if (mFirebaseAuth.getCurrentUser() != null) {
 //            // already signed in
 //        } else {
@@ -168,26 +168,26 @@ public class MainActivity extends AppCompatActivity {
             showErrorMessage(R.string.msg_no_connection_error);
         }
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() != null) {
-                    // already signed in
-                } else {
-                    // not signed in
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-//                                    .setIsSmartLockEnabled(false)
-                                    .setAvailableProviders(Arrays.asList(
-                                            new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                            new AuthUI.IdpConfig.EmailBuilder().build()))
-//                                            new AuthUI.IdpConfig.PhoneBuilder().build()))
-                                    .build(),
-                            RC_SIGN_IN);
-                }
-            }
-        };
+//        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                if (firebaseAuth.getCurrentUser() != null) {
+//                    // already signed in
+//                } else {
+//                    // not signed in
+//                    startActivityForResult(
+//                            AuthUI.getInstance()
+//                                    .createSignInIntentBuilder()
+////                                    .setIsSmartLockEnabled(false)
+//                                    .setAvailableProviders(Arrays.asList(
+//                                            new AuthUI.IdpConfig.GoogleBuilder().build(),
+//                                            new AuthUI.IdpConfig.EmailBuilder().build()))
+////                                            new AuthUI.IdpConfig.PhoneBuilder().build()))
+//                                    .build(),
+//                            RC_SIGN_IN);
+//                }
+//            }
+//        };
     }
 
 //    @Override
@@ -209,14 +209,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mFirebaseRecyclerAdapter.startListening();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+//        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mFirebaseRecyclerAdapter.stopListening();
-        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+//        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
     }
 
     private static final String BUNDLE_RECYCLER_LAYOUT = "MainActivity.mRecyclerView.layout";

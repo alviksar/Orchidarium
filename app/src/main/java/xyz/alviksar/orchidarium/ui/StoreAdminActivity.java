@@ -1,12 +1,15 @@
 package xyz.alviksar.orchidarium.ui;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -19,13 +22,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import xyz.alviksar.orchidarium.BuildConfig;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
@@ -67,6 +77,16 @@ public class StoreAdminActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
 
+    private FirebaseAuth mFirebaseAuth;
+    private String mUserName;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+
+    private FirebaseRecyclerAdapter mFirebaseRecyclerAdapter;
+    private Parcelable mSavedRecyclerLayoutState = null;
+
+    // Choose an arbitrary request code value
+    private static final int RC_SIGN_IN = 123;
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(OrchidEntity.EXTRA_ORCHID, mOrchid);
@@ -78,6 +98,24 @@ public class StoreAdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_admin);
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        if (mFirebaseAuth.getCurrentUser() == null) {
+            // not signed in
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setIsSmartLockEnabled(!BuildConfig.DEBUG /* credentials */, true /* hints */)
+                            .setAvailableProviders(Arrays.asList(
+                                    new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                    new AuthUI.IdpConfig.EmailBuilder().build()))
+//                                            new AuthUI.IdpConfig.PhoneBuilder().build()))
+                            .build(),
+                    RC_SIGN_IN);
+        } else {
+            mUserName = mFirebaseAuth.getCurrentUser().getDisplayName();
+        }
+
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(OrchidEntity.EXTRA_ORCHID)) {
             mOrchid = getIntent().getParcelableExtra(OrchidEntity.EXTRA_ORCHID);
@@ -108,7 +146,6 @@ public class StoreAdminActivity extends AppCompatActivity {
             }
         });
         mPutOnForSaleSwitch.setChecked(mOrchid.getIsVisibleForSale());
-
 
         String s = "";
         switch (mOrchid.getAge()) {
@@ -162,7 +199,6 @@ public class StoreAdminActivity extends AppCompatActivity {
         mDescriptionEditText.setOnTouchListener(mTouchListener);
         mPlantAgeSpinner.setOnTouchListener(mTouchListener);
         mPotSizeSpinner.setOnTouchListener(mTouchListener);
-
 
         mPutOnForSaleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -266,6 +302,42 @@ public class StoreAdminActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // RC_SIGN_IN is the request code you passed into startActivityForResult(...)
+        // when starting the sign in flow.
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            // Successfully signed in
+            if (resultCode == RESULT_OK && mFirebaseAuth.getCurrentUser() != null) {
+                mUserName = mFirebaseAuth.getCurrentUser().getDisplayName();
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // Sign in was canceled by the user, finish the activity
+                Toast.makeText(this, "Sign in canceled",
+                        Toast.LENGTH_SHORT).show();
+                finish();
+
+            } else {
+                // Sign in failed
+                if (response == null) {
+                    Toast.makeText(this, "Sign in canceled",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    Toast.makeText(this, R.string.msg_no_connection_error,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Toast.makeText(this, String.format("Sign in error: $s", response.getError()),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void saveOrchid() {
         if (mOrchid == null) {
             mOrchid = new OrchidEntity();
@@ -280,7 +352,13 @@ public class StoreAdminActivity extends AppCompatActivity {
                 .replace(',', '.')));
         mOrchid.setDescription(mDescriptionEditText.getText().toString().trim());
         mOrchid.setCurrencySymbol(mCurrencySymbol.getSelectedItem().toString());
-//        mOrchid = DummyData.getOrchid(22);
+        mOrchid.setWriter(mUserName);
+        mOrchid.setSaveTime(System.currentTimeMillis());
+
+        // Save a chosen currency symbol
+        OrchidariumPreferences.setCurrencySymbol(this, mOrchid.getCurrencySymbol());
+
+        // Save or add new orchid
         if (TextUtils.isEmpty(mOrchid.getId())) {
             // Add new data
             mDatabaseReference.push().setValue(mOrchid);
@@ -288,9 +366,6 @@ public class StoreAdminActivity extends AppCompatActivity {
             // Replace existing data
             mDatabaseReference.child(mOrchid.getId()).setValue(mOrchid);
         }
-
-        // Save a chosen currency symbol
-        OrchidariumPreferences.setCurrencySymbol(this, mOrchid.getCurrencySymbol());
     }
 
     /**
@@ -390,4 +465,6 @@ public class StoreAdminActivity extends AppCompatActivity {
         // Show dialog that there are unsaved changes
         showUnsavedChangesDialog(discardButtonClickListener);
     }
+
+
 }
