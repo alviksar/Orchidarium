@@ -22,14 +22,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,8 +64,14 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReference;
     private ChildEventListener mChildEventListener;
 
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+
     private FirebaseRecyclerAdapter mFirebaseRecyclerAdapter;
     private Parcelable mSavedRecyclerLayoutState = null;
+
+    // Choose an arbitrary request code value
+    private static final int RC_SIGN_IN = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +80,12 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("orchids");
-
+        mFirebaseAuth = FirebaseAuth.getInstance();
+//        if (mFirebaseAuth.getCurrentUser() != null) {
+//            // already signed in
+//        } else {
+//            // not signed in
+//        }
         // Calculate the number of columns in the grid
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int mColumnWidthPixels;
@@ -151,18 +167,56 @@ public class MainActivity extends AppCompatActivity {
             // Set no connection error message
             showErrorMessage(R.string.msg_no_connection_error);
         }
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() != null) {
+                    // already signed in
+                } else {
+                    // not signed in
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+//                                    .setIsSmartLockEnabled(false)
+                                    .setAvailableProviders(Arrays.asList(
+                                            new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                            new AuthUI.IdpConfig.EmailBuilder().build()))
+//                                            new AuthUI.IdpConfig.PhoneBuilder().build()))
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+            }
+        };
     }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == RC_SIGN_IN) {
+//            if (resultCode == RESULT_OK) {
+//                // Sign-in succeeded, set up the UI
+//                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+//            } else if (resultCode == RESULT_CANCELED) {
+//                // Sign in was canceled by the user, finish the activity
+//                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+//                finish();
+//            }
+//        }
+//    }
 
     @Override
     protected void onStart() {
         super.onStart();
         mFirebaseRecyclerAdapter.startListening();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mFirebaseRecyclerAdapter.stopListening();
+        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
     }
 
     private static final String BUNDLE_RECYCLER_LAYOUT = "MainActivity.mRecyclerView.layout";
@@ -226,21 +280,24 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
-            startActivity(startSettingsActivity);
-            return true;
-        } else if (id == R.id.action_add_new) {
-            Intent intent = new Intent(MainActivity.this, StoreAdminActivity.class);
-            intent.putExtra(OrchidEntity.EXTRA_ORCHID, new OrchidEntity());
-            startActivity(intent);
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_sign_out:
+                AuthUI.getInstance().signOut(this);
+                return true;
+            case R.id.action_settings:
+                Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+                startActivity(startSettingsActivity);
+                return true;
+            case R.id.action_add_new:
+                    Intent intent = new Intent(MainActivity.this, StoreAdminActivity.class);
+                    intent.putExtra(OrchidEntity.EXTRA_ORCHID, new OrchidEntity());
+                    startActivity(intent);
+                    return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -263,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
         mErrorMessage.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.INVISIBLE);
     }
+
     /**
      * This method will make the RecyclerView visible and hide the error message and
      * loading indicator.

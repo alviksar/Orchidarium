@@ -78,5 +78,6 @@
     <string name="sign_rur" translatable="false">\u20BD</string>
 
     <string name="empty" translatable="false">""</string>
+    <string name="action_sign_out">Sign out</string>
 
 </resources>
