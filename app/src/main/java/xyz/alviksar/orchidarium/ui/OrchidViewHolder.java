@@ -2,10 +2,14 @@ package xyz.alviksar.orchidarium.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.Locale;
 
@@ -24,7 +28,7 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
     Context mContext;
 
     @BindView(R.id.iv_nice_photo)
-    ImageView mNicePhotoImageView;
+    ImageView mNiceImageView;
 
     @BindView(R.id.iv_in_cart)
     ImageView mInCartImageView;
@@ -63,26 +67,12 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
             mForSaleTimeTextView.setText(DateFormatter.timeFrom(orchid.getForSaleTime()));
         mOrchidItem = orchid;
         mOrchidItem.setId(key);
+
+        GlideApp.with(mNiceImageView.getContext())
+                .load(mOrchidItem.getNicePhoto())
+                .centerCrop()
+                .into(mNiceImageView);
     }
-//    public void onClick(View v) {
-//        Toast.makeText(v.getContext(), "Delete icon has been clicked", Toast.LENGTH_LONG).show();
-//        String taskTitle = taskObject.get(getAdapterPosition()).getTask();
-////        Log.d(TAG, "Task Title " + taskTitle);
-//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-//        Query applesQuery = ref.orderByChild("task").equalTo(taskTitle);
-//        applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-//                    appleSnapshot.getRef().removeValue();
-//                }
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//              // TODO:  Log.e(TAG, "onCancelled", databaseError.toException());
-//            }
-//        });
-//    }
 
     @Override
     public void onClick(View view) {

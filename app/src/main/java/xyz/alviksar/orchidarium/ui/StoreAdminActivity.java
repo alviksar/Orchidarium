@@ -2,8 +2,10 @@ package xyz.alviksar.orchidarium.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,25 +18,41 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import xyz.alviksar.orchidarium.BuildConfig;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
@@ -72,6 +90,14 @@ public class StoreAdminActivity extends AppCompatActivity {
     @BindView(R.id.sp_currency)
     Spinner mCurrencySymbol;
 
+    @BindView(R.id.pb_load_photo)
+    ProgressBar mProgressBar;
+
+    @BindView(R.id.iv_nice_photo)
+    ImageView mNiceImageView;
+
+    MenuItem mSaveMenuItem;
+
     private int mPlantAge;
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -79,13 +105,17 @@ public class StoreAdminActivity extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth;
     private String mUserName;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    //    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private FirebaseStorage mFirebaseStorage;
+    private StorageReference mStorageReference;
+
 
     private FirebaseRecyclerAdapter mFirebaseRecyclerAdapter;
     private Parcelable mSavedRecyclerLayoutState = null;
 
-    // Choose an arbitrary request code value
-    private static final int RC_SIGN_IN = 123;
+    // Request codes value
+    private static final int RC_SIGN_IN = 1;
+    private static final int RC_PHOTO_PICKER = 2;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -105,7 +135,8 @@ public class StoreAdminActivity extends AppCompatActivity {
             startActivityForResult(
                     AuthUI.getInstance()
                             .createSignInIntentBuilder()
-                            .setIsSmartLockEnabled(!BuildConfig.DEBUG /* credentials */, true /* hints */)
+                            .setIsSmartLockEnabled(!BuildConfig.DEBUG /* credentials */,
+                                    true /* hints */)
                             .setAvailableProviders(Arrays.asList(
                                     new AuthUI.IdpConfig.GoogleBuilder().build(),
                                     new AuthUI.IdpConfig.EmailBuilder().build()))
@@ -115,6 +146,12 @@ public class StoreAdminActivity extends AppCompatActivity {
         } else {
             mUserName = mFirebaseAuth.getCurrentUser().getUid();
         }
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference().child("orchids");
+
+        mFirebaseStorage = FirebaseStorage.getInstance();
+        mStorageReference = mFirebaseStorage.getReference("orchid_photos");
 
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(OrchidEntity.EXTRA_ORCHID)) {
@@ -189,9 +226,6 @@ public class StoreAdminActivity extends AppCompatActivity {
                 "%.2f", mOrchid.getRetailPrice()));
         mDescriptionEditText.setText(mOrchid.getDescription());
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("orchids");
-
         mCodeEditText.setOnTouchListener(mTouchListener);
         mPutOnForSaleSwitch.setOnTouchListener(mTouchListener);
         mNameEditText.setOnTouchListener(mTouchListener);
@@ -236,11 +270,18 @@ public class StoreAdminActivity extends AppCompatActivity {
                 mPlantAge = OrchidEntity.AGE_UNKNOWN;
             }
         });
+
+        GlideApp.with(mNiceImageView.getContext())
+                .load(mOrchid.getNicePhoto())
+                .centerCrop()
+                .into(mNiceImageView);
+
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        mSaveMenuItem = menu.findItem(R.id.action_save);
         // If this is a new orchid, hide the "Delete" menu item.
         if (mOrchid == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
@@ -259,8 +300,6 @@ public class StoreAdminActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // User clicked on a menu option in the app bar overflow menu
         try {
-
-
             switch (item.getItemId()) {
                 // Respond to a click on the "Save" menu option
                 case R.id.action_save:
@@ -335,6 +374,55 @@ public class StoreAdminActivity extends AppCompatActivity {
                 Toast.makeText(this, String.format("Sign in error: $s", response.getError()),
                         Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
+            Uri selectedImageUri = data.getData();
+            final StorageReference photoRef = mStorageReference.child(selectedImageUri.getLastPathSegment());
+
+            Glide.with(mNiceImageView.getContext()).clear(mNiceImageView);
+            mProgressBar.setVisibility(View.VISIBLE);
+            mProgressBar.setProgress(0);
+            mSaveMenuItem.setEnabled(false);
+
+            // Listen for state changes, errors, and completion of the upload.
+            photoRef.putFile(selectedImageUri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                    mProgressBar.setProgress((int) progress);
+//                    System.out.println("Upload is " + progress + "% done");
+                }
+            }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+//                    System.out.println("Upload is paused");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mSaveMenuItem.setEnabled(true);
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+//                https://gist.github.com/jonathanbcsouza/13929ab81077645f1033bf9ce45beaab
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    //When the image has successfully uploaded, get its download URL
+                    photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            mOrchid.setNicePhoto(uri.toString());
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                            GlideApp.with(mNiceImageView.getContext())
+                                    .load(mOrchid.getNicePhoto())
+                                    .centerCrop()
+                                    .into(mNiceImageView);
+                            mSaveMenuItem.setEnabled(true);
+                        }
+                    });
+                }
+            });
+
         }
     }
 
@@ -464,6 +552,16 @@ public class StoreAdminActivity extends AppCompatActivity {
 
         // Show dialog that there are unsaved changes
         showUnsavedChangesDialog(discardButtonClickListener);
+    }
+
+    // Upload an image for a flowering orchid
+    @OnClick(R.id.btn_add_nice_photo)
+    public void onClick(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/jpeg");
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        startActivityForResult(Intent.createChooser(intent, "Choose the image"),
+                RC_PHOTO_PICKER);
     }
 
 

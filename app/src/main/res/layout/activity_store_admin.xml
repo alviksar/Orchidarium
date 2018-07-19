@@ -14,8 +14,8 @@
         <include layout="@layout/layout_input_data" />
 
         <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="320dp">
 
             <ImageView
                 android:id="@+id/iv_nice_photo"
@@ -26,12 +26,20 @@
                 android:src="@drawable/phragmipedium_besseae_nice" />
 
             <Button
-                android:id="@+id/add_nice_photo"
+                android:id="@+id/btn_add_nice_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="8dp"
                 android:text="@string/btn_add_change_nice_photo" />
+
+            <ProgressBar
+                android:id="@+id/pb_load_photo"
+                android:layout_width="@dimen/progressbar_size"
+                android:layout_height="@dimen/progressbar_size"
+                android:visibility="invisible"
+                android:layout_gravity="center" />
+
         </FrameLayout>
 
         <View
@@ -52,7 +60,7 @@
                 android:src="@drawable/phragmipedium_besseae_real" />
 
             <Button
-                android:id="@+id/add_real_photo"
+                android:id="@+id/btn_add_real_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
