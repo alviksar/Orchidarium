@@ -99,6 +99,7 @@ public class StoreAdminActivity extends AppCompatActivity {
     MenuItem mSaveMenuItem;
 
     private int mPlantAge;
+    private Uri mSelectedImageUri = null;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -122,7 +123,6 @@ public class StoreAdminActivity extends AppCompatActivity {
         outState.putParcelable(OrchidEntity.EXTRA_ORCHID, mOrchid);
         super.onSaveInstanceState(outState);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +152,6 @@ public class StoreAdminActivity extends AppCompatActivity {
 
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference("orchid_photos");
-
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(OrchidEntity.EXTRA_ORCHID)) {
             mOrchid = getIntent().getParcelableExtra(OrchidEntity.EXTRA_ORCHID);
@@ -304,7 +303,7 @@ public class StoreAdminActivity extends AppCompatActivity {
                 // Respond to a click on the "Save" menu option
                 case R.id.action_save:
                     saveOrchid();
-                    finish();
+                    //  finish();
                     return true;
                 // Respond to a click on the "Delete" menu option
                 case R.id.action_delete:
@@ -375,54 +374,12 @@ public class StoreAdminActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
-            Uri selectedImageUri = data.getData();
-            final StorageReference photoRef = mStorageReference.child(selectedImageUri.getLastPathSegment());
-
-            Glide.with(mNiceImageView.getContext()).clear(mNiceImageView);
-            mProgressBar.setVisibility(View.VISIBLE);
-            mProgressBar.setProgress(0);
-            mSaveMenuItem.setEnabled(false);
-
-            // Listen for state changes, errors, and completion of the upload.
-            photoRef.putFile(selectedImageUri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                    mProgressBar.setProgress((int) progress);
-//                    System.out.println("Upload is " + progress + "% done");
-                }
-            }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-//                    System.out.println("Upload is paused");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    mProgressBar.setVisibility(View.INVISIBLE);
-                    mSaveMenuItem.setEnabled(true);
-                    // Handle unsuccessful uploads
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-//                https://gist.github.com/jonathanbcsouza/13929ab81077645f1033bf9ce45beaab
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    //When the image has successfully uploaded, get its download URL
-                    photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            mOrchid.setNicePhoto(uri.toString());
-                            mProgressBar.setVisibility(View.INVISIBLE);
-                            GlideApp.with(mNiceImageView.getContext())
-                                    .load(mOrchid.getNicePhoto())
-                                    .centerCrop()
-                                    .into(mNiceImageView);
-                            mSaveMenuItem.setEnabled(true);
-                        }
-                    });
-                }
-            });
-
+            mSelectedImageUri = data.getData();
+            GlideApp.with(mNiceImageView.getContext()).clear(mNiceImageView);
+            GlideApp.with(mNiceImageView.getContext())
+                    .load(mSelectedImageUri)
+                    .centerCrop()
+                    .into(mNiceImageView);
         }
     }
 
@@ -445,7 +402,66 @@ public class StoreAdminActivity extends AppCompatActivity {
 
         // Save a chosen currency symbol
         OrchidariumPreferences.setCurrencySymbol(this, mOrchid.getCurrencySymbol());
+        
+        if (mSelectedImageUri != null) {
+            // Upload a new nice image
+            final StorageReference photoRef = mStorageReference.child(mSelectedImageUri.getLastPathSegment());
 
+            mProgressBar.setVisibility(View.VISIBLE);
+            mProgressBar.setProgress(0);
+            mSaveMenuItem.setEnabled(false);
+
+            // Listen for state changes, errors, and completion of the upload.
+            photoRef.putFile(mSelectedImageUri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                    mProgressBar.setProgress((int) progress);
+//                    System.out.println("Upload is " + progress + "% done");
+                }
+            }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+//                    System.out.println("Upload is paused");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mSaveMenuItem.setEnabled(true);
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+//                https://gist.github.com/jonathanbcsouza/13929ab81077645f1033bf9ce45beaab
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    //When the image has successfully uploaded, get its download URL
+                    photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            mOrchid.setNicePhoto(uri.toString());
+                            mProgressBar.setVisibility(View.INVISIBLE);
+//                            GlideApp.with(mNiceImageView.getContext())
+//                                    .load(mOrchid.getNicePhoto())
+//                                    .centerCrop()
+//                                    .into(mNiceImageView);
+                            saveOrchidDataToDB();
+                            finish();
+                        }
+                    });
+                }
+            });
+
+
+        } else {
+            saveOrchidDataToDB();
+            finish();
+        }
+
+    }
+
+    private void saveOrchidDataToDB() {
         // Save or add new orchid
         if (TextUtils.isEmpty(mOrchid.getId())) {
             // Add new data

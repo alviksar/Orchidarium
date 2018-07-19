@@ -4,10 +4,14 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <!--
-    Allows Glide to monitor connectivity status and restart failed requests if users go from a
+    Allows Glide to monitor connectivity status and restart failed requests if users go from
     a disconnected to a connected network state.
     -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!--
+    To load images from local folders like DCIM or Pictures
+    -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
