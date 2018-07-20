@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.util.List;
+import java.util.Stack;
 
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.util.GlideApp;
@@ -81,6 +82,10 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
         }
     }
 
+    public List<String> getData() {
+        return mDataset;
+    }
+
     public void addImage(String imageUri) {
         if (mDataset != null && mDataset.size() > 0) {
             mDataset.add(mDataset.size()-1, imageUri);
@@ -105,6 +110,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
                 mClickHandler.onClickBannerPhoto(mDataset.get(position));
             }
         }
+
     }
 }
 

@@ -50,6 +50,7 @@ public class OrchidEntity implements Parcelable {
 
     // Constructor from Parcel
     private OrchidEntity(Parcel in) {
+        realPhotos = new ArrayList<>();
         id = in.readString();
         code = in.readString();
         name = in.readString();
@@ -64,7 +65,6 @@ public class OrchidEntity implements Parcelable {
         currencySymbol = in.readString();
         writer = in.readString();
         saveTime = in.readLong();
-        if (realPhotos == null) realPhotos = new ArrayList<>();
     }
 
     public static final Creator<OrchidEntity> CREATOR = new Creator<OrchidEntity>() {

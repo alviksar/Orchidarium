@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -403,7 +404,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         } else if (requestCode == RC_REAL_PHOTO_PICKER && resultCode == RESULT_OK) {
             mSelectedImageUri = data.getData();
             mBannerAdapter.addImage(mSelectedImageUri.toString());
-
         }
     }
 
@@ -435,8 +435,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
             mProgressBar.setProgress(0);
             mSaveMenuItem.setEnabled(false);
 
-
-            // Listen for state changes, errors, and completion of the upload.
+            // Upload nice photo and save the object to the database
             photoRef.putFile(mSelectedImageUri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
@@ -472,11 +471,11 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                                         .getReferenceFromUrl(mOrchid.getNicePhoto());
                                 deleteRef.delete()
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        // File deleted successfully
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                // File deleted successfully
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception exception) {
                                         // Uh-oh, an error occurred!
@@ -490,6 +489,10 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 //                                    .load(mOrchid.getNicePhoto())
 //                                    .centerCrop()
 //                                    .into(mNiceImageView);
+
+                            // Upload list of real images
+                            uploadListOfPhotos(getToUpload(mBannerAdapter.getData()));
+
                             saveOrchidDataToDB();
                             finish();
                         }
@@ -653,5 +656,96 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         startActivityForResult(Intent.createChooser(intent, getString(R.string.msg_choose_image)),
                 requestCode);
+    }
+
+
+    private Stack<String> getToUpload(List<String> afterList) {
+        Stack<String> toUpload = new Stack<>();
+        for (String s : afterList) {
+            Uri uri = Uri.parse(s);
+            String host = uri.getScheme();
+            if ("content".equals(host)) toUpload.push(s);
+        }
+        return toUpload;
+    }
+
+    private Stack<String> getToDelete(List<String> beforeList, List<String> afterList) {
+        Stack<String> toDelete = new Stack<>();
+        for (String s : beforeList) {
+          if(!afterList.contains(s)) toDelete.push(s);
+        }
+        return toDelete;
+    }
+
+    private void deleteListOfPhotos(final Stack<String> toDelete) {
+        if (!toDelete.empty()) {
+            final String photoUrl = toDelete.pop();
+            if (!TextUtils.isEmpty(photoUrl)) {
+                // Delete image file
+                final StorageReference deleteRef
+                        = mFirebaseStorage.getReferenceFromUrl(photoUrl);
+                deleteRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // If file was deleted successfully, delete next one
+                        mOrchid.getRealPhotos().remove(photoUrl);
+                        deleteListOfPhotos(toDelete);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        String errMsg = String.format("Failure: %s", exception.getMessage());
+                        Toast.makeText(StoreAdminActivity.this,
+                                errMsg, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        }
+    }
+
+    private void uploadListOfPhotos(final Stack<String> toUpload) {
+        if (!toUpload.empty()) {
+            String photoUrl = toUpload.pop();
+            if (!TextUtils.isEmpty(photoUrl)) {
+                Uri photoUri = Uri.parse(photoUrl);
+                final StorageReference photoRef = mStorageReference.child(photoUri.getLastPathSegment());
+
+                mProgressBar.setVisibility(View.VISIBLE);
+                mProgressBar.setProgress(0);
+
+                // Listen for state changes, errors, and completion of the upload.
+                photoRef.putFile(photoUri).addOnProgressListener(
+                        new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        mProgressBar.setProgress((int) progress);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        mSaveMenuItem.setEnabled(true);
+                        String errMsg = String.format("Failure: %s", exception.getMessage());
+                        Toast.makeText(StoreAdminActivity.this,
+                                errMsg, Toast.LENGTH_LONG).show();                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+//                https://gist.github.com/jonathanbcsouza/13929ab81077645f1033bf9ce45beaab
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        //When the image has successfully uploaded, get its download URL
+                        photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // Save new url
+                                uploadListOfPhotos(toUpload);
+                                mOrchid.getRealPhotos().add(uri.toString());
+                                mProgressBar.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                    }
+                });
+            }
+        }
     }
 }
