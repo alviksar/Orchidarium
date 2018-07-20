@@ -121,8 +121,10 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
     private Parcelable mSavedRecyclerLayoutState = null;
 
     // Request codes value
-    private static final int RC_SIGN_IN = 1;
-    private static final int RC_PHOTO_PICKER = 2;
+    private static final int RC_AUTH_SIGN_IN = 1;
+    private static final int RC_NICE_PHOTO_PICKER = 2;
+    private static final int RC_REAL_PHOTO_PICKER = 3;
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -148,7 +150,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                                     new AuthUI.IdpConfig.EmailBuilder().build()))
 //                                            new AuthUI.IdpConfig.PhoneBuilder().build()))
                             .build(),
-                    RC_SIGN_IN);
+                    RC_AUTH_SIGN_IN);
         } else {
             mUserName = mFirebaseAuth.getCurrentUser().getUid();
         }
@@ -360,9 +362,9 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // RC_SIGN_IN is the request code you passed into startActivityForResult(...)
+        // RC_AUTH_SIGN_IN is the request code you passed into startActivityForResult(...)
         // when starting the sign in flow.
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == RC_AUTH_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             // Successfully signed in
@@ -391,13 +393,17 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                 Toast.makeText(this, String.format("Sign in error: $s", response.getError()),
                         Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
+        } else if (requestCode == RC_NICE_PHOTO_PICKER && resultCode == RESULT_OK) {
             mSelectedImageUri = data.getData();
             GlideApp.with(mNiceImageView.getContext()).clear(mNiceImageView);
             GlideApp.with(mNiceImageView.getContext())
                     .load(mSelectedImageUri)
                     .centerCrop()
                     .into(mNiceImageView);
+        } else if (requestCode == RC_REAL_PHOTO_PICKER && resultCode == RESULT_OK) {
+            mSelectedImageUri = data.getData();
+            mBannerAdapter.addImage(mSelectedImageUri.toString());
+
         }
     }
 
@@ -630,17 +636,22 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
     // Upload an image for a flowering orchid
     @OnClick(R.id.btn_add_nice_photo)
     public void onClick(View view) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/jpeg");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.msg_choose_image)),
-                RC_PHOTO_PICKER);
+        choosePhoto(RC_NICE_PHOTO_PICKER);
     }
 
 
     @Override
     public void onClickBannerPhoto(String url) {
-        Toast.makeText(this, "Banner", Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(url)) {
+            choosePhoto(RC_REAL_PHOTO_PICKER);
+        }
+    }
 
+    private void choosePhoto(int requestCode) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/jpeg");
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.msg_choose_image)),
+                requestCode);
     }
 }
