@@ -64,6 +64,7 @@ public class OrchidEntity implements Parcelable {
         currencySymbol = in.readString();
         writer = in.readString();
         saveTime = in.readLong();
+        if (realPhotos == null) realPhotos = new ArrayList<>();
     }
 
     public static final Creator<OrchidEntity> CREATOR = new Creator<OrchidEntity>() {

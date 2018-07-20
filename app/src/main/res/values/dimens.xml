@@ -10,4 +10,5 @@
     <dimen name="detail_title_text_size">32sp</dimen>
     <dimen name="error_msg_text_size">22sp</dimen>
     <dimen name="progressbar_size">64dp</dimen>
+    <dimen name="dim_real_photo_at_banner_size">120dp</dimen>
 </resources>

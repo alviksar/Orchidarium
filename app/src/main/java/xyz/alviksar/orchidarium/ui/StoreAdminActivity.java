@@ -9,34 +9,31 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -46,18 +43,20 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.http.Url;
 import xyz.alviksar.orchidarium.BuildConfig;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
+import xyz.alviksar.orchidarium.util.GlideApp;
+
 
 public class StoreAdminActivity extends AppCompatActivity {
 
@@ -96,6 +95,12 @@ public class StoreAdminActivity extends AppCompatActivity {
 
     @BindView(R.id.iv_nice_photo)
     ImageView mNiceImageView;
+
+    @BindView(R.id.rv_banner)
+    RecyclerView mBannerRecyclerView;
+    LinearLayoutManager mLayoutManager;
+    BannerAdapter mBannerAdapter;
+    List<String> mBannerList;
 
     MenuItem mSaveMenuItem;
 
@@ -168,6 +173,18 @@ public class StoreAdminActivity extends AppCompatActivity {
         }
 
         ButterKnife.bind(this);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        // mBannerRecyclerView.setHasFixedSize(true);
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false);
+        mBannerRecyclerView.setLayoutManager(mLayoutManager);
+        // specify an adapter (see also next example)
+        mBannerList = new ArrayList<>(mOrchid.getRealPhotos());
+        mBannerList.add(getString(R.string.empty));
+        mBannerAdapter = new BannerAdapter(mBannerList);
+        mBannerRecyclerView.setAdapter(mBannerAdapter);
 
         mCodeEditText.setText(mOrchid.getCode());
         mNameEditText.setText(mOrchid.getName());

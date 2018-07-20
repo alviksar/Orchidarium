@@ -1,4 +1,4 @@
-package xyz.alviksar.orchidarium.ui;
+package xyz.alviksar.orchidarium.util;
 
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;
