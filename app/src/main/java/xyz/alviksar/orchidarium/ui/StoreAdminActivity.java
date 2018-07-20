@@ -58,7 +58,7 @@ import xyz.alviksar.orchidarium.model.OrchidEntity;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
 
-public class StoreAdminActivity extends AppCompatActivity {
+public class StoreAdminActivity extends AppCompatActivity implements BannerAdapter.BannerAdapterOnClickHandler {
 
     private OrchidEntity mOrchid;
     private boolean mDataHasChanged = false;
@@ -183,7 +183,7 @@ public class StoreAdminActivity extends AppCompatActivity {
         // specify an adapter (see also next example)
         mBannerList = new ArrayList<>(mOrchid.getRealPhotos());
         mBannerList.add(getString(R.string.empty));
-        mBannerAdapter = new BannerAdapter(mBannerList);
+        mBannerAdapter = new BannerAdapter(mBannerList, this);
         mBannerRecyclerView.setAdapter(mBannerAdapter);
 
         mCodeEditText.setText(mOrchid.getCode());
@@ -638,4 +638,9 @@ public class StoreAdminActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClickBannerPhoto(String url) {
+        Toast.makeText(this, "Banner", Toast.LENGTH_LONG).show();
+
+    }
 }

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -12,37 +13,38 @@ import java.util.List;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
-public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.ViewHolder> {
-    private List<String> mDataset;
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView mImageView;
-
-        ViewHolder(ImageView v) {
-            super(v);
-            mImageView = v;
-        }
+public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdapterViewHolder> {
+    /**
+     * The interface to handle clicks on items within this Adapter
+     */
+    public interface BannerAdapterOnClickHandler {
+        void onClickBannerPhoto(String url);
     }
 
-    public BannerAdapter(List<String> myDataset) {
+    private List<String> mDataset;
+    private  BannerAdapterOnClickHandler mClickHandler;
+
+    public BannerAdapter(List<String> myDataset, BannerAdapterOnClickHandler clickHandler) {
         mDataset = myDataset;
+        mClickHandler = clickHandler;
+
     }
 
     // Create new views (invoked by the layout manager)
     @NonNull
     @Override
-    public BannerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                                       int viewType) {
+    public BannerAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                                                      int viewType) {
         // create a new view
         ImageView v = (ImageView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_banner, parent, false);
-        ViewHolder vh = new ViewHolder(v);
+        BannerAdapterViewHolder vh = new BannerAdapterViewHolder(v);
         return vh;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BannerAdapterViewHolder holder, int position) {
         final int emptyPadding = 32;
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
@@ -66,7 +68,29 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.ViewHolder
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        if (mDataset != null) {
+            return mDataset.size();
+        } else {
+            return 0;
+        }
+    }
+
+    class BannerAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        ImageView mImageView;
+
+        BannerAdapterViewHolder(ImageView v) {
+            super(v);
+            mImageView = v;
+            v.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            if (mDataset != null) {
+                mClickHandler.onClickBannerPhoto(mDataset.get(position));
+            }
+        }
     }
 }
 

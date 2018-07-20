@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             @NonNull
             @Override
             public OrchidViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                // Create a new instance of the ViewHolder, in this case we are using a custom
+                // Create a new instance of the BannerAdapterViewHolder, in this case we are using a custom
                 // layout called R.layout.list_item_orchid for each item
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_orchid, parent, false);
