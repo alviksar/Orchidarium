@@ -79,5 +79,6 @@
 
     <string name="empty" translatable="false">""</string>
     <string name="action_sign_out">Sign out</string>
+    <string name="msg_choose_image">Choose the image</string>
 
 </resources>

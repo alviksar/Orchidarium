@@ -53,6 +53,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.http.Url;
 import xyz.alviksar.orchidarium.BuildConfig;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
@@ -402,7 +403,7 @@ public class StoreAdminActivity extends AppCompatActivity {
 
         // Save a chosen currency symbol
         OrchidariumPreferences.setCurrencySymbol(this, mOrchid.getCurrencySymbol());
-        
+
         if (mSelectedImageUri != null) {
             // Upload a new nice image
             final StorageReference photoRef = mStorageReference.child(mSelectedImageUri.getLastPathSegment());
@@ -410,6 +411,7 @@ public class StoreAdminActivity extends AppCompatActivity {
             mProgressBar.setVisibility(View.VISIBLE);
             mProgressBar.setProgress(0);
             mSaveMenuItem.setEnabled(false);
+
 
             // Listen for state changes, errors, and completion of the upload.
             photoRef.putFile(mSelectedImageUri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -440,6 +442,25 @@ public class StoreAdminActivity extends AppCompatActivity {
                     photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
+
+                            if (!TextUtils.isEmpty(mOrchid.getNicePhoto())) {
+                                // Delete old file
+                                final StorageReference deleteRef = mFirebaseStorage
+                                        .getReferenceFromUrl(mOrchid.getNicePhoto());
+                                deleteRef.delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // File deleted successfully
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Uh-oh, an error occurred!
+                                    }
+                                });
+                            }
+                            // Save new url
                             mOrchid.setNicePhoto(uri.toString());
                             mProgressBar.setVisibility(View.INVISIBLE);
 //                            GlideApp.with(mNiceImageView.getContext())
@@ -515,7 +536,26 @@ public class StoreAdminActivity extends AppCompatActivity {
      */
     private void deleteOrchid() {
         if (mOrchid != null && !TextUtils.isEmpty(mOrchid.getId())) {
-            mDatabaseReference.child(mOrchid.getId()).removeValue();
+
+            if (!TextUtils.isEmpty(mOrchid.getNicePhoto())) {
+                // Delete image  file
+                final StorageReference deleteRef
+                        = mFirebaseStorage.getReferenceFromUrl(mOrchid.getNicePhoto());
+                deleteRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // If file was deleted successfully, delete object from database
+                        mDatabaseReference.child(mOrchid.getId()).removeValue();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        String errMsg = String.format("Failure: %s", exception.getMessage());
+                        Toast.makeText(StoreAdminActivity.this,
+                                errMsg, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
         }
     }
 
@@ -576,7 +616,7 @@ public class StoreAdminActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/jpeg");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        startActivityForResult(Intent.createChooser(intent, "Choose the image"),
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.msg_choose_image)),
                 RC_PHOTO_PICKER);
     }
 
