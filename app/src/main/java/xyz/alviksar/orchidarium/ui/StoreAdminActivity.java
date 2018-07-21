@@ -466,6 +466,8 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                         }
                     }
                 });
+            } else {
+                uploadNicePhotoAndFinish();
             }
 
 

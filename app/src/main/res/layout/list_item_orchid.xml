@@ -43,7 +43,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/lightGreen800">
+        android:background="@color/lightGreen900">
 
         <TextView
             android:id="@+id/tv_name"
