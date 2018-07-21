@@ -54,7 +54,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
     @Override
     public void onBindViewHolder(@NonNull BannerAdapterViewHolder holder, int position) {
         final int emptyPadding = 32;
-        final int photoPadding = 4;
+        final int photoPadding = 1;
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         String photoUrl = mDataset.get(position);

@@ -38,7 +38,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
@@ -439,78 +438,83 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
     private void uploadNicePhotoAndSaveDataToDb() {
         if (mSelectedImageUri != null) {
             // Upload a new nice image
-            final StorageReference photoRef = mStorageReference.child(mSelectedImageUri.getLastPathSegment());
 
             mProgressBar.setVisibility(View.VISIBLE);
             mProgressBar.setProgress(0);
             mSaveMenuItem.setEnabled(false);
 
-            // Upload nice photo and save the object to the database
-            photoRef.putFile(mSelectedImageUri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                    mProgressBar.setProgress((int) progress);
-//                    System.out.println("Upload is " + progress + "% done");
-                }
-            }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-//                    System.out.println("Upload is paused");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    mProgressBar.setVisibility(View.INVISIBLE);
-                    mSaveMenuItem.setEnabled(true);
-                    // Handle unsuccessful uploads
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-//                https://gist.github.com/jonathanbcsouza/13929ab81077645f1033bf9ce45beaab
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                    //When the image has successfully uploaded, get its download URL
-                    photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-
-                            if (!TextUtils.isEmpty(mOrchid.getNicePhoto())) {
-                                // Delete old file
-                                final StorageReference deleteRef = mFirebaseStorage
-                                        .getReferenceFromUrl(mOrchid.getNicePhoto());
-                                deleteRef.delete()
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                // File deleted successfully
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Uh-oh, an error occurred!
-                                    }
-                                });
-                            }
-                            // Save new url
-                            mOrchid.setNicePhoto(uri.toString());
-                            mProgressBar.setVisibility(View.INVISIBLE);
-
-                            // Save object in database
-                            saveOrchidDataToDb();
-
-                            // That is it
-                            finish();
+            // First, delete old image
+            if (!TextUtils.isEmpty(mOrchid.getNicePhoto())) {
+                // Delete old file
+                final StorageReference deleteRef = mFirebaseStorage
+                        .getReferenceFromUrl(mOrchid.getNicePhoto());
+                deleteRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        uploadNicePhotoAndFinish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        String errMsg = String.format("Failure: %s", exception.getMessage());
+                        Toast.makeText(StoreAdminActivity.this,
+                                errMsg, Toast.LENGTH_LONG).show();
+                        int errorCode = ((StorageException) exception).getErrorCode();
+                        if (errorCode == ERROR_OBJECT_NOT_FOUND) {
+                            // Can continue
+                            uploadNicePhotoAndFinish();
                         }
-                    });
-                }
-            });
+                    }
+                });
+            }
 
 
         } else {
             saveOrchidDataToDb();
             finish();
         }
+    }
+
+    private void uploadNicePhotoAndFinish() {
+        // Upload nice photo and save the object to the database
+        final StorageReference photoRef = mStorageReference.child(mSelectedImageUri.getLastPathSegment());
+        photoRef.putFile(mSelectedImageUri)
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred())
+                                / taskSnapshot.getTotalByteCount();
+                        mProgressBar.setProgress((int) progress);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mSaveMenuItem.setEnabled(true);
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+//                https://gist.github.com/jonathanbcsouza/13929ab81077645f1033bf9ce45beaab
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                //When the image has successfully uploaded, get its download URL
+                photoRef.getDownloadUrl()
+                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // Save new url
+                                mOrchid.setNicePhoto(uri.toString());
+                                mProgressBar.setVisibility(View.INVISIBLE);
+
+                                // Save object in database
+                                saveOrchidDataToDb();
+
+                                // That is it.
+                                finish();
+                            }
+                        });
+            }
+        });
     }
 
     private void saveOrchidDataToDb() {

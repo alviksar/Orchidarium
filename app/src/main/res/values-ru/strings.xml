@@ -25,7 +25,6 @@
     <string name="action_make_order">Оформить заказ</string>
     <string name="action_settings">Настройки</string>
     <string name="label_retail_price">Розничная цена</string>
-
     <string name="plant_age_two_years_before">2–3 года до цветения</string>
     <string name="plant_age_one_years_before">1 год до цветения</string>
     <string name="plant_age_flowering">возраст цветения</string>
@@ -46,5 +45,9 @@
     <string name="desc_nice_orchid_photo">Вид цветущей орхидеи</string>
     <string name="desc_selected_for_purchase">Отобрана для заказа</string>
     <string name="msg_error_getting_data">Ошибка загрузки данных.</string>
+    <string name="msg_choose_image">Выберите фото</string>
+    <string name="action_delete_photo">Удалить</string>
+    <string name="action_sign_out">Выйти</string>
+    <string name="desc_real_orchid_photo">Фотографии орхидеи</string>
 
 </resources>

@@ -23,13 +23,17 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/phragmipedium_besseae_nice" />
 
-            <Button
+            <android.support.design.widget.FloatingActionButton
+
                 android:id="@+id/btn_add_nice_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                android:contentDescription="@string/desc_nice_orchid_photo"
+                android:src="@drawable/ic_local_florist_gold_24dp"
+                app:elevation="@dimen/fab_elevation"
                 android:layout_gravity="bottom|end"
-                android:layout_margin="8dp"
-                android:text="@string/btn_add_change_nice_photo" />
+                app:pressedTranslationZ="@dimen/fab_press_translation_z" />
 
             <ProgressBar
                 android:id="@+id/pb_load_photo"
