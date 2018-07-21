@@ -12,7 +12,6 @@
     To load images from local folders like DCIM or Pictures
     -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
 
     <application
         android:allowBackup="true"

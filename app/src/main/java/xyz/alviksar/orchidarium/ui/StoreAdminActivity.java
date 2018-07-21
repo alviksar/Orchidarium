@@ -38,7 +38,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -427,6 +426,13 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         // Save a chosen currency symbol
         OrchidariumPreferences.setCurrencySymbol(this, mOrchid.getCurrencySymbol());
 
+        uploadListOfPhotosAndSaveDataToDb(getToUpload(mBannerAdapter.getData()));
+
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mSaveMenuItem.setEnabled(true);
+
+        return;
+ /*
         if (mSelectedImageUri != null) {
             // Upload a new nice image
             final StorageReference photoRef = mStorageReference.child(mSelectedImageUri.getLastPathSegment());
@@ -491,9 +497,8 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 //                                    .into(mNiceImageView);
 
                             // Upload list of real images
-                            uploadListOfPhotos(getToUpload(mBannerAdapter.getData()));
 
-                            saveOrchidDataToDB();
+                            saveOrchidDataToDb();
                             finish();
                         }
                     });
@@ -502,13 +507,14 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 
 
         } else {
-            saveOrchidDataToDB();
+            saveOrchidDataToDb();
             finish();
         }
+        */
 
     }
 
-    private void saveOrchidDataToDB() {
+    private void saveOrchidDataToDb() {
         // Save or add new orchid
         if (TextUtils.isEmpty(mOrchid.getId())) {
             // Add new data
@@ -562,7 +568,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
      */
     private void deleteOrchid() {
         if (mOrchid != null && !TextUtils.isEmpty(mOrchid.getId())) {
-
             if (!TextUtils.isEmpty(mOrchid.getNicePhoto())) {
                 // Delete image  file
                 final StorageReference deleteRef
@@ -703,8 +708,14 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         }
     }
 
-    private void uploadListOfPhotos(final Stack<String> toUpload) {
-        if (!toUpload.empty()) {
+    private void uploadListOfPhotosAndSaveDataToDb(final Stack<String> toUpload) {
+        if (toUpload.empty()) {
+            // All photos have been saved
+
+            saveOrchidDataToDb();
+            finish();
+
+        } else {
             String photoUrl = toUpload.pop();
             if (!TextUtils.isEmpty(photoUrl)) {
                 Uri photoUri = Uri.parse(photoUrl);
@@ -738,9 +749,12 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                             @Override
                             public void onSuccess(Uri uri) {
                                 // Save new url
-                                uploadListOfPhotos(toUpload);
                                 mOrchid.getRealPhotos().add(uri.toString());
                                 mProgressBar.setVisibility(View.INVISIBLE);
+
+                                // Upload next one
+                                uploadListOfPhotosAndSaveDataToDb(toUpload);
+
                             }
                         });
                     }
