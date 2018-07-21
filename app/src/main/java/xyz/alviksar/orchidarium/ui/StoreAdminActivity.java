@@ -40,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -57,6 +58,8 @@ import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 import xyz.alviksar.orchidarium.util.GlideApp;
+
+import static com.google.firebase.storage.StorageException.ERROR_OBJECT_NOT_FOUND;
 
 
 public class StoreAdminActivity extends AppCompatActivity implements BannerAdapter.BannerAdapterOnClickHandler {
@@ -428,7 +431,8 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         // Save a chosen currency symbol
         OrchidariumPreferences.setCurrencySymbol(this, mOrchid.getCurrencySymbol());
 
-        uploadListOfPhotosAndSaveDataToDb(getToUpload(mBannerAdapter.getData()));
+        changeListOfPhotosAndSaveDataToDb(
+                getToDelete(mOrchid.getRealPhotos(), mBannerAdapter.getData()));
 
     }
 
@@ -491,13 +495,8 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                             // Save new url
                             mOrchid.setNicePhoto(uri.toString());
                             mProgressBar.setVisibility(View.INVISIBLE);
-//                            GlideApp.with(mNiceImageView.getContext())
-//                                    .load(mOrchid.getNicePhoto())
-//                                    .centerCrop()
-//                                    .into(mNiceImageView);
 
-                            // Upload list of real images
-
+                            // Save object in database
                             saveOrchidDataToDb();
 
                             // That is it
@@ -544,7 +543,9 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         builder.setPositiveButton(R.string.btn_delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the orchid.
-                deleteOrchid();
+                // deleteOrchid();
+                deleteListOfPhotosAndObjectFromDb(
+                        getToDelete(mOrchid.getRealPhotos(), new ArrayList<String>()));
                 NavUtils.navigateUpFromSameTask(StoreAdminActivity.this);
             }
         });
@@ -584,6 +585,11 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                         String errMsg = String.format("Failure: %s", exception.getMessage());
                         Toast.makeText(StoreAdminActivity.this,
                                 errMsg, Toast.LENGTH_LONG).show();
+                        int errorCode = ((StorageException) exception).getErrorCode();
+                        if (errorCode == ERROR_OBJECT_NOT_FOUND) {
+                            // Can delete
+                            mDatabaseReference.child(mOrchid.getId()).removeValue();
+                        }
                     }
                 });
             }
@@ -682,8 +688,12 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         return toDelete;
     }
 
-    private void deleteListOfPhotos(final Stack<String> toDelete) {
-        if (!toDelete.empty()) {
+    private void changeListOfPhotosAndSaveDataToDb(final Stack<String> toDelete) {
+        if (toDelete.empty()) {
+            // Next step
+            uploadListOfPhotosAndSaveDataToDb(getToUpload(mBannerAdapter.getData()));
+        } else {
+            // Delete list of real photos
             final String photoUrl = toDelete.pop();
             if (!TextUtils.isEmpty(photoUrl)) {
                 // Delete image file
@@ -694,7 +704,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                     public void onSuccess(Void aVoid) {
                         // If file was deleted successfully, delete next one
                         mOrchid.getRealPhotos().remove(photoUrl);
-                        deleteListOfPhotos(toDelete);
+                        changeListOfPhotosAndSaveDataToDb(toDelete);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -702,6 +712,48 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                         String errMsg = String.format("Failure: %s", exception.getMessage());
                         Toast.makeText(StoreAdminActivity.this,
                                 errMsg, Toast.LENGTH_LONG).show();
+                        int errorCode = ((StorageException) exception).getErrorCode();
+                        if (errorCode == ERROR_OBJECT_NOT_FOUND) {
+                            // Can continue
+                            mOrchid.getRealPhotos().remove(photoUrl);
+                            changeListOfPhotosAndSaveDataToDb(toDelete);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    private void deleteListOfPhotosAndObjectFromDb(final Stack<String> photosToDelete) {
+        if (photosToDelete.empty()) {
+            // Next step
+            deleteOrchid();
+        } else {
+            // Delete list of real photos
+            final String photoUrl = photosToDelete.pop();
+            if (!TextUtils.isEmpty(photoUrl)) {
+                // Delete image file
+                final StorageReference deleteRef
+                        = mFirebaseStorage.getReferenceFromUrl(photoUrl);
+                deleteRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // If file was deleted successfully, delete next one
+                        mOrchid.getRealPhotos().remove(photoUrl);
+                        deleteListOfPhotosAndObjectFromDb(photosToDelete);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        String errMsg = String.format("Failure: %s", exception.getMessage());
+                        Toast.makeText(StoreAdminActivity.this,
+                                errMsg, Toast.LENGTH_LONG).show();
+                        int errorCode = ((StorageException) exception).getErrorCode();
+                        if (errorCode == ERROR_OBJECT_NOT_FOUND) {
+                            // Can continue
+                            mOrchid.getRealPhotos().remove(photoUrl);
+                            deleteListOfPhotosAndObjectFromDb(photosToDelete);
+                        }
                     }
                 });
             }
@@ -721,9 +773,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                 Uri photoUri = Uri.parse(photoUrl);
                 final StorageReference photoRef = mStorageReference.child(photoUri.getLastPathSegment());
 
-
                 mProgressBar.setProgress(0);
-
                 // Listen for state changes, errors, and completion of the upload.
                 photoRef.putFile(photoUri).addOnProgressListener(
                         new OnProgressListener<UploadTask.TaskSnapshot>() {
