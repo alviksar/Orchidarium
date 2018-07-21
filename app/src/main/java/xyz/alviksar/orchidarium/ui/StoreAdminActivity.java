@@ -38,6 +38,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -401,8 +402,8 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                     .centerCrop()
                     .into(mNiceImageView);
         } else if (requestCode == RC_REAL_PHOTO_PICKER && resultCode == RESULT_OK) {
-            mSelectedImageUri = data.getData();
-            mBannerAdapter.addImage(mSelectedImageUri.toString());
+            if (data.getData() != null)
+                mBannerAdapter.addImage(data.getData().toString());
         }
     }
 
@@ -432,7 +433,11 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         mSaveMenuItem.setEnabled(true);
 
         return;
- /*
+
+
+    }
+
+    private void UploadNicePhotoAndSaveDataToDb() {
         if (mSelectedImageUri != null) {
             // Upload a new nice image
             final StorageReference photoRef = mStorageReference.child(mSelectedImageUri.getLastPathSegment());
@@ -499,6 +504,8 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                             // Upload list of real images
 
                             saveOrchidDataToDb();
+
+                            // That is it
                             finish();
                         }
                     });
@@ -510,8 +517,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
             saveOrchidDataToDb();
             finish();
         }
-        */
-
     }
 
     private void saveOrchidDataToDb() {
@@ -677,7 +682,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
     private Stack<String> getToDelete(List<String> beforeList, List<String> afterList) {
         Stack<String> toDelete = new Stack<>();
         for (String s : beforeList) {
-          if(!afterList.contains(s)) toDelete.push(s);
+            if (!afterList.contains(s)) toDelete.push(s);
         }
         return toDelete;
     }
@@ -710,12 +715,11 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 
     private void uploadListOfPhotosAndSaveDataToDb(final Stack<String> toUpload) {
         if (toUpload.empty()) {
-            // All photos have been saved
-
-            saveOrchidDataToDb();
-            finish();
+            // All photos have been saved, save the nice photo and obbject
+            UploadNicePhotoAndSaveDataToDb();
 
         } else {
+            // Save the list of real photos recursively
             String photoUrl = toUpload.pop();
             if (!TextUtils.isEmpty(photoUrl)) {
                 Uri photoUri = Uri.parse(photoUrl);
@@ -727,19 +731,20 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                 // Listen for state changes, errors, and completion of the upload.
                 photoRef.putFile(photoUri).addOnProgressListener(
                         new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                        mProgressBar.setProgress((int) progress);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                                mProgressBar.setProgress((int) progress);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         mProgressBar.setVisibility(View.INVISIBLE);
                         mSaveMenuItem.setEnabled(true);
                         String errMsg = String.format("Failure: %s", exception.getMessage());
                         Toast.makeText(StoreAdminActivity.this,
-                                errMsg, Toast.LENGTH_LONG).show();                    }
+                                errMsg, Toast.LENGTH_LONG).show();
+                    }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
 //                https://gist.github.com/jonathanbcsouza/13929ab81077645f1033bf9ce45beaab
