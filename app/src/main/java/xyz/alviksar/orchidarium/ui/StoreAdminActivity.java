@@ -424,20 +424,15 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         mOrchid.setWriter(mUserName);
         mOrchid.setSaveTime(System.currentTimeMillis());
 
+        mProgressBar.setVisibility(View.VISIBLE);
         // Save a chosen currency symbol
         OrchidariumPreferences.setCurrencySymbol(this, mOrchid.getCurrencySymbol());
 
         uploadListOfPhotosAndSaveDataToDb(getToUpload(mBannerAdapter.getData()));
 
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mSaveMenuItem.setEnabled(true);
-
-        return;
-
-
     }
 
-    private void UploadNicePhotoAndSaveDataToDb() {
+    private void uploadNicePhotoAndSaveDataToDb() {
         if (mSelectedImageUri != null) {
             // Upload a new nice image
             final StorageReference photoRef = mStorageReference.child(mSelectedImageUri.getLastPathSegment());
@@ -714,9 +709,10 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
     }
 
     private void uploadListOfPhotosAndSaveDataToDb(final Stack<String> toUpload) {
+        mProgressBar.setVisibility(View.VISIBLE);
         if (toUpload.empty()) {
             // All photos have been saved, save the nice photo and obbject
-            UploadNicePhotoAndSaveDataToDb();
+            uploadNicePhotoAndSaveDataToDb();
 
         } else {
             // Save the list of real photos recursively
@@ -725,7 +721,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                 Uri photoUri = Uri.parse(photoUrl);
                 final StorageReference photoRef = mStorageReference.child(photoUri.getLastPathSegment());
 
-                mProgressBar.setVisibility(View.VISIBLE);
+
                 mProgressBar.setProgress(0);
 
                 // Listen for state changes, errors, and completion of the upload.

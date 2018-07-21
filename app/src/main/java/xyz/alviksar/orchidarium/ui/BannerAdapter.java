@@ -2,9 +2,13 @@ package xyz.alviksar.orchidarium.ui;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -26,7 +30,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
     }
 
     private List<String> mDataset;
-    private  BannerAdapterOnClickHandler mClickHandler;
+    private BannerAdapterOnClickHandler mClickHandler;
 
     public BannerAdapter(List<String> myDataset, BannerAdapterOnClickHandler clickHandler) {
         mDataset = myDataset;
@@ -88,19 +92,21 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
 
     public void addImage(String imageUri) {
         if (mDataset != null && mDataset.size() > 0) {
-            mDataset.add(mDataset.size()-1, imageUri);
+            mDataset.add(mDataset.size() - 1, imageUri);
             // After the new data is set, call notifyDataSetChanged
             notifyDataSetChanged();
         }
     }
 
-    class BannerAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class BannerAdapterViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnCreateContextMenuListener, PopupMenu.OnMenuItemClickListener {
         ImageView mImageView;
 
         BannerAdapterViewHolder(ImageView v) {
             super(v);
             mImageView = v;
             v.setOnClickListener(this);
+            v.setOnCreateContextMenuListener(this);
         }
 
         @Override
@@ -111,6 +117,31 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
             }
         }
 
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            int position = getAdapterPosition();
+            if (position != mDataset.size() - 1) {
+                PopupMenu popup = new PopupMenu(v.getContext(), v);
+                popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
+                popup.setOnMenuItemClickListener(this);
+                popup.show();
+            }
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_delete_photo:
+                    int position = getAdapterPosition();
+                    if (position != mDataset.size() - 1) {
+                        mDataset.remove(position);
+                        notifyDataSetChanged();
+                    }
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }
 
