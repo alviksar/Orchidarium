@@ -1,8 +1,10 @@
 package xyz.alviksar.orchidarium.ui;
 
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -671,7 +673,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
     }
 
     @Override
-    public void onClickBannerPhoto(String url, int position) {
+    public void onClickBannerPhoto(View view, String url, int position) {
         if (TextUtils.isEmpty(url)) {
             choosePhoto(RC_REAL_PHOTO_PICKER);
         } else {
@@ -682,7 +684,24 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
             intent.putStringArrayListExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST,
                     mBannerAdapter.getData());
             intent.putExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST_POSITION, position);
-            startActivity(intent);
+//            startActivity(intent);
+
+            //        startActivity(intent,
+//                ActivityOptions.makeSceneTransitionAnimation(StoreAdminActivity.this, view,
+//                        view.getTransitionName()).toBundle());
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+                View sharedView = view.findViewById(R.id.iv_real_photo);
+                startActivity(intent,
+                        ActivityOptions.makeSceneTransitionAnimation(
+                                StoreAdminActivity.this,
+                                sharedView,
+                                sharedView.getTransitionName())
+                                .toBundle());
+            } else {
+                startActivity(intent);
+            }
         }
     }
 

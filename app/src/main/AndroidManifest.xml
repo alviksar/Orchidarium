@@ -48,7 +48,7 @@
             android:name=".ui.StoreAdminActivity"
             android:label="@string/action_add_new"
             android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.Detail">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MainActivity" />
@@ -57,7 +57,7 @@
             android:name=".ui.PhotoGalleryActivity"
             android:label="@string/title_activity_photo_gallery"
             android:parentActivityName=".ui.StoreAdminActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.Gallery">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="xyz.alviksar.orchidarium.ui.StoreAdminActivity" />

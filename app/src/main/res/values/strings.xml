@@ -85,4 +85,6 @@
     <string name="title_activity_photo_gallery">PhotoGalleryActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <string name="transition_photo" translatable="false">transition_photo</string>
+
 </resources>

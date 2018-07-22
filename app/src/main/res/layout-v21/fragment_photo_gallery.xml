@@ -10,6 +10,7 @@
         android:id="@+id/iv_real_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/desc_real_orchid_photo" />
+        android:contentDescription="@string/desc_real_orchid_photo"
+        android:transitionName="@string/transition_photo" />
 
 </FrameLayout>

@@ -119,7 +119,7 @@ public class PhotoGalleryActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_photo_gallery, container, false);
             final int position = getArguments().getInt(ARG_SECTION_NUMBER);
-            ImageView imageView = rootView.findViewById(R.id.iv_photo);
+            ImageView imageView = rootView.findViewById(R.id.iv_real_photo);
 
             if (!TextUtils.isEmpty(mPhotos.get(position))) {
                 GlideApp.with(imageView.getContext())

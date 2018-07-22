@@ -27,7 +27,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
      * The interface to handle clicks on items within this Adapter
      */
     public interface BannerAdapterOnClickHandler {
-        void onClickBannerPhoto(String url, int position);
+        void onClickBannerPhoto(View view, String url, int position);
     }
 
     private ArrayList<String> mDataset;
@@ -118,7 +118,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
         public void onClick(View view) {
             int position = getAdapterPosition();
             if (mDataset != null) {
-                mClickHandler.onClickBannerPhoto(mDataset.get(position), position);
+                mClickHandler.onClickBannerPhoto(view, mDataset.get(position), position);
             }
         }
 
