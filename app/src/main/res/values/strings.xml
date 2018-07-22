@@ -35,7 +35,7 @@
     <!-- Button which load a nice image. [CHAR LIMIT=30] -->
     <string name="btn_add_change_nice_photo">Add/Change nice photo</string>
     <!-- Button which load real images. [CHAR LIMIT=30] -->
-    <string name="btn_add_change_real_photo"  >Add/Change real photo</string>
+    <string name="btn_add_change_real_photo">Add/Change real photo</string>
 
     <!-- Mocks -->
     <string name="mock_detail_title" translatable="false">Phragmipedium besseae</string>
@@ -82,5 +82,7 @@
     <string name="action_sign_out">Sign out</string>
     <string name="msg_choose_image">Choose the image</string>
     <string name="action_delete_photo">Delete</string>
+    <string name="title_activity_photo_gallery">PhotoGalleryActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 </resources>

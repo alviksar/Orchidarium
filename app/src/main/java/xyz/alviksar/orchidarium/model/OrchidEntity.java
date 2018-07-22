@@ -12,8 +12,11 @@ import java.util.List;
 @IgnoreExtraProperties
 public class OrchidEntity implements Parcelable {
 
-    // String to pass an orchid entity to activity as parcelable
+    // String to pass an orchid data to activity
     public static final String EXTRA_ORCHID = "extra_orchid";
+    public static final String EXTRA_ORCHID_NAME = "extra_orchid_name";
+    public static final String EXTRA_ORCHID_PHOTO_LIST = "extra_orchid_photo_list";
+    public static final String EXTRA_ORCHID_PHOTO_LIST_POSITION = "extra_orchid_photo_list_position";
 
     // Four ages of orchids
     public static final int AGE_TWO_YEARS_BEFORE = 3;

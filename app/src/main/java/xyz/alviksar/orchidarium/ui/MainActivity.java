@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     // For saving state
     private static final String BUNDLE_RECYCLER_LAYOUT = "MainActivity.mRecyclerView.layout";
-    private static final String BUNDLE_RECYCLER_POSITION = "MainActivity.mRecyclerView.position";
 
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
@@ -107,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
             @NonNull
             @Override
             public OrchidViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                // Create a new instance of the BannerAdapterViewHolder, in this case we are using a custom
-                // layout called R.layout.list_item_orchid for each item
+                // Create a new instance of the BannerAdapterViewHolder, in this case we are using
+                // a custom layout called R.layout.list_item_orchid for each item
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_orchid, parent, false);
 
@@ -128,14 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 // Called each time there is a new data snapshot. You may want to use this method
                 // to hide a loading spinner or check for the "no documents" state and update your UI.
                 showData();
-//                Bundle savedInstanceState = new Bundle();
-//                onRestoreInstanceState(savedInstanceState);
-//                if (savedInstanceState.containsKey(BUNDLE_RECYCLER_LAYOUT)) {
-//                    mSavedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
-//                    if (mSavedRecyclerLayoutState != null) {
-//                        mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
-//                    }
-//                }
                 if (mSavedRecyclerLayoutState != null) {
                     mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
                 }
@@ -143,9 +134,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(DatabaseError e) {
-                // Called when there is an error getting data. You may want to update
-                // your UI to display an error message to the user.
-                // ...
                 showErrorMessage(R.string.msg_error_getting_data);
             }
         };
@@ -167,31 +155,6 @@ public class MainActivity extends AppCompatActivity {
             // Set no connection error message
             showErrorMessage(R.string.msg_no_connection_error);
         }
-
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-//        Bundle savedInstanceState = new Bundle();
-//        onRestoreInstanceState(savedInstanceState);
-//        if (savedInstanceState.containsKey(BUNDLE_RECYCLER_LAYOUT)) {
-//            mSavedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
-//            if (mSavedRecyclerLayoutState != null) {
-//                mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
-//            }
-//        }
-//        mFirebaseRecyclerAdapter.startListening();
-    }
-
-    @Override
-    protected void onStop() {
-//        mFirebaseRecyclerAdapter.stopListening();
-//        Bundle outState = new Bundle();
-//        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mRecyclerView.getLayoutManager().onSaveInstanceState());
-//        onSaveInstanceState(outState);
-        super.onStop();
 
     }
 
@@ -273,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.action_add_new:
                 Intent intent = new Intent(MainActivity.this, StoreAdminActivity.class);
-                intent.putExtra(OrchidEntity.EXTRA_ORCHID, new OrchidEntity());
+//                intent.putExtra(OrchidEntity.EXTRA_ORCHID, new OrchidEntity());
                 startActivity(intent);
                 return true;
             default:

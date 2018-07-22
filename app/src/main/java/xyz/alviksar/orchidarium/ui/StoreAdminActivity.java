@@ -43,6 +43,8 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -103,7 +105,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
     RecyclerView mBannerRecyclerView;
     LinearLayoutManager mLayoutManager;
     BannerAdapter mBannerAdapter;
-    List<String> mBannerList;
+//    List<String> mBannerList;
 
     MenuItem mSaveMenuItem;
 
@@ -167,6 +169,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         if (mOrchid == null) {
             setTitle(R.string.title_new_orchid);
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
+            mOrchid = new OrchidEntity();
             invalidateOptionsMenu();
         } else {
             setTitle(R.string.title_edit_orchid);
@@ -181,10 +184,10 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         mLayoutManager = new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false);
         mBannerRecyclerView.setLayoutManager(mLayoutManager);
         // specify an adapter (see also next example)
-        mBannerList = new ArrayList<>(mOrchid.getRealPhotos());
+        ArrayList <String> bannerList = new ArrayList<>(mOrchid.getRealPhotos());
         // Add an empty  item for the add photo image
-        mBannerList.add(getString(R.string.empty));
-        mBannerAdapter = new BannerAdapter(mBannerList, this);
+        bannerList.add(getString(R.string.empty));
+        mBannerAdapter = new BannerAdapter(bannerList, this);
         mBannerRecyclerView.setAdapter(mBannerAdapter);
 
         mCodeEditText.setText(mOrchid.getCode());
@@ -660,9 +663,18 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 
 
     @Override
-    public void onClickBannerPhoto(String url) {
+    public void onClickBannerPhoto(String url, int position) {
         if (TextUtils.isEmpty(url)) {
             choosePhoto(RC_REAL_PHOTO_PICKER);
+        } else {
+            Intent intent = new Intent(StoreAdminActivity.this,
+                    PhotoGalleryActivity.class);
+            intent.setData(Uri.parse(url));
+            intent.putExtra(OrchidEntity.EXTRA_ORCHID_NAME, mOrchid.getName());
+            intent.putStringArrayListExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST,
+                    mBannerAdapter.getData());
+            intent.putExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST_POSITION, position);
+            startActivity(intent);
         }
     }
 

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -26,13 +27,13 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
      * The interface to handle clicks on items within this Adapter
      */
     public interface BannerAdapterOnClickHandler {
-        void onClickBannerPhoto(String url);
+        void onClickBannerPhoto(String url, int position);
     }
 
-    private List<String> mDataset;
+    private ArrayList<String> mDataset;
     private BannerAdapterOnClickHandler mClickHandler;
 
-    public BannerAdapter(List<String> myDataset, BannerAdapterOnClickHandler clickHandler) {
+    public BannerAdapter(ArrayList<String> myDataset, BannerAdapterOnClickHandler clickHandler) {
         mDataset = myDataset;
         mClickHandler = clickHandler;
 
@@ -86,7 +87,11 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
         }
     }
 
-    public List<String> getData() {
+    public ArrayList<String> getmDataset() {
+        return mDataset;
+    }
+
+    ArrayList<String> getData() {
         return mDataset;
     }
 
@@ -113,7 +118,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
         public void onClick(View view) {
             int position = getAdapterPosition();
             if (mDataset != null) {
-                mClickHandler.onClickBannerPhoto(mDataset.get(position));
+                mClickHandler.onClickBannerPhoto(mDataset.get(position), position);
             }
         }
 
