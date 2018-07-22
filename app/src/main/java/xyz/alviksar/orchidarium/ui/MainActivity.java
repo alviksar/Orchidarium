@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.rv_orchids)
     RecyclerView mRecyclerView;
+    // For saving state
+    private static final String BUNDLE_RECYCLER_LAYOUT = "MainActivity.mRecyclerView.layout";
+    private static final String BUNDLE_RECYCLER_POSITION = "MainActivity.mRecyclerView.position";
 
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
@@ -125,6 +128,14 @@ public class MainActivity extends AppCompatActivity {
                 // Called each time there is a new data snapshot. You may want to use this method
                 // to hide a loading spinner or check for the "no documents" state and update your UI.
                 showData();
+//                Bundle savedInstanceState = new Bundle();
+//                onRestoreInstanceState(savedInstanceState);
+//                if (savedInstanceState.containsKey(BUNDLE_RECYCLER_LAYOUT)) {
+//                    mSavedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+//                    if (mSavedRecyclerLayoutState != null) {
+//                        mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
+//                    }
+//                }
                 if (mSavedRecyclerLayoutState != null) {
                     mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
                 }
@@ -150,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         // If there is a network connection, fetch data
         if (networkInfo != null && networkInfo.isConnected()) {
+            mFirebaseRecyclerAdapter.startListening();
             showLoading();
         } else {
             // Set no connection error message
@@ -159,22 +171,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onStart() {
         super.onStart();
-        mFirebaseRecyclerAdapter.startListening();
-//        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+//        Bundle savedInstanceState = new Bundle();
+//        onRestoreInstanceState(savedInstanceState);
+//        if (savedInstanceState.containsKey(BUNDLE_RECYCLER_LAYOUT)) {
+//            mSavedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+//            if (mSavedRecyclerLayoutState != null) {
+//                mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
+//            }
+//        }
+//        mFirebaseRecyclerAdapter.startListening();
     }
 
     @Override
     protected void onStop() {
+//        mFirebaseRecyclerAdapter.stopListening();
+//        Bundle outState = new Bundle();
+//        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mRecyclerView.getLayoutManager().onSaveInstanceState());
+//        onSaveInstanceState(outState);
         super.onStop();
-        mFirebaseRecyclerAdapter.stopListening();
-//        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+
     }
 
-    private static final String BUNDLE_RECYCLER_LAYOUT = "MainActivity.mRecyclerView.layout";
+    @Override
+    protected void onDestroy() {
+        mFirebaseRecyclerAdapter.stopListening();
+        super.onDestroy();
+    }
+
 
     /**
      * https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll-position-using-recyclerview-state
@@ -191,8 +217,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mRecyclerView.getLayoutManager().onSaveInstanceState());
         super.onSaveInstanceState(outState);
+        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mRecyclerView.getLayoutManager().onSaveInstanceState());
     }
 
     @Override
@@ -246,10 +272,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(startSettingsActivity);
                 return true;
             case R.id.action_add_new:
-                    Intent intent = new Intent(MainActivity.this, StoreAdminActivity.class);
-                    intent.putExtra(OrchidEntity.EXTRA_ORCHID, new OrchidEntity());
-                    startActivity(intent);
-                    return true;
+                Intent intent = new Intent(MainActivity.this, StoreAdminActivity.class);
+                intent.putExtra(OrchidEntity.EXTRA_ORCHID, new OrchidEntity());
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -43,7 +43,7 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
     @BindView(R.id.tv_for_sale_time)
     TextView mForSaleTimeTextView;
 
-    OrchidEntity mOrchidItem;
+    private OrchidEntity mOrchidItem;
 
 
     public OrchidViewHolder(View itemView) {
@@ -60,8 +60,13 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
             mPriceTextView.setText(String.format(Locale.getDefault(),
                     "$ %.2f", orchid.getRetailPrice()));
         } else {
-            mPriceTextView.setText(String.format(Locale.getDefault(),
-                    "%.2f %s", orchid.getRetailPrice(), orchid.getCurrencySymbol()));
+            if (orchid.getCurrencySymbol().equals(mContext.getString(R.string.sign_rur))) {
+                mPriceTextView.setText(String.format(Locale.getDefault(),
+                        "%.0f %s", orchid.getRetailPrice(), orchid.getCurrencySymbol()));
+            } else {
+                mPriceTextView.setText(String.format(Locale.getDefault(),
+                        "%.2f %s", orchid.getRetailPrice(), orchid.getCurrencySymbol()));
+            }
         }
 
         if (orchid.getForSaleTime() > 0)

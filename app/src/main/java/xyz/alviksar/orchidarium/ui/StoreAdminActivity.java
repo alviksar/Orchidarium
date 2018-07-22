@@ -115,13 +115,8 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 
     private FirebaseAuth mFirebaseAuth;
     private String mUserName;
-    //    private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
-
-
-    private FirebaseRecyclerAdapter mFirebaseRecyclerAdapter;
-    private Parcelable mSavedRecyclerLayoutState = null;
 
     // Request codes value
     private static final int RC_AUTH_SIGN_IN = 1;
@@ -187,6 +182,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         mBannerRecyclerView.setLayoutManager(mLayoutManager);
         // specify an adapter (see also next example)
         mBannerList = new ArrayList<>(mOrchid.getRealPhotos());
+        // Add an empty  item for the add photo image
         mBannerList.add(getString(R.string.empty));
         mBannerAdapter = new BannerAdapter(mBannerList, this);
         mBannerRecyclerView.setAdapter(mBannerAdapter);
@@ -243,9 +239,12 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
             mCurrencySymbol.setSelection(((ArrayAdapter<String>) mCurrencySymbol.getAdapter())
                     .getPosition(mOrchid.getCurrencySymbol()));
         }
+        if (mOrchid.getRetailPrice() != 0)
+            mRetaPriceEditText.setText(String.format(Locale.getDefault(),
+                    "%.2f", mOrchid.getRetailPrice()));
+        else
+            mRetaPriceEditText.setText("");
 
-        mRetaPriceEditText.setText(String.format(Locale.getDefault(),
-                "%.2f", mOrchid.getRetailPrice()));
         mDescriptionEditText.setText(mOrchid.getDescription());
 
         mCodeEditText.setOnTouchListener(mTouchListener);
@@ -769,7 +768,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
     private void uploadListOfPhotosAndSaveDataToDb(final Stack<String> toUpload) {
         mProgressBar.setVisibility(View.VISIBLE);
         if (toUpload.empty()) {
-            // All photos have been saved, save the nice photo and obbject
+            // All photos have been saved, so save the nice photo and the object
             uploadNicePhotoAndSaveDataToDb();
 
         } else {
@@ -785,7 +784,8 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                         new OnProgressListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                                double progress = (100.0 * taskSnapshot.getBytesTransferred())
+                                        / taskSnapshot.getTotalByteCount();
                                 mProgressBar.setProgress((int) progress);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
