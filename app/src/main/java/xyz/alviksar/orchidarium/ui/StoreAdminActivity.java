@@ -45,6 +45,7 @@ import com.google.firebase.storage.UploadTask;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -172,7 +173,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
             mOrchid = new OrchidEntity();
             invalidateOptionsMenu();
         } else {
-            setTitle(R.string.title_edit_orchid);
+            setTitle(mOrchid.getName());
         }
 
         ButterKnife.bind(this);
@@ -184,7 +185,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         mLayoutManager = new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false);
         mBannerRecyclerView.setLayoutManager(mLayoutManager);
         // specify an adapter (see also next example)
-        ArrayList <String> bannerList = new ArrayList<>(mOrchid.getRealPhotos());
+        ArrayList<String> bannerList = new ArrayList<>(mOrchid.getRealPhotos());
         // Add an empty  item for the add photo image
         bannerList.add(getString(R.string.empty));
         mBannerAdapter = new BannerAdapter(bannerList, this);
@@ -657,10 +658,17 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 
     // Upload an image for a flowering orchid
     @OnClick(R.id.btn_add_nice_photo)
-    public void onClick(View view) {
+    public void onClickBtn(View view) {
         choosePhoto(RC_NICE_PHOTO_PICKER);
     }
 
+    @OnClick(R.id.iv_nice_photo)
+    public void onClickImage(View view) {
+        Intent intent = new Intent();
+        intent.setAction(android.content.Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.parse(mOrchid.getNicePhoto()), "image/*");
+        startActivity(intent);
+    }
 
     @Override
     public void onClickBannerPhoto(String url, int position) {
@@ -831,4 +839,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
             }
         }
     }
+
+
 }
