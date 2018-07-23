@@ -29,8 +29,22 @@
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".ui.SearchActivity" />
+                android:value=".ui.MainActivity" />
+
+            <!-- This intent-filter identifies this activity as "searchable" -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- This metadata entry provides further configuration details for searches -->
+            <!-- that are handled by this activity. -->
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
+
+
         <activity
             android:name=".ui.DetailActivity"
             android:parentActivityName=".ui.MainActivity"
@@ -66,22 +80,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="xyz.alviksar.orchidarium.ui.StoreAdminActivity" />
         </activity>
-        <activity
-            android:name=".ui.SearchActivity"
-            android:theme="@style/AppTheme">
-            <!-- This intent-filter identifies this activity as "searchable" -->
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <!-- This metadata entry provides further configuration details for searches -->
-            <!-- that are handled by this activity. -->
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-
-        </activity>
     </application>
 
 </manifest>

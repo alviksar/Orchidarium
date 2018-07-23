@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        handleIntent(getIntent());
+
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(BUNDLE_RECYCLER_LAYOUT))
                 mSavedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
@@ -156,9 +158,20 @@ public class MainActivity extends AppCompatActivity {
             // Set no connection error message
             showErrorMessage(R.string.msg_no_connection_error);
         }
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
 
-
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String searchQuery = intent.getStringExtra(SearchManager.QUERY);
+            Toast.makeText(this, "Search %" + searchQuery + "% started.", Toast.LENGTH_LONG).show();
+            //  doMySearch(searchQuery);        }
+        }
     }
 
 
