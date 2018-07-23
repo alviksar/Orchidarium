@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Firebase
     private FirebaseRecyclerAdapter mFirebaseRecyclerAdapter;
+    private Query mQuery;
+
     private Parcelable mSavedRecyclerLayoutState = null;
 
     @Override
@@ -93,14 +95,9 @@ public class MainActivity extends AppCompatActivity {
         /*
         https://github.com/firebase/FirebaseUI-Android/blob/master/database/README.md
          */
-        Query query = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("orchids");
-//                .limitToLast(50);
-
         FirebaseRecyclerOptions<OrchidEntity> options =
                 new FirebaseRecyclerOptions.Builder<OrchidEntity>()
-                        .setQuery(query, OrchidEntity.class)
+                        .setQuery(mQuery, OrchidEntity.class)
                         .build();
 
         mFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<OrchidEntity,
@@ -138,6 +135,17 @@ public class MainActivity extends AppCompatActivity {
             public void onError(DatabaseError e) {
                 showErrorMessage(R.string.msg_error_getting_data);
             }
+
+            // New ones at the top of the list
+            // https://stackoverflow.com/questions/34156996/firebase-data-desc-sorting-in-android
+            @NonNull
+            @Override
+            public OrchidEntity getItem(int position) {
+                //  return super.getItem(position);
+                return super.getItem(getItemCount() - (position + 1));
+            }
+
+
         };
         mRecyclerView.setAdapter(mFirebaseRecyclerAdapter);
         GridLayoutManager layoutManager =
@@ -169,8 +177,16 @@ public class MainActivity extends AppCompatActivity {
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String searchQuery = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(this, "Search %" + searchQuery + "% started.", Toast.LENGTH_LONG).show();
-            //  doMySearch(searchQuery);        }
+            Toast.makeText(this, "Search for'" + searchQuery + "' started.", Toast.LENGTH_LONG).show();
+            mQuery = FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("orchids").orderByChild("name")
+                    .startAt(searchQuery)
+                    .endAt(searchQuery + "\uf8ff");
+        } else {
+            mQuery = FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("orchids").orderByChild("saveTime");
         }
     }
 
@@ -230,9 +246,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, StoreAdminActivity.class);
                 startActivity(intent);
                 return true;
-//            case  R.id.action_filter:
-//                Toast.makeText(this, "Search started.", Toast.LENGTH_LONG).show();
-//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -87,41 +87,6 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
         intent.putExtra(OrchidEntity.EXTRA_ORCHID, mOrchidItem);
         mContext.startActivity(intent);
 
-//        Toast.makeText(mContext, mOrchidItem.getName(), Toast.LENGTH_LONG).show();
-//        int itemPosition = getLayoutPosition();
-
-        //      intent.putExtra("position", itemPosition + "");
-//        OrchidEntity orchid =
-//
-//
-//        mContext.startActivity(intent);
-/*
-        final ArrayList<OrchidEntity> orchids = new ArrayList<>();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("orchids");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    restaurants.add(snapshot.getValue(Restaurant.class));
-                }
-
-                int itemPosition = getLayoutPosition();
-
-                Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
-                intent.putExtra("position", itemPosition + "");
-                intent.putExtra("restaurants", Parcels.wrap(restaurants));
-
-                mContext.startActivity(intent);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        */
     }
 }
 
