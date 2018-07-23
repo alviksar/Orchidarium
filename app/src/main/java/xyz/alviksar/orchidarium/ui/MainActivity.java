@@ -1,5 +1,6 @@
 package xyz.alviksar.orchidarium.ui;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -18,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.SearchView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -48,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final Float TILE_WIDTH_INCHES = 1.0f;
 
-    Spinner mFilterSpinner;
-
     @BindView(R.id.rv_orchids)
     RecyclerView mRecyclerView;
     // For saving state
@@ -69,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(BUNDLE_RECYCLER_LAYOUT))
                 mSavedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         // If there is a network connection, fetch data
         if (networkInfo != null && networkInfo.isConnected()) {
+            // Start watching data
             mFirebaseRecyclerAdapter.startListening();
             showLoading();
         } else {
@@ -156,7 +157,10 @@ public class MainActivity extends AppCompatActivity {
             showErrorMessage(R.string.msg_no_connection_error);
         }
 
+
+
     }
+
 
     @Override
     protected void onDestroy() {
@@ -188,38 +192,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        /*
-        Set spinner into menu bar
-        Thanks to Dércia Silva
-        http://www.viralandroid.com/2016/03/how-to-add-spinner-dropdown-list-to-android-actionbar-toolbar.html
-        */
-        MenuItem item = menu.findItem(R.id.sp_filter);
-        mFilterSpinner = (Spinner) item.getActionView();
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.maint_activity_menu_spinner_items, R.layout.menu_item_spinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mFilterSpinner.setAdapter(adapter);
-
-        // Set spinner to the right state
-        int defPosition = adapter.getPosition(OrchidariumPreferences.getMode(this));
-        mFilterSpinner.setSelection(defPosition);
-
-        mFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (mFilterSpinner.getSelectedItem() != null) {
-                    //    String mode = (String) mSpinner.getSelectedItem();
-                    //     int position = mSpinner.getSelectedItemPosition();
-                    //   OrchidariumPreferences.setMode(getApplicationContext(), mode);
-                    // TODO: updateList(mode);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_filter).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(true);
+        searchView.setSubmitButtonEnabled(true);
 
         return true;
     }
@@ -236,9 +215,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.action_add_new:
                 Intent intent = new Intent(MainActivity.this, StoreAdminActivity.class);
-//                intent.putExtra(OrchidEntity.EXTRA_ORCHID, new OrchidEntity());
                 startActivity(intent);
                 return true;
+//            case  R.id.action_filter:
+//                Toast.makeText(this, "Search started.", Toast.LENGTH_LONG).show();
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

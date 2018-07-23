@@ -1,6 +1,7 @@
 package xyz.alviksar.orchidarium.ui;
 
 import android.app.ActivityOptions;
+import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;

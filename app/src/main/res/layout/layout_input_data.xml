@@ -117,7 +117,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:ems="6"
+        android:ems="5"
         android:hint="@string/label_retail_price"
         android:inputType="numberDecimal"
         app:layout_constraintStart_toStartOf="parent"
