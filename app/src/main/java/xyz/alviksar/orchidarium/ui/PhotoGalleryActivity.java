@@ -124,7 +124,7 @@ public class PhotoGalleryActivity extends AppCompatActivity {
             if (!TextUtils.isEmpty(mPhotos.get(position))) {
                 GlideApp.with(imageView.getContext())
                         .load(mPhotos.get(position))
-                        .centerCrop()
+                        .fitCenter()
                         .into(imageView);
             }
             imageView.setOnClickListener(new View.OnClickListener() {

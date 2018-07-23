@@ -65,13 +65,13 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
             holder.mImageView.setPadding(emptyPadding, emptyPadding, emptyPadding, emptyPadding);
             GlideApp.with(holder.mImageView.getContext())
                     .load(R.drawable.ic_add_a_photo_gray_24dp)
-                    .centerCrop()
+                    .fitCenter()
                     .into(holder.mImageView);
         } else {
             holder.mImageView.setPadding(photoPadding, photoPadding, photoPadding, photoPadding);
             GlideApp.with(holder.mImageView.getContext())
                     .load(photoUrl)
-                    .centerCrop()
+                    .fitCenter()
                     .into(holder.mImageView);
         }
 

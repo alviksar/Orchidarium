@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/iv_real_photo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/desc_real_orchid_photo" />
 
 </FrameLayout>
