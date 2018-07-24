@@ -25,7 +25,6 @@ public class OrchidEntity implements Parcelable {
     public static final int AGE_BLOOMING = 0;
     public static final int AGE_UNKNOWN = -1;
 
-    @Exclude
     private String id;
     private String code = "";
     private String name;
@@ -166,7 +165,7 @@ public class OrchidEntity implements Parcelable {
     public void setIsVisibleForSale(boolean state) {
         if (state) {
             this.isVisibleForSale = 1;
-            forSaleTime = System.currentTimeMillis();
+            forSaleTime = (-1)*System.currentTimeMillis();
         } else {
             this.isVisibleForSale = 0;
         }
@@ -187,8 +186,6 @@ public class OrchidEntity implements Parcelable {
     public void setSaveTime(long saveTime) {
         this.saveTime = saveTime;
     }
-
-
 
     @Override
     public int describeContents() {

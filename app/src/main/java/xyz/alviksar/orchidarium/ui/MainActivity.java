@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity
         if (TextUtils.isEmpty(searchQuery)) {
             query = FirebaseDatabase.getInstance()
                     .getReference()
-                    .child("orchids").orderByChild("saveTime");
+                    .child("orchids").orderByChild("forSaleTime");
 
         } else {
             query = FirebaseDatabase.getInstance()
@@ -136,7 +136,8 @@ public class MainActivity extends AppCompatActivity
             protected void onBindViewHolder(@NonNull OrchidViewHolder holder, int position,
                                             @NonNull OrchidEntity model) {
                 // Bind the OrchidEntity object to the OrchidViewHolder
-                String key = getRef(position).getKey();
+                 String key = getRef(position).getKey();
+//                String key = getRef(getItemCount() - (position + 1)).getKey();
                 holder.bindOrchid(model, key);
             }
 
@@ -160,13 +161,12 @@ public class MainActivity extends AppCompatActivity
             @NonNull
             @Override
             public OrchidEntity getItem(int position) {
-                //  return super.getItem(position);
-                return super.getItem(getItemCount() - (position + 1));
+                  return super.getItem(position);
+//                return super.getItem(getItemCount() - (position + 1));
             }
 
 
         };
-        mRecyclerView.setAdapter(mFirebaseRecyclerAdapter);
         // Calculate the number of columns in the grid
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int mColumnWidthPixels;
@@ -179,13 +179,13 @@ public class MainActivity extends AppCompatActivity
         }
         int columns = Math.max(1, metrics.widthPixels / mColumnWidthPixels);
 
-
         GridLayoutManager layoutManager =
                 new GridLayoutManager(this, columns);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        if (mFirebaseRecyclerAdapter != null)
-            mFirebaseRecyclerAdapter.startListening();
+        mRecyclerView.setAdapter(mFirebaseRecyclerAdapter);
+
+        mFirebaseRecyclerAdapter.startListening();
     }
 
     @Override

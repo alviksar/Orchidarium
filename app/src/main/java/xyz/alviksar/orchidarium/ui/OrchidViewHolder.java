@@ -64,6 +64,9 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
     }
 
     public void bindOrchid(OrchidEntity orchid, String key) {
+        mOrchidItem = orchid;
+        mOrchidItem.setId(key);
+
         mNameTextView.setText(orchid.getName());
         if (orchid.getCurrencySymbol().equals(mContext.getString(R.string.sign_usd))) {
             mPriceTextView.setText(String.format(Locale.getDefault(),
@@ -80,8 +83,6 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
 
         if (orchid.getForSaleTime() > 0)
             mForSaleTimeTextView.setText(DateFormatter.timeFrom(orchid.getForSaleTime()));
-        mOrchidItem = orchid;
-        mOrchidItem.setId(key);
 
         if (mOrchidItem.getIsVisibleForSale()) {
             mTopRightScrim.setVisibility(View.GONE);

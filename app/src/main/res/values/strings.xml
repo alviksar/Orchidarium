@@ -83,7 +83,7 @@
     <string name="msg_choose_image">Choose the image</string>
     <string name="action_delete_photo">Delete</string>
     <string name="title_activity_photo_gallery">PhotoGalleryActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <!--string name="section_format">Hello World from section: %1$d</string-->
 
     <string name="transition_real_photo" translatable="false">transition_real_photo</string>
     <string name="transition_nice_photo" translatable="false">transition_nice_photo</string>
