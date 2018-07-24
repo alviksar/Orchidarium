@@ -64,6 +64,9 @@ public class MainActivity extends AppCompatActivity
     private String mSearchQuery = null;
     private static final String BUNDLE_SEARCH_QUERY = "MainActivity.mSearchQuery";
 
+    private boolean mHiddenOnly = false;
+    private static final String BUNDLE_HIDDEN_ONLY = "MainActivity.mHiddenOnly";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,8 @@ public class MainActivity extends AppCompatActivity
                 mSavedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
             if (savedInstanceState.containsKey(BUNDLE_SEARCH_QUERY))
                 mSearchQuery = savedInstanceState.getString(BUNDLE_SEARCH_QUERY);
+            if (savedInstanceState.containsKey(BUNDLE_HIDDEN_ONLY))
+                mHiddenOnly = savedInstanceState.getBoolean(BUNDLE_HIDDEN_ONLY);
         }
 
         // Check network connection
@@ -86,7 +91,6 @@ public class MainActivity extends AppCompatActivity
         if (networkInfo != null && networkInfo.isConnected()) {
             // Start watching data
             setRecyclerAdapter(mSearchQuery);
-            showLoading();
         } else {
             // Set no connection error message
             showErrorMessage(R.string.msg_no_connection_error);
@@ -97,19 +101,29 @@ public class MainActivity extends AppCompatActivity
     private void setRecyclerAdapter(String searchQuery) {
         if (mFirebaseRecyclerAdapter != null)
             mFirebaseRecyclerAdapter.stopListening();
+        showLoading();
+
 //        Toast.makeText(this, "Search for'" + searchQuery + "' started.", Toast.LENGTH_LONG).show();
         Query query;
-        if (TextUtils.isEmpty(searchQuery)) {
+//        mHiddenOnly = true;
+        if (mHiddenOnly) {
             query = FirebaseDatabase.getInstance()
                     .getReference()
-                    .child("orchids").orderByChild("forSaleTime");
-
+                    .child("orchids")
+                    .orderByChild("isVisibleForSale")
+                    .equalTo(false);
         } else {
-            query = FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child("orchids").orderByChild("name")
-                    .startAt(searchQuery)
-                    .endAt(searchQuery + "\uf8ff");
+            if (TextUtils.isEmpty(searchQuery)) {
+                query = FirebaseDatabase.getInstance()
+                        .getReference()
+                        .child("orchids").orderByChild("forSaleTime");
+            } else {
+                query = FirebaseDatabase.getInstance()
+                        .getReference()
+                        .child("orchids").orderByChild("name")
+                        .startAt(searchQuery)
+                        .endAt(searchQuery + "\uf8ff");
+            }
         }
         /*
         https://github.com/firebase/FirebaseUI-Android/blob/master/database/README.md
@@ -136,7 +150,7 @@ public class MainActivity extends AppCompatActivity
             protected void onBindViewHolder(@NonNull OrchidViewHolder holder, int position,
                                             @NonNull OrchidEntity model) {
                 // Bind the OrchidEntity object to the OrchidViewHolder
-                 String key = getRef(position).getKey();
+                String key = getRef(position).getKey();
 //                String key = getRef(getItemCount() - (position + 1)).getKey();
                 holder.bindOrchid(model, key);
             }
@@ -161,7 +175,7 @@ public class MainActivity extends AppCompatActivity
             @NonNull
             @Override
             public OrchidEntity getItem(int position) {
-                  return super.getItem(position);
+                return super.getItem(position);
 //                return super.getItem(getItemCount() - (position + 1));
             }
 
@@ -205,6 +219,8 @@ public class MainActivity extends AppCompatActivity
                 mSavedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
             if (savedInstanceState.containsKey(BUNDLE_SEARCH_QUERY))
                 mSearchQuery = savedInstanceState.getString(BUNDLE_SEARCH_QUERY);
+            if (savedInstanceState.containsKey(BUNDLE_HIDDEN_ONLY))
+                mHiddenOnly = savedInstanceState.getBoolean(BUNDLE_HIDDEN_ONLY);
         }
     }
 
@@ -213,6 +229,7 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mRecyclerView.getLayoutManager().onSaveInstanceState());
         outState.putString(BUNDLE_SEARCH_QUERY, mSearchQuery);
+        outState.putBoolean(BUNDLE_HIDDEN_ONLY, mHiddenOnly);
     }
 
     @Override
@@ -264,6 +281,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_add_new:
                 Intent intent = new Intent(MainActivity.this, StoreAdminActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.action_show_hidden:
+                mHiddenOnly = !mHiddenOnly;
+                setRecyclerAdapter(mSearchQuery);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
