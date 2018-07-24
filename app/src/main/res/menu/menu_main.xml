@@ -13,6 +13,13 @@
         android:id="@+id/action_make_order"
         android:icon="@drawable/ic_shopping_cart_white_24dp"
         android:title="@string/action_make_order"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_show_hidden"
+        android:icon="@drawable/ic_visibility_off_gray_24dp"
+        android:title="@string/action_show_hidden"
         app:showAsAction="ifRoom" />
 
     <item

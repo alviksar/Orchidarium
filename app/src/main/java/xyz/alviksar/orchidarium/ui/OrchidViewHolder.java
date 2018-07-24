@@ -46,6 +46,12 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
     @BindView(R.id.tv_for_sale_time)
     TextView mForSaleTimeTextView;
 
+    @BindView(R.id.scrim_top_right)
+    View mTopRightScrim;
+
+    @BindView(R.id.iv_hidden)
+    ImageView mHiddenImageView;
+
     private OrchidEntity mOrchidItem;
 
 
@@ -77,6 +83,14 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
         mOrchidItem = orchid;
         mOrchidItem.setId(key);
 
+        if (mOrchidItem.getIsVisibleForSale()) {
+            mTopRightScrim.setVisibility(View.GONE);
+            mHiddenImageView.setVisibility(View.GONE);
+        } else {
+            mTopRightScrim.setVisibility(View.VISIBLE);
+            mHiddenImageView.setVisibility(View.VISIBLE);
+        }
+
         GlideApp.with(mNiceImageView.getContext())
                 .load(mOrchidItem.getNicePhoto())
                 .centerCrop()
@@ -98,11 +112,6 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
         } else {
             mContext.startActivity(intent);
         }
-
-//        Intent intent = new Intent(mContext, StoreAdminActivity.class);
-//        intent.putExtra(OrchidEntity.EXTRA_ORCHID, mOrchidItem);
-//        mContext.startActivity(intent);
-
     }
 }
 
