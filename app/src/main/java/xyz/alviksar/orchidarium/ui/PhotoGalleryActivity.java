@@ -2,6 +2,7 @@ package xyz.alviksar.orchidarium.ui;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.Fragment;
@@ -87,6 +88,34 @@ public class PhotoGalleryActivity extends AppCompatActivity {
         outState.putStringArrayList(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST, mPhotos);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to a click on the "Up" arrow button in the app bar
+            case android.R.id.home:
+                // Hook up the up button
+                // Continue with navigating up to parent activity
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // User clicked on a menu option in the app bar overflow menu
+//            switch (item.getItemId()) {
+//                // Respond to a click on the "Up" arrow button in the app bar
+//                case android.R.id.home:
+//                    // Hook up the up button
+//                    // If the orchid hasn't changed, continue with navigating up to parent activity
+//                    NavUtils.navigateUpFromSameTask(PhotoGalleryActivity.this);
+//                    return true;
+//                    default:
+//            }
+//        }
+//    }
+//
 
     /**
      * A placeholder fragment containing a simple view.
@@ -134,7 +163,9 @@ public class PhotoGalleryActivity extends AppCompatActivity {
                     intent.setAction(android.content.Intent.ACTION_VIEW);
                     intent.setDataAndType(Uri.parse(mPhotos.get(position)), "image/*");
                     startActivity(intent);
-                };
+                }
+
+                ;
 
             });
             return rootView;

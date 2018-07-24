@@ -11,6 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/desc_real_orchid_photo"
-        android:transitionName="@string/transition_photo" />
+        android:transitionName="@string/transition_real_photo" />
 
 </FrameLayout>

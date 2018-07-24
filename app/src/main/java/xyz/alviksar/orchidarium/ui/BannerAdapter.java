@@ -22,7 +22,6 @@ import xyz.alviksar.orchidarium.util.GlideApp;
 
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdapterViewHolder> {
 
-
     /**
      * The interface to handle clicks on items within this Adapter
      */

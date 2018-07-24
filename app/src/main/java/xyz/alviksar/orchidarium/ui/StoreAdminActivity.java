@@ -685,7 +685,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
             intent.putStringArrayListExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST,
                     mBannerAdapter.getData());
             intent.putExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST_POSITION, position);
-//            startActivity(intent);
 
             //        startActivity(intent,
 //                ActivityOptions.makeSceneTransitionAnimation(StoreAdminActivity.this, view,

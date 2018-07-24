@@ -1,8 +1,11 @@
 package xyz.alviksar.orchidarium.ui;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,8 +28,8 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 400;
 
-    View mView;
-    Context mContext;
+    private Context mContext;
+    private Activity mActivity;
 
     @BindView(R.id.iv_nice_photo)
     ImageView mNiceImageView;
@@ -46,10 +49,10 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
     private OrchidEntity mOrchidItem;
 
 
-    public OrchidViewHolder(View itemView) {
+    public OrchidViewHolder(View itemView, Activity activity) {
         super(itemView);
-        mView = itemView;
         mContext = itemView.getContext();
+        mActivity = activity;
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener(this);
     }
@@ -82,10 +85,23 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
 
     @Override
     public void onClick(View view) {
-
         Intent intent = new Intent(mContext, StoreAdminActivity.class);
         intent.putExtra(OrchidEntity.EXTRA_ORCHID, mOrchidItem);
-        mContext.startActivity(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+            View sharedView = view.findViewById(R.id.iv_nice_photo);
+            mContext.startActivity(intent,
+                    ActivityOptions.makeSceneTransitionAnimation(
+                            mActivity,
+                            sharedView,
+                            sharedView.getTransitionName())
+                            .toBundle());
+        } else {
+            mContext.startActivity(intent);
+        }
+
+//        Intent intent = new Intent(mContext, StoreAdminActivity.class);
+//        intent.putExtra(OrchidEntity.EXTRA_ORCHID, mOrchidItem);
+//        mContext.startActivity(intent);
 
     }
 }

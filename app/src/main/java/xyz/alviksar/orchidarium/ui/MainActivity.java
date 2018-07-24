@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_orchid, parent, false);
 
-                return new OrchidViewHolder(view);
+                return new OrchidViewHolder(view, MainActivity.this);
             }
 
             @Override

@@ -10,7 +10,8 @@
         android:layout_height="320dp"
         android:contentDescription="@string/label_nice_image"
         android:scaleType="centerCrop"
-        android:src="@drawable/phragmipedium_besseae_nice" />
+        android:src="@drawable/phragmipedium_besseae_nice"
+        android:transitionName="@string/transition_nice_photo" />
 
     <android.support.design.widget.FloatingActionButton
 
