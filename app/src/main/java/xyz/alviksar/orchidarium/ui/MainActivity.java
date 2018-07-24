@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -65,20 +66,21 @@ public class MainActivity extends AppCompatActivity {
     private Query mQuery;
 
     private Parcelable mSavedRecyclerLayoutState = null;
+    private String mSearchString;
+    private SearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        handleIntent(getIntent());
-
+        ButterKnife.bind(this);
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(BUNDLE_RECYCLER_LAYOUT))
                 mSavedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+            if (savedInstanceState.containsKey("mSearchString"))
+                mSearchString = savedInstanceState.getString("mSearchString");
         }
 
-        ButterKnife.bind(this);
 
         // Calculate the number of columns in the grid
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -88,9 +90,55 @@ public class MainActivity extends AppCompatActivity {
 
         } else {   // ORIENTATION_PORTRAIT
             mColumnWidthPixels = Math.round(TILE_WIDTH_INCHES * metrics.xdpi);
-
         }
         int columns = Math.max(1, metrics.widthPixels / mColumnWidthPixels);
+
+        // Check network connection
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        // If there is a network connection, fetch data
+        if (networkInfo != null && networkInfo.isConnected()) {
+            showLoading();
+            handleSearchIntent(getIntent());
+            GridLayoutManager layoutManager =
+                    new GridLayoutManager(this, columns);
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setHasFixedSize(true);
+            // Start watching data
+//            mFirebaseRecyclerAdapter.startListening();
+        } else {
+            // Set no connection error message
+            showErrorMessage(R.string.msg_no_connection_error);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleSearchIntent(intent);
+    }
+
+    private void handleSearchIntent(Intent intent) {
+        if (mFirebaseRecyclerAdapter != null)
+            mFirebaseRecyclerAdapter.stopListening();
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            mSearchString = intent.getStringExtra(SearchManager.QUERY);
+            if (mSearchView != null)
+                mSearchView.setQuery(mSearchString, false);
+            Toast.makeText(this, "Search for'" + mSearchString + "' started.",
+                    Toast.LENGTH_LONG).show();
+            mQuery = FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("orchids").orderByChild("name")
+                    .startAt(mSearchString)
+                    .endAt(mSearchString + "\uf8ff");
+        } else {
+            mQuery = FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("orchids").orderByChild("saveTime");
+        }
 
         /*
         https://github.com/firebase/FirebaseUI-Android/blob/master/database/README.md
@@ -109,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
                 // a custom layout called R.layout.list_item_orchid for each item
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_orchid, parent, false);
-
                 return new OrchidViewHolder(view);
             }
 
@@ -145,58 +192,18 @@ public class MainActivity extends AppCompatActivity {
                 return super.getItem(getItemCount() - (position + 1));
             }
 
-
         };
         mRecyclerView.setAdapter(mFirebaseRecyclerAdapter);
-        GridLayoutManager layoutManager =
-                new GridLayoutManager(this, columns);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
+        mFirebaseRecyclerAdapter.startListening();
 
-        // Check network connection
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        // If there is a network connection, fetch data
-        if (networkInfo != null && networkInfo.isConnected()) {
-            // Start watching data
-            mFirebaseRecyclerAdapter.startListening();
-            showLoading();
-        } else {
-            // Set no connection error message
-            showErrorMessage(R.string.msg_no_connection_error);
-        }
+        // https://gist.github.com/Kishanjvaghela/67c42f8f32efaa2fadb682bc980e9280
     }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String searchQuery = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(this, "Search for'" + searchQuery + "' started.", Toast.LENGTH_LONG).show();
-            mQuery = FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child("orchids").orderByChild("name")
-                    .startAt(searchQuery)
-                    .endAt(searchQuery + "\uf8ff");
-        } else {
-            mQuery = FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child("orchids").orderByChild("saveTime");
-        }
-    }
-
 
     @Override
     protected void onDestroy() {
         mFirebaseRecyclerAdapter.stopListening();
         super.onDestroy();
     }
-
 
     /**
      * https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll-position-using-recyclerview-state
@@ -207,6 +214,8 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(BUNDLE_RECYCLER_LAYOUT))
                 mSavedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+            if (savedInstanceState.containsKey("mSearchString"))
+                mSearchString = savedInstanceState.getString("mSearchString");
         }
     }
 
@@ -215,6 +224,8 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mRecyclerView.getLayoutManager().onSaveInstanceState());
+        mSearchString = mSearchView.getQuery().toString();
+        outState.putString("mSearchString", mSearchString);
     }
 
     @Override
@@ -223,12 +234,24 @@ public class MainActivity extends AppCompatActivity {
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_filter).getActionView();
+        mSearchView = (SearchView) menu.findItem(R.id.action_filter).getActionView();
         // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(true);
-        searchView.setSubmitButtonEnabled(true);
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        mSearchView.setIconifiedByDefault(true);
+        mSearchView.setSubmitButtonEnabled(false);
+        mSearchView.setQuery(mSearchString, true);
+        mSearchView.clearFocus();
 
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+                                           @Override
+                                           public boolean onClose() {
+                                               mSearchString = "";
+                                               mSearchView.setQuery("", false);
+                                               mSearchView.clearFocus();
+
+                                               return false;
+                                           }
+                                       });
         return true;
     }
 

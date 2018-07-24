@@ -73,7 +73,6 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
             mForSaleTimeTextView.setText(DateFormatter.timeFrom(orchid.getForSaleTime()));
         mOrchidItem = orchid;
         mOrchidItem.setId(key);
-
         GlideApp.with(mNiceImageView.getContext())
                 .load(mOrchidItem.getNicePhoto())
                 .centerCrop()
