@@ -172,9 +172,9 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         }
         if (mOrchid == null) {
             setTitle(R.string.title_new_orchid);
+            invalidateOptionsMenu();
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
             mOrchid = new OrchidEntity();
-            invalidateOptionsMenu();
         } else {
             setTitle(mOrchid.getName());
         }
@@ -311,7 +311,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         super.onPrepareOptionsMenu(menu);
         mSaveMenuItem = menu.findItem(R.id.action_save);
         // If this is a new orchid, hide the "Delete" menu item.
-        if (mOrchid == null) {
+        if (mOrchid == null || getTitle().equals(getString(R.string.title_new_orchid))) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setEnabled(false);
         }

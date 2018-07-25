@@ -200,6 +200,8 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mFirebaseRecyclerAdapter);
 
         mFirebaseRecyclerAdapter.startListening();
+        invalidateOptionsMenu();
+
     }
 
     @Override
@@ -263,11 +265,19 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
-
-
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        // If this is a new orchid, hide the "Delete" menu item.
+        if (mHiddenOnly) {
+            menu.findItem(R.id.action_search).setVisible(false);
+            menu.findItem(R.id.action_show_hidden).setIcon(R.drawable.ic_visibility_off_gold_24dp);
+        }
+        return true;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
