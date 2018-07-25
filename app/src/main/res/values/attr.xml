@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Indicates if it is a tablet with portrait orientation or not  -->
+    <bool name="isTabletPort">false</bool>
+</resources>

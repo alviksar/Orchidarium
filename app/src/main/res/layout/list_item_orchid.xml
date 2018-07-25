@@ -90,6 +90,5 @@
             android:textColor="@color/gray100"
             android:visibility="gone"
             tools:text="1 day" />
-
     </RelativeLayout>
 </LinearLayout>

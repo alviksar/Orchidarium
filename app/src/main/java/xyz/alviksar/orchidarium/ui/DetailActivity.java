@@ -13,6 +13,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -137,11 +138,6 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
         mFirebaseAuth = FirebaseAuth.getInstance();
         if (mFirebaseAuth.getCurrentUser() == null) {
             // not signed in
@@ -162,9 +158,9 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("orchids");
-
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference("orchid_photos");
+
         String title;
         if (savedInstanceState == null || !savedInstanceState.containsKey(OrchidEntity.EXTRA_ORCHID)) {
             mOrchid = getIntent().getParcelableExtra(OrchidEntity.EXTRA_ORCHID);
@@ -182,10 +178,27 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
         setTitle(title);
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle(title);
+        if (collapsingToolbarLayout != null)
+            collapsingToolbarLayout.setTitle(title);
 
-        // Use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        /*
+        https://stackoverflow.com/questions/9279111/determine-if-the-device-is-a-smartphone-or-tablet
+        */
+        boolean tabletPort = getResources().getBoolean(R.bool.isTabletPort);
+        if (tabletPort) {
+            // If a tablet portrait screen, use 2 columns grid
+
+            mLayoutManager = new GridLayoutManager(this, 2);
+        } else {
+            // Use a linear layout manager
+            mLayoutManager = new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false);
+        }
         mBannerRecyclerView.setLayoutManager(mLayoutManager);
         // specify an adapter (see also next example)
         ArrayList<String> bannerList = new ArrayList<>(mOrchid.getRealPhotos());
@@ -294,7 +307,8 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
         GlideApp.with(mNiceImageView.getContext())
                 .load(mOrchid.getNicePhoto())
-                .centerCrop()
+                //  .centerCrop()
+                .fitCenter()
                 .into(mNiceImageView);
 
     }
