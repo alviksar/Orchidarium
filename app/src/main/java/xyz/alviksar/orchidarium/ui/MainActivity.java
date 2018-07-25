@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,7 +40,7 @@ import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 public class MainActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener {
 
-    private static final Float TILE_WIDTH_INCHES = 1.0f;
+    private static final Float TILE_WIDTH_INCHES = 1.2f;
 
     @BindView(R.id.rv_orchids)
     RecyclerView mRecyclerView;
@@ -292,7 +291,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(startSettingsActivity);
                 return true;
             case R.id.action_add_new:
-                Intent intent = new Intent(MainActivity.this, StoreAdminActivity.class);
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.action_show_hidden:

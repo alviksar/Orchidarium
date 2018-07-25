@@ -64,8 +64,6 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_visibility_off_white_24dp"
             android:visibility="visible" />
-
-
     </FrameLayout>
 
     <RelativeLayout

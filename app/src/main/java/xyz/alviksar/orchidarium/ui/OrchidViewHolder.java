@@ -4,15 +4,11 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import java.util.Locale;
 
@@ -100,7 +96,7 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(mContext, StoreAdminActivity.class);
+        Intent intent = new Intent(mContext, DetailActivity.class);
         intent.putExtra(OrchidEntity.EXTRA_ORCHID, mOrchidItem);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
             View sharedView = view.findViewById(R.id.iv_nice_photo);

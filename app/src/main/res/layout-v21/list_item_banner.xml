@@ -4,6 +4,7 @@
     android:id="@+id/iv_real_photo"
     android:layout_width="wrap_content"
     android:layout_height="@dimen/dim_real_photo_at_banner_size"
+    android:background="@color/gray100"
     android:contentDescription="@string/desc_real_orchid_photo"
     android:transitionName="@string/transition_real_photo"
     tools:src="@drawable/phragmipedium_besseae_real" />

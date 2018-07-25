@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.StoreAdminActivity">
+    tools:context=".ui.DetailActivity">
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinatorlayout"
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
 
             <include layout="@layout/layout_banner" />
 
-            <include layout="@layout/layout_input_data" />
+            <include layout="@layout/layout_data" />
 
         </LinearLayout>
 

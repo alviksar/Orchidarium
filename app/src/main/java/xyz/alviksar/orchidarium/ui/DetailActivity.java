@@ -7,13 +7,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,7 +64,7 @@ import xyz.alviksar.orchidarium.util.GlideApp;
 import static com.google.firebase.storage.StorageException.ERROR_OBJECT_NOT_FOUND;
 
 
-public class StoreAdminActivity extends AppCompatActivity implements BannerAdapter.BannerAdapterOnClickHandler {
+public class DetailActivity extends AppCompatActivity implements BannerAdapter.BannerAdapterOnClickHandler {
 
     private OrchidEntity mOrchid;
     private boolean mDataHasChanged = false;
@@ -71,9 +74,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 
     @BindView(R.id.sw_put_up_for_sale)
     SwitchCompat mPutOnForSaleSwitch;
-
-    @BindView(R.id.tv_state)
-    TextView mStateTextView;
 
     @BindView(R.id.et_name)
     EditText mNameEditText;
@@ -133,7 +133,14 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_store_admin);
+        setContentView(R.layout.activity_detail);
+
+        ButterKnife.bind(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         if (mFirebaseAuth.getCurrentUser() == null) {
@@ -158,27 +165,26 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference("orchid_photos");
-
+        String title;
         if (savedInstanceState == null || !savedInstanceState.containsKey(OrchidEntity.EXTRA_ORCHID)) {
             mOrchid = getIntent().getParcelableExtra(OrchidEntity.EXTRA_ORCHID);
         } else {
             mOrchid = savedInstanceState.getParcelable(OrchidEntity.EXTRA_ORCHID);
         }
         if (mOrchid == null) {
-            setTitle(R.string.title_new_orchid);
-            invalidateOptionsMenu();
+            title = getString(R.string.title_new_orchid);
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
+            invalidateOptionsMenu();
             mOrchid = new OrchidEntity();
         } else {
-            setTitle(mOrchid.getName());
+            title = mOrchid.getName();
         }
 
-        ButterKnife.bind(this);
+        setTitle(title);
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitle(title);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        // mBannerRecyclerView.setHasFixedSize(true);
-        // use a linear layout manager
+        // Use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false);
         mBannerRecyclerView.setLayoutManager(mLayoutManager);
         // specify an adapter (see also next example)
@@ -190,18 +196,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 
         mCodeEditText.setText(mOrchid.getCode());
         mNameEditText.setText(mOrchid.getName());
-
-        mPutOnForSaleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    mStateTextView.setText(R.string.label_available_for_order);
-                } else {
-                    mStateTextView.setText(R.string.label_hidden);
-                }
-            }
-        });
-        mPutOnForSaleSwitch.setChecked(mOrchid.getIsVisibleForSale());
 
         String s = "";
         switch (mOrchid.getAge()) {
@@ -259,13 +253,18 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         mPutOnForSaleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mStateTextView.setText(mPutOnForSaleSwitch.getTextOn());
+                    mPutOnForSaleSwitch.setText(mPutOnForSaleSwitch.getTextOn());
                 } else {
-                    mStateTextView.setText(mPutOnForSaleSwitch.getTextOff());
+                    mPutOnForSaleSwitch.setText(mPutOnForSaleSwitch.getTextOff());
                 }
             }
         });
-
+        mPutOnForSaleSwitch.setChecked(mOrchid.getIsVisibleForSale());
+        if (mOrchid.getIsVisibleForSale()) {
+            mPutOnForSaleSwitch.setText(mPutOnForSaleSwitch.getTextOn());
+        } else {
+            mPutOnForSaleSwitch.setText(mPutOnForSaleSwitch.getTextOff());
+        }
         // Set the integer to the constant values
         mPlantAgeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -337,7 +336,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                     // Hook up the up button
                     // If the orchid hasn't changed, continue with navigating up to parent activity
                     if (!mDataHasChanged) {
-                        NavUtils.navigateUpFromSameTask(StoreAdminActivity.this);
+                        NavUtils.navigateUpFromSameTask(DetailActivity.this);
                         return true;
                     }
 
@@ -349,7 +348,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     // User clicked "Discard" button, navigate to parent activity.
-                                    NavUtils.navigateUpFromSameTask(StoreAdminActivity.this);
+                                    NavUtils.navigateUpFromSameTask(DetailActivity.this);
                                 }
                             };
 
@@ -359,7 +358,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
             }
         } catch (IllegalArgumentException e) {
             Snackbar.make(findViewById(R.id.coordinatorlayout), e.getMessage(), Snackbar.LENGTH_LONG).show();
-//            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -379,8 +377,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                 // Sign in was canceled by the user, finish the activity
                 Snackbar.make(findViewById(R.id.coordinatorlayout), "Sign in canceled",
                         Snackbar.LENGTH_LONG).show();
-//                Toast.makeText(this, "Sign in canceled",
-//                        Toast.LENGTH_SHORT).show();
                 finish();
 
             } else {
@@ -389,23 +385,17 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                     Snackbar.make(findViewById(R.id.coordinatorlayout),
                             "Sign in canceled",
                             Snackbar.LENGTH_LONG).show();
-//                    Toast.makeText(this, "Sign in canceled",
-//                            Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
                     Snackbar.make(findViewById(R.id.coordinatorlayout),
                             R.string.msg_no_connection_error,
                             Snackbar.LENGTH_LONG).show();
-//                    Toast.makeText(this, R.string.msg_no_connection_error,
-//                            Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Snackbar.make(findViewById(R.id.coordinatorlayout),
                         String.format("Sign in error: $s", response.getError()),
                         Snackbar.LENGTH_LONG).show();
-//                Toast.makeText(this, String.format("Sign in error: $s", response.getError()),
-//                        Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == RC_NICE_PHOTO_PICKER && resultCode == RESULT_OK) {
             mSelectedImageUri = data.getData();
@@ -470,8 +460,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                         String errMsg = String.format("Failure: %s", exception.getMessage());
                         Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
                                 Snackbar.LENGTH_LONG).show();
-//                        Toast.makeText(StoreAdminActivity.this,
-//                                errMsg, Toast.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
                         if (errorCode == ERROR_OBJECT_NOT_FOUND) {
                             // Can continue
@@ -565,7 +553,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                 // deleteOrchid();
                 deleteListOfPhotosAndObjectFromDb(
                         getToDelete(mOrchid.getRealPhotos(), new ArrayList<String>()));
-                NavUtils.navigateUpFromSameTask(StoreAdminActivity.this);
+                NavUtils.navigateUpFromSameTask(DetailActivity.this);
             }
         });
         builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
@@ -604,8 +592,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                         String errMsg = String.format("Failure: %s", exception.getMessage());
                         Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
                                 Snackbar.LENGTH_LONG).show();
-//                        Toast.makeText(StoreAdminActivity.this,
-//                                errMsg, Toast.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
                         if (errorCode == ERROR_OBJECT_NOT_FOUND) {
                             // Can delete
@@ -687,7 +673,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
         if (TextUtils.isEmpty(url)) {
             choosePhoto(RC_REAL_PHOTO_PICKER);
         } else {
-            Intent intent = new Intent(StoreAdminActivity.this,
+            Intent intent = new Intent(DetailActivity.this,
                     PhotoGalleryActivity.class);
             intent.setData(Uri.parse(url));
             intent.putExtra(OrchidEntity.EXTRA_ORCHID_NAME, mOrchid.getName());
@@ -696,7 +682,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
             intent.putExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST_POSITION, position);
 
             //        startActivity(intent,
-//                ActivityOptions.makeSceneTransitionAnimation(StoreAdminActivity.this, view,
+//                ActivityOptions.makeSceneTransitionAnimation(DetailActivity.this, view,
 //                        view.getTransitionName()).toBundle());
 
 
@@ -704,7 +690,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                 View sharedView = view.findViewById(R.id.iv_real_photo);
                 startActivity(intent,
                         ActivityOptions.makeSceneTransitionAnimation(
-                                StoreAdminActivity.this,
+                                DetailActivity.this,
                                 sharedView,
                                 sharedView.getTransitionName())
                                 .toBundle());
@@ -765,8 +751,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                         String errMsg = String.format("Failure: %s", exception.getMessage());
                         Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
                                 Snackbar.LENGTH_LONG).show();
-//                        Toast.makeText(StoreAdminActivity.this,
-//                                errMsg, Toast.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
                         if (errorCode == ERROR_OBJECT_NOT_FOUND) {
                             // Can continue
@@ -803,8 +787,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                         String errMsg = String.format("Failure: %s", exception.getMessage());
                         Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
                                 Snackbar.LENGTH_LONG).show();
-//                        Toast.makeText(StoreAdminActivity.this,
-//                                errMsg, Toast.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
                         if (errorCode == ERROR_OBJECT_NOT_FOUND) {
                             // Can continue
@@ -848,8 +830,6 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                         String errMsg = String.format("Failure: %s", exception.getMessage());
                         Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
                                 Snackbar.LENGTH_LONG).show();
-//                        Toast.makeText(StoreAdminActivity.this,
-//                                errMsg, Toast.LENGTH_LONG).show();
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override

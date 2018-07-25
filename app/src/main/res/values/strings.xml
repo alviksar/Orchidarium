@@ -29,7 +29,7 @@
     <string name="pref_sum_notification_is_on">Notification is on</string>
     <string name="pref_sum_notification_is_off">Notification is off</string>
 
-    <!-- StoreAdminActivity -->
+    <!-- DetailActivity -->
     <string name="label_nice_image">The nice image</string>
     <string name="label_real_image">The real image</string>
     <!-- Button which load a nice image. [CHAR LIMIT=30] -->
