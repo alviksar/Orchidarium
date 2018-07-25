@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.support.v7.widget.SearchView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -105,7 +104,6 @@ public class MainActivity extends AppCompatActivity
 
 //        Toast.makeText(this, "Search for'" + searchQuery + "' started.", Toast.LENGTH_LONG).show();
         Query query;
-//        mHiddenOnly = true;
         if (mHiddenOnly) {
             query = FirebaseDatabase.getInstance()
                     .getReference()
@@ -206,7 +204,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        mFirebaseRecyclerAdapter.stopListening();
+        if (mFirebaseRecyclerAdapter != null)
+            mFirebaseRecyclerAdapter.stopListening();
         super.onDestroy();
     }
 
@@ -273,11 +272,15 @@ public class MainActivity extends AppCompatActivity
         super.onPrepareOptionsMenu(menu);
         // If this is a new orchid, hide the "Delete" menu item.
         if (mHiddenOnly) {
+            setTitle(getString(R.string.title_invisible_to_customers));
             menu.findItem(R.id.action_search).setVisible(false);
             menu.findItem(R.id.action_show_hidden).setIcon(R.drawable.ic_visibility_off_gold_24dp);
+        } else {
+            setTitle(getString(R.string.app_name));
         }
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

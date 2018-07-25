@@ -46,14 +46,6 @@
 
 
         <activity
-            android:name=".ui.DetailActivity"
-            android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/AppTheme.Main">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity" />
-        </activity>
-        <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/action_settings"
             android:parentActivityName=".ui.MainActivity"

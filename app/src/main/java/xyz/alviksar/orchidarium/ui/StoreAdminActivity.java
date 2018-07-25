@@ -1,14 +1,13 @@
 package xyz.alviksar.orchidarium.ui;
 
 import android.app.ActivityOptions;
-import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,12 +28,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,9 +43,6 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -364,7 +358,8 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                     return true;
             }
         } catch (IllegalArgumentException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.coordinatorlayout), e.getMessage(), Snackbar.LENGTH_LONG).show();
+//            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -382,25 +377,35 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
-                Toast.makeText(this, "Sign in canceled",
-                        Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.coordinatorlayout), "Sign in canceled",
+                        Snackbar.LENGTH_LONG).show();
+//                Toast.makeText(this, "Sign in canceled",
+//                        Toast.LENGTH_SHORT).show();
                 finish();
 
             } else {
                 // Sign in failed
                 if (response == null) {
-                    Toast.makeText(this, "Sign in canceled",
-                            Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.coordinatorlayout),
+                            "Sign in canceled",
+                            Snackbar.LENGTH_LONG).show();
+//                    Toast.makeText(this, "Sign in canceled",
+//                            Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    Toast.makeText(this, R.string.msg_no_connection_error,
-                            Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.coordinatorlayout),
+                            R.string.msg_no_connection_error,
+                            Snackbar.LENGTH_LONG).show();
+//                    Toast.makeText(this, R.string.msg_no_connection_error,
+//                            Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Toast.makeText(this, String.format("Sign in error: $s", response.getError()),
-                        Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.coordinatorlayout),
+                        String.format("Sign in error: $s", response.getError()),
+                        Snackbar.LENGTH_LONG).show();
+//                Toast.makeText(this, String.format("Sign in error: $s", response.getError()),
+//                        Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == RC_NICE_PHOTO_PICKER && resultCode == RESULT_OK) {
             mSelectedImageUri = data.getData();
@@ -463,8 +468,10 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         String errMsg = String.format("Failure: %s", exception.getMessage());
-                        Toast.makeText(StoreAdminActivity.this,
-                                errMsg, Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
+                                Snackbar.LENGTH_LONG).show();
+//                        Toast.makeText(StoreAdminActivity.this,
+//                                errMsg, Toast.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
                         if (errorCode == ERROR_OBJECT_NOT_FOUND) {
                             // Can continue
@@ -595,8 +602,10 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         String errMsg = String.format("Failure: %s", exception.getMessage());
-                        Toast.makeText(StoreAdminActivity.this,
-                                errMsg, Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
+                                Snackbar.LENGTH_LONG).show();
+//                        Toast.makeText(StoreAdminActivity.this,
+//                                errMsg, Toast.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
                         if (errorCode == ERROR_OBJECT_NOT_FOUND) {
                             // Can delete
@@ -691,7 +700,7 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
 //                        view.getTransitionName()).toBundle());
 
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 View sharedView = view.findViewById(R.id.iv_real_photo);
                 startActivity(intent,
                         ActivityOptions.makeSceneTransitionAnimation(
@@ -754,8 +763,10 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         String errMsg = String.format("Failure: %s", exception.getMessage());
-                        Toast.makeText(StoreAdminActivity.this,
-                                errMsg, Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
+                                Snackbar.LENGTH_LONG).show();
+//                        Toast.makeText(StoreAdminActivity.this,
+//                                errMsg, Toast.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
                         if (errorCode == ERROR_OBJECT_NOT_FOUND) {
                             // Can continue
@@ -790,8 +801,10 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         String errMsg = String.format("Failure: %s", exception.getMessage());
-                        Toast.makeText(StoreAdminActivity.this,
-                                errMsg, Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
+                                Snackbar.LENGTH_LONG).show();
+//                        Toast.makeText(StoreAdminActivity.this,
+//                                errMsg, Toast.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
                         if (errorCode == ERROR_OBJECT_NOT_FOUND) {
                             // Can continue
@@ -833,8 +846,10 @@ public class StoreAdminActivity extends AppCompatActivity implements BannerAdapt
                         mProgressBar.setVisibility(View.INVISIBLE);
                         mSaveMenuItem.setEnabled(true);
                         String errMsg = String.format("Failure: %s", exception.getMessage());
-                        Toast.makeText(StoreAdminActivity.this,
-                                errMsg, Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
+                                Snackbar.LENGTH_LONG).show();
+//                        Toast.makeText(StoreAdminActivity.this,
+//                                errMsg, Toast.LENGTH_LONG).show();
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override

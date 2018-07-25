@@ -14,10 +14,11 @@
     <!-- A text that will be shown to users if something goes wrong -->
     <TextView
         android:id="@+id/tv_error_message"
+        android:layout_margin="32dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textColor="@color/gray300"
+        android:textAlignment="center"
         android:textSize="@dimen/error_msg_text_size"
         android:visibility="invisible" />
 

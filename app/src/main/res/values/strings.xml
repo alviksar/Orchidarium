@@ -92,5 +92,6 @@
     <string name="app_label">app_label</string>
     <string name="action_show_hidden">Show hidden only</string>
     <string name="invisible_to_buyers">Invisible to buyers</string>
+    <string name="title_invisible_to_customers">Only invisible to customers</string>
 
 </resources>
