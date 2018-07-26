@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.OnClick;
+import timber.log.Timber;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 import xyz.alviksar.orchidarium.util.GlideApp;
@@ -52,6 +53,7 @@ public class PhotoGalleryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_gallery);
+        Timber.i("Activity started");
 
         String title;
         if (savedInstanceState == null) {

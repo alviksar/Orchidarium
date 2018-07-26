@@ -32,6 +32,8 @@ import com.google.firebase.database.Query;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
+import xyz.alviksar.orchidarium.BuildConfig;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 
@@ -70,6 +72,10 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (BuildConfig.DEBUG)
+            Timber.plant(new Timber.DebugTree());
+
         ButterKnife.bind(this);
 
         if (savedInstanceState != null) {
