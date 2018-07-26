@@ -233,7 +233,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mRecyclerView.getLayoutManager().onSaveInstanceState());
+        if (mRecyclerView != null && mRecyclerView.getLayoutManager() != null)
+            outState.putParcelable(BUNDLE_RECYCLER_LAYOUT,
+                    mRecyclerView.getLayoutManager().onSaveInstanceState());
         outState.putString(BUNDLE_SEARCH_QUERY, mSearchQuery);
         outState.putBoolean(BUNDLE_HIDDEN_ONLY, mHiddenOnly);
     }

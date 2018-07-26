@@ -1,4 +1,4 @@
-package xyz.alviksar.orchidarium.util;
+package xyz.alviksar.orchidarium;
 
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 

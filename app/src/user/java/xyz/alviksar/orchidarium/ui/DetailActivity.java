@@ -23,21 +23,17 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.firebase.ui.auth.AuthUI;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import xyz.alviksar.orchidarium.BuildConfig;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
@@ -47,7 +43,6 @@ import xyz.alviksar.orchidarium.util.GlideApp;
 public class DetailActivity extends AppCompatActivity implements BannerAdapter.BannerAdapterOnClickHandler {
 
     private OrchidEntity mOrchid;
-    private boolean mDataHasChanged = false;
 
     @BindView(R.id.tv_code)
     TextView mCodeTextView;
@@ -83,8 +78,6 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
     RecyclerView mBannerRecyclerView;
     LinearLayoutManager mLayoutManager;
     BannerAdapter mBannerAdapter;
-
-    MenuItem mSaveMenuItem;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -128,9 +121,9 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         setTitle(title);
 
         if (OrchidariumPreferences.inCart(mOrchid))
-            mAddToCartButton.setImageResource(R.drawable.ic_add_shopping_cart_yellow_24dp);
+            mAddToCartButton.setImageResource(R.drawable.ic_remove_shopping_cart_white_24dp);
         else
-            mAddToCartButton.setImageResource(R.drawable.ic_remove_shopping_cart_gray_24dp);
+            mAddToCartButton.setImageResource(R.drawable.ic_add_shopping_cart_white_24dp);
 
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         if (collapsingToolbarLayout != null)
@@ -204,18 +197,19 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        mSaveMenuItem = menu.findItem(R.id.action_save);
-        // If this is a new orchid, hide the "Delete" menu item.
-        if (mOrchid == null || getTitle().equals(getString(R.string.title_new_orchid))) {
-            MenuItem menuItem = menu.findItem(R.id.action_delete);
-            menuItem.setEnabled(false);
+        if (mOrchid != null) {
+            MenuItem menuItem = menu.findItem(R.id.action_cart);
+            if (OrchidariumPreferences.inCart(mOrchid))
+                menuItem.setIcon(R.drawable.ic_remove_shopping_cart_white_24dp);
+            else
+                menuItem.setIcon(R.drawable.ic_add_shopping_cart_white_24dp);
         }
         return true;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_store_admin, menu);
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
         return true;
     }
 
@@ -226,15 +220,15 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
             switch (item.getItemId()) {
                 case android.R.id.home:
                     // Hook up the up button
-                    // If the orchid hasn't changed, continue with navigating up to parent activity
-                    if (!mDataHasChanged) {
-                        NavUtils.navigateUpFromSameTask(DetailActivity.this);
-                        return true;
-                    }
+                    NavUtils.navigateUpFromSameTask(DetailActivity.this);
                     return true;
+                case R.id.action_cart:
+                    cartTransfer();
+                    invalidateOptionsMenu();
             }
         } catch (IllegalArgumentException e) {
-            Snackbar.make(findViewById(R.id.coordinatorlayout), e.getMessage(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.coordinatorlayout),
+                    e.getMessage(), Snackbar.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -248,14 +242,18 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         startActivity(intent);
     }
 
-    @OnClick(R.id.btn_add_nice_photo)
-    public void onClickAddToCartButton(View view) {
+    private void cartTransfer() {
         // Swap icons
         if (OrchidariumPreferences.inCart(mOrchid))
-            mAddToCartButton.setImageResource(R.drawable.ic_remove_shopping_cart_gray_24dp);
+            mAddToCartButton.setImageResource(R.drawable.ic_remove_shopping_cart_white_24dp);
         else
-            mAddToCartButton.setImageResource(R.drawable.ic_add_shopping_cart_yellow_24dp);
+            mAddToCartButton.setImageResource(R.drawable.ic_add_shopping_cart_white_24dp);
         OrchidariumPreferences.addToCart(mOrchid);
+    }
+
+    @OnClick(R.id.btn_add_nice_photo)
+    public void onClickCartButton(View view) {
+        cartTransfer();
     }
 
     @Override
