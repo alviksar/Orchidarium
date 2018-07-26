@@ -8,6 +8,7 @@ import java.util.Currency;
 import java.util.Locale;
 
 import xyz.alviksar.orchidarium.R;
+import xyz.alviksar.orchidarium.model.OrchidEntity;
 
 public class OrchidariumPreferences {
         /**
@@ -60,4 +61,13 @@ public class OrchidariumPreferences {
         String symbol = currency.getSymbol();
         return sp.getString(context.getString(R.string.pref_key_currency_symbol), symbol);
     }
+
+    public static void addToCart(OrchidEntity orchid) {
+
+    }
+
+    public static boolean inCart(OrchidEntity orchid) {
+        return  false;
+    }
+
 }

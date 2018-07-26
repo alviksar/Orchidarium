@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="112dp" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/et_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="6"
+            android:hint="@string/hint_id"
+            tools:text="234567" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/sw_put_up_for_sale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/label_appearance"
+        android:textOff="@string/label_hidden"
+        android:textOn="@string/label_available_for_order"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:showText="false" />
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="16"
+        android:hint="@string/label_name"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_code"
+        tools:text="Phragmipedium besseae" />
+
+    <TextView
+        android:id="@+id/tv_plant_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/label_plant_age"
+        app:layout_constraintBaseline_toBaselineOf="@+id/sp_plant_age"
+        app:layout_constraintEnd_toStartOf="@+id/guideline" />
+
+    <Spinner
+        android:id="@+id/sp_plant_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:entries="@array/plant_ages"
+        android:hint="@string/label_plant_age"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/et_name"
+        tools:text="@string/plant_age_two_years_before" />
+
+
+    <TextView
+        android:id="@+id/tv_pot_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/label_pot_size"
+        app:layout_constraintBaseline_toBaselineOf="@+id/sp_pot_size"
+        app:layout_constraintEnd_toStartOf="@+id/guideline" />
+
+    <Spinner
+        android:id="@+id/sp_pot_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:entries="@array/pot_sizes"
+        android:hint="@string/label_pot_size"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/sp_plant_age"
+        tools:text="@string/pot_size_3_5" />
+
+    <EditText
+        android:id="@+id/et_retail_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="5"
+        android:hint="@string/label_retail_price"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sp_pot_size"
+        tools:text="12345" />
+
+    <Spinner
+        android:id="@+id/sp_currency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:entries="@array/currency_signs"
+        app:layout_constraintBaseline_toBaselineOf="@+id/et_retail_price"
+        app:layout_constraintStart_toEndOf="@+id/et_retail_price"
+        tools:text="@string/pot_size_3_5" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_retail_price">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/et_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:hint="@string/label_description"
+            android:singleLine="false" />
+    </android.support.design.widget.TextInputLayout>
+
+</android.support.constraint.ConstraintLayout>

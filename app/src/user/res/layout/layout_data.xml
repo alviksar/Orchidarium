@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?><!-- layout_data for user -->
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="112dp" />
+
+    <TextView
+        android:id="@+id/tv_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="234567" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/DataTextAppearanceStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_code"
+        tools:text="Phragmipedium besseae" />
+
+    <TextView
+        android:id="@+id/tv_plant_age_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/label_plant_age"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_plant_age"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_plant_age"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+        tools:text="@string/plant_age_two_years_before" />
+
+    <TextView
+        android:id="@+id/tv_pot_size_label"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/label_pot_size"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_pot_size"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_pot_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tv_plant_age"
+        tools:text="@string/pot_size_3_5" />
+
+    <TextView
+        android:id="@+id/tv_retail_price"
+        style="@style/DataTextAppearanceStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pot_size"
+        tools:text="12345" />
+
+    <TextView
+        android:id="@+id/tv_currency"
+        style="@style/DataTextAppearanceStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_retail_price"
+        app:layout_constraintStart_toEndOf="@+id/tv_retail_price"
+        tools:text="@string/pot_size_3_5" />
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Medium"
+        android:id="@+id/tv_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="top"
+        android:singleLine="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_retail_price" />
+
+</android.support.constraint.ConstraintLayout>
