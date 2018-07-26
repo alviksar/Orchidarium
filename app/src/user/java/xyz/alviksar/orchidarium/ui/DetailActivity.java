@@ -120,7 +120,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         }
         setTitle(title);
 
-        if (OrchidariumPreferences.inCart(mOrchid))
+        if (OrchidariumPreferences.inCart(this, mOrchid))
             mAddToCartButton.setImageResource(R.drawable.ic_remove_shopping_cart_white_24dp);
         else
             mAddToCartButton.setImageResource(R.drawable.ic_add_shopping_cart_white_24dp);
@@ -199,7 +199,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         super.onPrepareOptionsMenu(menu);
         if (mOrchid != null) {
             MenuItem menuItem = menu.findItem(R.id.action_cart);
-            if (OrchidariumPreferences.inCart(mOrchid))
+            if (OrchidariumPreferences.inCart(this, mOrchid))
                 menuItem.setIcon(R.drawable.ic_remove_shopping_cart_white_24dp);
             else
                 menuItem.setIcon(R.drawable.ic_add_shopping_cart_white_24dp);
@@ -244,11 +244,15 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
     private void cartTransfer() {
         // Swap icons
-        if (OrchidariumPreferences.inCart(mOrchid))
-            mAddToCartButton.setImageResource(R.drawable.ic_remove_shopping_cart_white_24dp);
-        else
+        if (OrchidariumPreferences.inCart(this, mOrchid)) {
             mAddToCartButton.setImageResource(R.drawable.ic_add_shopping_cart_white_24dp);
-        OrchidariumPreferences.addToCart(mOrchid);
+            OrchidariumPreferences.removeFromCart(this, mOrchid);
+        }
+        else {
+            mAddToCartButton.setImageResource(R.drawable.ic_remove_shopping_cart_white_24dp);
+            OrchidariumPreferences.addToCart(this, mOrchid);
+        }
+        invalidateOptionsMenu();
     }
 
     @OnClick(R.id.btn_add_nice_photo)
