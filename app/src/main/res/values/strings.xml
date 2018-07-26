@@ -82,14 +82,14 @@
     <string name="action_sign_out">Sign out</string>
     <string name="msg_choose_image">Choose the image</string>
     <string name="action_delete_photo">Delete</string>
-    <string name="title_activity_photo_gallery">PhotoGalleryActivity</string>
+    <string name="title_activity_photo_gallery">Photo Gallery</string>
     <!--string name="section_format">Hello World from section: %1$d</string-->
 
     <string name="transition_real_photo" translatable="false">transition_real_photo</string>
     <string name="transition_nice_photo" translatable="false">transition_nice_photo</string>
 
     <string name="search_hint">Search by name</string>
-    <string name="app_label">app_label</string>
+    <string name="app_label" translatable="false">app_label</string>
     <string name="action_show_hidden">Show hidden only</string>
     <string name="invisible_to_buyers">Invisible to buyers</string>
     <string name="title_invisible_to_customers">Only invisible to customers</string>

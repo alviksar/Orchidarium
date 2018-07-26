@@ -49,5 +49,10 @@
     <string name="action_delete_photo">Удалить</string>
     <string name="action_sign_out">Выйти</string>
     <string name="desc_real_orchid_photo">Фотографии орхидеи</string>
+    <string name="title_activity_photo_gallery">"Фотографии "</string>
+    <string name="search_hint">Поиск по названию</string>
+    <string name="action_show_hidden">Только скрытые</string>
+    <string name="invisible_to_buyers">Скрыто</string>
+    <string name="title_invisible_to_customers">Только скрытые</string>
 
 </resources>
