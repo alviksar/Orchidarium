@@ -2,9 +2,11 @@ package xyz.alviksar.orchidarium.ui;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -40,7 +42,9 @@ import xyz.alviksar.orchidarium.model.OrchidEntity;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
 
-public class DetailActivity extends AppCompatActivity implements BannerAdapter.BannerAdapterOnClickHandler {
+public class DetailActivity extends AppCompatActivity
+        implements BannerAdapter.BannerAdapterOnClickHandler,
+        SharedPreferences.OnSharedPreferenceChangeListener{
 
     private OrchidEntity mOrchid;
 
@@ -90,6 +94,14 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(OrchidEntity.EXTRA_ORCHID, mOrchid);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+
     }
 
     @Override
@@ -192,6 +204,9 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                 .fitCenter()
                 .into(mNiceImageView);
 
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+
     }
 
     @Override
@@ -200,9 +215,9 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         if (mOrchid != null) {
             MenuItem menuItem = menu.findItem(R.id.action_cart);
             if (OrchidariumPreferences.inCart(this, mOrchid))
-                menuItem.setIcon(R.drawable.ic_remove_shopping_cart_white_24dp);
+                menuItem.setVisible(true);
             else
-                menuItem.setIcon(R.drawable.ic_add_shopping_cart_white_24dp);
+                menuItem.setVisible(false);
         }
         return true;
     }
@@ -223,8 +238,9 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                     NavUtils.navigateUpFromSameTask(DetailActivity.this);
                     return true;
                 case R.id.action_cart:
-                    cartTransfer();
-                    invalidateOptionsMenu();
+//                    cartTransfer();
+//                    invalidateOptionsMenu();
+//                    return true;
             }
         } catch (IllegalArgumentException e) {
             Snackbar.make(findViewById(R.id.coordinatorlayout),
@@ -247,8 +263,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         if (OrchidariumPreferences.inCart(this, mOrchid)) {
             mAddToCartButton.setImageResource(R.drawable.ic_add_shopping_cart_white_24dp);
             OrchidariumPreferences.removeFromCart(this, mOrchid);
-        }
-        else {
+        } else {
             mAddToCartButton.setImageResource(R.drawable.ic_remove_shopping_cart_white_24dp);
             OrchidariumPreferences.addToCart(this, mOrchid);
         }
@@ -283,4 +298,10 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         }
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        if (s.equals(OrchidariumPreferences.PREF_CONTENTS_OF_THE_CART)) {
+            invalidateOptionsMenu();
+        }
+    }
 }

@@ -3,9 +3,12 @@ package xyz.alviksar.orchidarium.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Currency;
+import java.util.List;
 import java.util.Locale;
 
 import xyz.alviksar.orchidarium.R;
@@ -13,7 +16,7 @@ import xyz.alviksar.orchidarium.model.OrchidEntity;
 
 public class OrchidariumPreferences {
 
-    private static final String PREF_CONTENTS_OF_THE_CART = "pref_contents_of_the_cart";
+    public static final String PREF_CONTENTS_OF_THE_CART = "pref_contents_of_the_cart";
     private static final String PREF_GOODS_DELIMITER = "#";
 
     /**
@@ -98,7 +101,7 @@ public class OrchidariumPreferences {
         StringBuilder new_cart = new StringBuilder();
         for (String good_key : goods) {
             if (!good_key.equals(orchid.getId()))
-                new_cart.append(orchid.getId()).append(PREF_GOODS_DELIMITER);
+                new_cart.append(good_key).append(PREF_GOODS_DELIMITER);
         }
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(PREF_CONTENTS_OF_THE_CART, new_cart.toString());
@@ -124,6 +127,14 @@ public class OrchidariumPreferences {
             if (good_key.equals(orchid.getId())) return true;
         }
         return false;
+    }
+
+    @NonNull
+    public static ArrayList<String> getCartContent(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String cart = sp.getString(PREF_CONTENTS_OF_THE_CART, "");
+        String goods[] = cart.split(PREF_GOODS_DELIMITER);
+        return new ArrayList<>(Arrays.asList(goods));
     }
 
 }

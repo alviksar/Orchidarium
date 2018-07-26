@@ -3,10 +3,12 @@ package xyz.alviksar.orchidarium.ui;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -30,17 +32,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 import xyz.alviksar.orchidarium.BuildConfig;
 import xyz.alviksar.orchidarium.R;
+import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
 public class MainActivity extends AppCompatActivity
-        implements SearchView.OnQueryTextListener {
+        implements SearchView.OnQueryTextListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final Float TILE_WIDTH_INCHES = 1.2f;
 
@@ -56,6 +62,7 @@ public class MainActivity extends AppCompatActivity
     TextView mErrorMessage;
 
     SearchView mSearchView;
+    ArrayList<String> mCart;
 
     // Firebase
     private FirebaseRecyclerAdapter mFirebaseRecyclerAdapter;
@@ -99,6 +106,10 @@ public class MainActivity extends AppCompatActivity
             // Set no connection error message
             showErrorMessage(R.string.msg_no_connection_error);
         }
+
+        mCart = OrchidariumPreferences.getCartContent(this);
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
 
@@ -155,7 +166,12 @@ public class MainActivity extends AppCompatActivity
                 // Bind the OrchidEntity object to the OrchidViewHolder
                 String key = getRef(position).getKey();
 //                String key = getRef(getItemCount() - (position + 1)).getKey();
-                holder.bindOrchid(model, key);
+
+                if (BuildConfig.FLAVOR.equals("user")) {
+                    holder.bindOrchid(model, key, mCart.contains(key));
+                } else {
+                    holder.bindOrchid(model, key, false);
+                }
             }
 
             @Override
@@ -212,6 +228,8 @@ public class MainActivity extends AppCompatActivity
         if (mFirebaseRecyclerAdapter != null)
             mFirebaseRecyclerAdapter.stopListening();
         super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     /**
@@ -352,5 +370,13 @@ public class MainActivity extends AppCompatActivity
     public boolean onQueryTextChange(String newText) {
         mSearchQuery = newText;
         return false;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        if (s.equals(OrchidariumPreferences.PREF_CONTENTS_OF_THE_CART)) {
+            mCart = OrchidariumPreferences.getCartContent(this);
+            mFirebaseRecyclerAdapter.notifyDataSetChanged();
+        }
     }
 }
