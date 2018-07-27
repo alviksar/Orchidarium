@@ -18,6 +18,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,11 +31,15 @@ import android.widget.TextView;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -410,13 +415,21 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void composePurchaseOrder() {
-        String body = getString(R.string.order_mail_body);
+    public void composePurchaseOrder(ArrayList<OrchidEntity> orchidList) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.order_address)});
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_subject));
-        intent.putExtra(Intent.EXTRA_TEXT, body);
+
+        StringBuilder body = new StringBuilder( getString(R.string.order_mail_body));
+        int n = 1;
+        for (OrchidEntity orchid: orchidList) {
+            body.append(String.format(Locale.getDefault(),"\n%d. %8s %s",
+                    n, orchid.getCode(), orchid.getName()));
+            n++;
+        }
+
+        intent.putExtra(Intent.EXTRA_TEXT, body.toString() );
 
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
@@ -425,7 +438,33 @@ public class MainActivity extends AppCompatActivity
 
     @OnClick(R.id.btn_order)
     public void onClickOrderButton(View view) {
-        composePurchaseOrder();
+        OrderByEmail();
+    }
+
+    public void OrderByEmail() {
+        final ArrayList<OrchidEntity> orchidList = new ArrayList<>();
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("orchids");
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot orchidSnapshot: dataSnapshot.getChildren()) {
+                    String key = orchidSnapshot.getKey();
+                    if (mCart.contains(key)) {
+                        orchidList.add(orchidSnapshot.getValue(OrchidEntity.class));
+                    }
+                }
+                composePurchaseOrder(orchidList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Timber.d("Error trying to get data for order" +
+                                                ""+databaseError);
+            }
+        });
     }
 
 }
