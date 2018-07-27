@@ -134,7 +134,9 @@ public class OrchidariumPreferences {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String cart = sp.getString(PREF_CONTENTS_OF_THE_CART, "");
         String goods[] = cart.split(PREF_GOODS_DELIMITER);
-        return new ArrayList<>(Arrays.asList(goods));
+        ArrayList<String> list = new ArrayList<>(Arrays.asList(goods));
+        list.remove("");
+        return list;
     }
 
 }

@@ -66,20 +66,15 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-
-
     <android.support.design.widget.FloatingActionButton
-
         android:id="@+id/btn_add_nice_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         app:layout_anchor="@id/detail_appbar"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="@dimen/fab_margin"
         android:contentDescription="@string/desc_nice_orchid_photo"
-        android:src="@drawable/ic_local_florist_gold_24dp"
-        app:pressedTranslationZ="@dimen/fab_press_translation_z" />
+        android:src="@drawable/ic_local_florist_gold_24dp" />
 
     <ProgressBar
         android:id="@+id/pb_load_photo"

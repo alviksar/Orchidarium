@@ -126,7 +126,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
             int position = getAdapterPosition();
             if (position != mDataset.size() - 1) {
                 PopupMenu popup = new PopupMenu(v.getContext(), v);
-                popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.menu_popup_banner, popup.getMenu());
                 popup.setOnMenuItemClickListener(this);
                 popup.show();
             }

@@ -93,5 +93,8 @@
     <string name="action_show_hidden">Show hidden only</string>
     <string name="invisible_to_buyers">Invisible to buyers</string>
     <string name="title_invisible_to_customers">Only invisible to customers</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="make_an_order_by_email">Make an order by email</string>
 
 </resources>

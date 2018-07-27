@@ -327,7 +327,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_store_admin, menu);
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
         return true;
     }
 

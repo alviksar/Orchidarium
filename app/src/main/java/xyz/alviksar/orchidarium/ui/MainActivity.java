@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,6 +62,9 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.tv_error_message)
     TextView mErrorMessage;
 
+    @BindView(R.id.btn_make_order)
+    FloatingActionButton mMakeOrderButton;
+
     SearchView mSearchView;
     ArrayList<String> mCart;
 
@@ -108,7 +112,17 @@ public class MainActivity extends AppCompatActivity
         }
 
         mCart = OrchidariumPreferences.getCartContent(this);
-        PreferenceManager.getDefaultSharedPreferences(this)
+        if (BuildConfig.FLAVOR == "user") {
+            if (mCart.isEmpty()) {
+                mMakeOrderButton.setVisibility(View.GONE);
+            } else {
+                mMakeOrderButton.setVisibility(View.VISIBLE);
+            }
+        }
+        if (BuildConfig.FLAVOR == "admin") {
+            mMakeOrderButton.setVisibility(View.GONE);
+        }
+            PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -296,12 +310,19 @@ public class MainActivity extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         // If this is a new orchid, hide the "Delete" menu item.
-        if (mHiddenOnly) {
-            setTitle(getString(R.string.title_invisible_to_customers));
-            menu.findItem(R.id.action_search).setVisible(false);
-            menu.findItem(R.id.action_show_hidden).setIcon(R.drawable.ic_visibility_off_gold_24dp);
-        } else {
-            setTitle(getString(R.string.app_name));
+        if (BuildConfig.FLAVOR == "user") {
+            menu.findItem(R.id.action_add_new).setVisible(false);
+            menu.findItem(R.id.action_show_hidden).setVisible(false);
+            menu.findItem(R.id.action_sign_out).setVisible(false);
+        }
+        if (BuildConfig.FLAVOR == "admin") {
+            if (mHiddenOnly) {
+                setTitle(getString(R.string.title_invisible_to_customers));
+                menu.findItem(R.id.action_search).setVisible(false);
+                menu.findItem(R.id.action_show_hidden).setIcon(R.drawable.ic_visibility_off_gold_24dp);
+            } else {
+                setTitle(getString(R.string.app_name));
+            }
         }
         return true;
     }
@@ -377,6 +398,13 @@ public class MainActivity extends AppCompatActivity
         if (s.equals(OrchidariumPreferences.PREF_CONTENTS_OF_THE_CART)) {
             mCart = OrchidariumPreferences.getCartContent(this);
             mFirebaseRecyclerAdapter.notifyDataSetChanged();
+            if (BuildConfig.FLAVOR == "user") {
+                if (mCart.isEmpty()) {
+                    mMakeOrderButton.setVisibility(View.GONE);
+                } else {
+                    mMakeOrderButton.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 }
