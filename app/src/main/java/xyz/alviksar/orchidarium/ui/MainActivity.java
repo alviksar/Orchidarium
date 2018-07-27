@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 import xyz.alviksar.orchidarium.BuildConfig;
 import xyz.alviksar.orchidarium.R;
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.tv_error_message)
     TextView mErrorMessage;
 
-    @BindView(R.id.btn_make_order)
+    @BindView(R.id.btn_order)
     FloatingActionButton mMakeOrderButton;
 
     SearchView mSearchView;
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         if (BuildConfig.FLAVOR == "admin") {
             mMakeOrderButton.setVisibility(View.GONE);
         }
-            PreferenceManager.getDefaultSharedPreferences(this)
+        PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -407,4 +409,23 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
+    public void composePurchaseOrder() {
+        String body = getString(R.string.order_mail_body);
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.order_address)});
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_subject));
+        intent.putExtra(Intent.EXTRA_TEXT, body);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    @OnClick(R.id.btn_order)
+    public void onClickOrderButton(View view) {
+        composePurchaseOrder();
+    }
+
 }

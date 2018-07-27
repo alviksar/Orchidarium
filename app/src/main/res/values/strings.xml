@@ -96,5 +96,9 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="make_an_order_by_email">Make an order by email</string>
+    <string name="order_subject">Orchdarium purchase order</string>
+    <string name="order_address">order.orchidarium@gmail.com</string>
+    <string name="order_mail_body">Dear florists,\n\n
+                I would like to order orchids according to the following list:</string>
 
 </resources>
