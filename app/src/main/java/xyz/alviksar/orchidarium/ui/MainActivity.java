@@ -18,7 +18,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -141,24 +140,33 @@ public class MainActivity extends AppCompatActivity
 
 //        Toast.makeText(this, "Search for'" + searchQuery + "' started.", Toast.LENGTH_LONG).show();
         Query query;
-        if (mHiddenOnly) {
+        if (BuildConfig.FLAVOR == "admin") {
+            if (mHiddenOnly) {
+                query = FirebaseDatabase.getInstance()
+                        .getReference()
+                        .child("orchids")
+                        .orderByChild("isVisibleForSale")
+                        .equalTo(false);
+            } else {
+                if (TextUtils.isEmpty(searchQuery)) {
+                    query = FirebaseDatabase.getInstance()
+                            .getReference()
+                            .child("orchids").orderByChild("forSaleTime");
+                } else {
+                    query = FirebaseDatabase.getInstance()
+                            .getReference()
+                            .child("orchids").orderByChild("name")
+                            .startAt(searchQuery)
+                            .endAt(searchQuery + "\uf8ff");
+                }
+            }
+        }
+        if (BuildConfig.FLAVOR == "user") {
             query = FirebaseDatabase.getInstance()
                     .getReference()
                     .child("orchids")
                     .orderByChild("isVisibleForSale")
-                    .equalTo(false);
-        } else {
-            if (TextUtils.isEmpty(searchQuery)) {
-                query = FirebaseDatabase.getInstance()
-                        .getReference()
-                        .child("orchids").orderByChild("forSaleTime");
-            } else {
-                query = FirebaseDatabase.getInstance()
-                        .getReference()
-                        .child("orchids").orderByChild("name")
-                        .startAt(searchQuery)
-                        .endAt(searchQuery + "\uf8ff");
-            }
+                    .equalTo(true);
         }
         /*
         https://github.com/firebase/FirebaseUI-Android/blob/master/database/README.md
@@ -421,15 +429,15 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.order_address)});
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_subject));
 
-        StringBuilder body = new StringBuilder( getString(R.string.order_mail_body));
+        StringBuilder body = new StringBuilder(getString(R.string.order_mail_body));
         int n = 1;
-        for (OrchidEntity orchid: orchidList) {
-            body.append(String.format(Locale.getDefault(),"\n%d. %8s %s",
+        for (OrchidEntity orchid : orchidList) {
+            body.append(String.format(Locale.getDefault(), "\n%d. %8s %s",
                     n, orchid.getCode(), orchid.getName()));
             n++;
         }
 
-        intent.putExtra(Intent.EXTRA_TEXT, body.toString() );
+        intent.putExtra(Intent.EXTRA_TEXT, body.toString());
 
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
@@ -438,10 +446,10 @@ public class MainActivity extends AppCompatActivity
 
     @OnClick(R.id.btn_order)
     public void onClickOrderButton(View view) {
-        OrderByEmail();
+        orderByEmail();
     }
 
-    public void OrderByEmail() {
+    public void orderByEmail() {
         final ArrayList<OrchidEntity> orchidList = new ArrayList<>();
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference()
@@ -450,7 +458,7 @@ public class MainActivity extends AppCompatActivity
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot orchidSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot orchidSnapshot : dataSnapshot.getChildren()) {
                     String key = orchidSnapshot.getKey();
                     if (mCart.contains(key)) {
                         orchidList.add(orchidSnapshot.getValue(OrchidEntity.class));
@@ -461,8 +469,8 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Timber.d("Error trying to get data for order" +
-                                                ""+databaseError);
+                Timber.d("Error trying to get data for order" +
+                        "" + databaseError);
             }
         });
     }
