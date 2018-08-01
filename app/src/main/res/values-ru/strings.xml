@@ -13,7 +13,7 @@
     <string name="btn_add_change_real_photo">Добавить/Заменить фото</string>
     <string name="pref_sum_notification_is_on">Подписка на сообщения включена</string>
     <string name="pref_sum_notification_is_off">Сообщения отключены</string>
-    <string name="label_notify_me">Присылать сообщения о новых поступлениях</string>
+    <string name="label_notify_me">Присылать сообщения</string>
     <string name="sort_descending_price">по убыванию цены</string>
     <string name="sort_ascending_price">по возрастанию цены</string>
     <string name="sort_new_at_the_end">новые в конце</string>
@@ -54,5 +54,8 @@
     <string name="action_show_hidden">Только скрытые</string>
     <string name="invisible_to_buyers">Скрыто</string>
     <string name="title_invisible_to_customers">Только скрытые</string>
+    <string name="make_an_order_by_email">Оформить заказ</string>
+    <string name="order_subject">Заказ для Орхидариума</string>
+    <string name="order_mail_body">Уважаемые цветоводы! \n  Хочу приобрети у вас следующиие орхидеи:</string>
 
 </resources>

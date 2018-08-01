@@ -21,8 +21,7 @@
 
     <string name="pref_key_currency_symbol" translatable="false">pref_key_currency_symbol</string>
 
-
-    <string name="label_notify_me">Notify me of new orchids</string>
+    <string name="label_notify_me">Notify me</string>
     <string name="pref_key_notify_me" translatable="false">pref_key_notify_me</string>
 
     <string name="pref_key_mode" translatable="false">pref_key_mode</string>
@@ -97,8 +96,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="make_an_order_by_email">Make an order by email</string>
     <string name="order_subject">Orchdarium purchase order</string>
-    <string name="order_address">order.orchidarium@gmail.com</string>
-    <string name="order_mail_body">Dear florists,\n\n
-                I would like to order orchids according to the following list:</string>
+    <string name="order_address" translatable="false">order.orchidarium@gmail.com</string>
+    <string name="order_mail_body">Dear florists, \n  I would like to order orchids according to the following list:</string>
 
 </resources>

@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
@@ -18,6 +20,9 @@ public class OrchidariumPreferences {
 
     public static final String PREF_CONTENTS_OF_THE_CART = "pref_contents_of_the_cart";
     private static final String PREF_GOODS_DELIMITER = "#";
+
+    public static final String NOTIFICATION_TOPIC = "news";
+
 
     /**
      * Helper method to handle setting the mode for the main activity in Preferences
@@ -43,6 +48,13 @@ public class OrchidariumPreferences {
         return sp.getString(context.getString(R.string.pref_key_mode),
                 context.getString(R.string.pref_mode_default));
     }
+
+    public static boolean isNotificationOn(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(context.getString(R.string.pref_key_notify_me),
+                context.getResources().getBoolean(R.bool.pref_default_notification));
+    }
+
 
     /**
      * Helper method to handle setting the mode for the main activity in Preferences
@@ -80,7 +92,7 @@ public class OrchidariumPreferences {
         if (inCart(context, orchid)) return;
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String cart = sp.getString(PREF_CONTENTS_OF_THE_CART, "");
-        cart +=  orchid.getId() + PREF_GOODS_DELIMITER;
+        cart += orchid.getId() + PREF_GOODS_DELIMITER;
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(PREF_CONTENTS_OF_THE_CART, cart);
         editor.apply();

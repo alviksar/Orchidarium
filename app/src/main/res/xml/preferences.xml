@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListPreference
+    <!-- ListPreference
         android:key="pref_key_sort_order"
         android:title="Order by"
         android:entries="@array/pref_order_list_entries"
-        android:entryValues="@array/pref_order_list_values" />
+        android:entryValues="@array/pref_order_list_values" / -->
 
-    <CheckBoxPreference
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
         android:key="@string/pref_key_notify_me"
         android:summaryOn="@string/pref_sum_notification_is_on"
         android:summaryOff="@string/pref_sum_notification_is_off"
         android:title="@string/label_notify_me" />
+
 </PreferenceScreen>

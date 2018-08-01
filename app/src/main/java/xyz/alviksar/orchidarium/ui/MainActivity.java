@@ -36,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -128,8 +129,19 @@ public class MainActivity extends AppCompatActivity
         if (BuildConfig.FLAVOR == "admin") {
             mMakeOrderButton.setVisibility(View.GONE);
         }
+
+        // Subscribe to notification
+        if (OrchidariumPreferences.isNotificationOn(this)) {
+            FirebaseMessaging
+                    .getInstance().subscribeToTopic(OrchidariumPreferences.NOTIFICATION_TOPIC);
+        } else {
+            FirebaseMessaging
+                    .getInstance().unsubscribeFromTopic(OrchidariumPreferences.NOTIFICATION_TOPIC);
+        }
+
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
+
     }
 
 
