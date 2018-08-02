@@ -3,8 +3,7 @@
     package="xyz.alviksar.orchidarium">
 
     <application>
-
-        <receiver android:name="xyz.alviksar.orchidarium.OrchidWidgetProvider">
+        <receiver android:name=".OrchidWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -14,6 +13,9 @@
                 android:resource="@xml/orchid_widget_info" />
         </receiver>
 
+        <service
+            android:name=".user.OrchidIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
