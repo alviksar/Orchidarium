@@ -51,23 +51,26 @@ public class OrchidWidgetProvider extends AppWidgetProvider {
 //        for (int appWidgetId : appWidgetIds) {
 //            updateAppWidget(context, appWidgetManager, appWidgetId);
 //        }
-        String url = "https://firebasestorage.googleapis.com/v0/b/orchidarium-7df3d.appspot.com/o/orchid_photos%2Fimage%3A5418?alt=media&token=2bbdf645-4dcb-41f6-acbf-b10b7bbfe828";
+        OrchidIntentService.startActionUpdateWidget(context);
 
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.orchid_widget);
-
-        appWidgetTarget = new AppWidgetTarget(context, R.id.iv_orchid, remoteViews, appWidgetIds) {
-            @Override
-            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                super.onResourceReady(resource, transition);
-            }
-        };
-
-        GlideApp.with(context.getApplicationContext())
-                .asBitmap()
-                .load(url)
-                .into(appWidgetTarget);
-
-        pushWidgetUpdate(context, remoteViews);
+//
+//        String url = "https://firebasestorage.googleapis.com/v0/b/orchidarium-7df3d.appspot.com/o/orchid_photos%2Fimage%3A5418?alt=media&token=2bbdf645-4dcb-41f6-acbf-b10b7bbfe828";
+//
+//        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.orchid_widget);
+//
+//        appWidgetTarget = new AppWidgetTarget(context, R.id.iv_orchid, remoteViews, appWidgetIds) {
+//            @Override
+//            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+//                super.onResourceReady(resource, transition);
+//            }
+//        };
+//
+//        GlideApp.with(context.getApplicationContext())
+//                .asBitmap()
+//                .load(url)
+//                .into(appWidgetTarget);
+//
+//        pushWidgetUpdate(context, remoteViews);
     }
 
     @Override
