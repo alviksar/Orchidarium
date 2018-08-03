@@ -14,8 +14,9 @@
         </receiver>
 
         <service
-            android:name=".user.OrchidIntentService"
+            android:name=".OrchidIntentService"
             android:exported="false"></service>
+
     </application>
 
 </manifest>
