@@ -4,14 +4,10 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.request.target.AppWidgetTarget;
-import com.bumptech.glide.request.transition.Transition;
-
-import xyz.alviksar.orchidarium.R;
-import xyz.alviksar.orchidarium.util.GlideApp;
 
 /**
  * Implementation of App Widget functionality.
@@ -31,13 +27,7 @@ public class OrchidWidgetProvider extends AppWidgetProvider {
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
-
-
-
     }
-    /*
-    https://futurestud.io/tutorials/glide-loading-images-into-notifications-and-appwidgets
-     */
 
     public static void pushWidgetUpdate(Context context, RemoteViews remoteViews) {
         ComponentName myWidget = new ComponentName(context, OrchidWidgetProvider.class);
@@ -46,31 +36,14 @@ public class OrchidWidgetProvider extends AppWidgetProvider {
     }
 
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
-//        for (int appWidgetId : appWidgetIds) {
-//            updateAppWidget(context, appWidgetManager, appWidgetId);
-//        }
-        OrchidIntentService.startActionUpdateWidget(context);
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+        OrchidIntentService.startActionUpdateWidgets(context);
+    }
 
-//
-//        String url = "https://firebasestorage.googleapis.com/v0/b/orchidarium-7df3d.appspot.com/o/orchid_photos%2Fimage%3A5418?alt=media&token=2bbdf645-4dcb-41f6-acbf-b10b7bbfe828";
-//
-//        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.orchid_widget);
-//
-//        appWidgetTarget = new AppWidgetTarget(context, R.id.iv_orchid, remoteViews, appWidgetIds) {
-//            @Override
-//            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-//                super.onResourceReady(resource, transition);
-//            }
-//        };
-//
-//        GlideApp.with(context.getApplicationContext())
-//                .asBitmap()
-//                .load(url)
-//                .into(appWidgetTarget);
-//
-//        pushWidgetUpdate(context, remoteViews);
+    @Override
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        OrchidIntentService.startActionUpdateWidgets(context);
     }
 
     @Override
