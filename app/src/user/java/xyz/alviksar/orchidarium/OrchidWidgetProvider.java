@@ -1,12 +1,16 @@
 package xyz.alviksar.orchidarium;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.request.target.AppWidgetTarget;
@@ -15,6 +19,7 @@ import com.bumptech.glide.request.transition.Transition;
 import java.util.concurrent.ExecutionException;
 
 import xyz.alviksar.orchidarium.model.OrchidEntity;
+import xyz.alviksar.orchidarium.ui.DetailActivity;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
 /**
@@ -51,6 +56,26 @@ public class OrchidWidgetProvider extends AppWidgetProvider {
                 .load(orchid.getNicePhoto())
                 .into(appWidgetTarget);
         remoteViews.setTextViewText(R.id.tv_orchid_name, orchid.getName());
+
+        Intent intent = new Intent(context, DetailActivity.class);
+        // Make the pending intent unique
+        // https://stackoverflow.com/a/5158408/9682456
+//        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        // Identifies the particular widget
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+
+        intent.putExtra(OrchidEntity.EXTRA_ORCHID, orchid);
+
+        // Create the TaskStackBuilder and add the intent, which inflates the back stack
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(intent);
+        // Get the PendingIntent containing the entire back stack
+        PendingIntent pendIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        remoteViews.setOnClickPendingIntent(R.id.iv_orchid, pendIntent);
+
         pushWidgetUpdate(context, remoteViews);
     }
 
