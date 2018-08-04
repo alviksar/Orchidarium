@@ -65,7 +65,8 @@ public class PhotoGalleryActivity extends AppCompatActivity {
             mPosition = getIntent().
                     getIntExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST_POSITION, 0);
             mPhotos = getIntent().getStringArrayListExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST);
-            mPhotos.remove(mPhotos.size() - 1);  // Remove last (empty) item.
+            if (TextUtils.isEmpty(mPhotos.get(mPhotos.size() - 1)))
+                mPhotos.remove(mPhotos.size() - 1);  // Remove last (empty) item.
         } else {
             mTitle = savedInstanceState.getString(OrchidEntity.EXTRA_ORCHID_NAME);
             mPosition = savedInstanceState.
