@@ -75,32 +75,8 @@ public class OrchidIntentService extends IntentService {
         Context context = getApplicationContext();
         String url = "https://firebasestorage.googleapis.com/v0/b/orchidarium-7df3d.appspot.com/o/orchid_photos%2Fimage%3A5418?alt=media&token=2bbdf645-4dcb-41f6-acbf-b10b7bbfe828";
 
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.orchid_widget);
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, OrchidWidgetProvider.class));
-        int maxWidth = 74, maxHeight = 74;
-        for (int appWidgetId : appWidgetIds) {
-            Bundle widgetOptions = appWidgetManager.getAppWidgetOptions(appWidgetId);
-            int width = widgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-            int height = widgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
-            if (width > maxWidth) maxWidth = width;
-            if (height > maxHeight) maxHeight = height;
-        }
-        /*
-        https://github.com/bumptech/glide/wiki/Loading-and-Caching-on-Background-Threads
-        */
-        Bitmap myBitmap = GlideApp.with(context)
-                .asBitmap()
-                .load(url)
-                .centerCrop()
-                .submit(maxWidth, maxHeight)
-                .get();
-        for (int appWidgetId : appWidgetIds) {
-            remoteViews.setImageViewBitmap(R.id.iv_orchid, myBitmap);
-            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-        }
-
-        OrchidWidgetProvider.pushWidgetUpdate(context, remoteViews);
+        OrchidWidgetProvider.updateWidgets(context, url);
     }
+
 
 }
