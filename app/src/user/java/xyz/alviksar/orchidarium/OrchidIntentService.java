@@ -8,16 +8,24 @@ import android.content.Intent;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.AppWidgetTarget;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import xyz.alviksar.orchidarium.util.GlideApp;
+import timber.log.Timber;
+import xyz.alviksar.orchidarium.model.OrchidEntity;
 
 
 /**
@@ -28,15 +36,13 @@ import xyz.alviksar.orchidarium.util.GlideApp;
 public class OrchidIntentService extends IntentService {
     private static final String ACTION_UPDATE_WIDGET = "xyz.alviksar.orchidarium.action.update_widget";
 
-//    private static final String EXTRA_PARAM1 = "xyz.alviksar.orchidarium.user.extra.PARAM1";
-//    private static final String EXTRA_PARAM2 = "xyz.alviksar.orchidarium.user.extra.PARAM2";
 
     public OrchidIntentService() {
         super("OrchidIntentService");
     }
 
     /**
-     * Starts this service to perform action Foo with the given parameters. If
+     * Starts this service to perform update a widget image. If
      * the service is already performing a task this action will be queued.
      *
      * @see IntentService
@@ -44,8 +50,6 @@ public class OrchidIntentService extends IntentService {
     public static void startActionUpdateWidgets(Context context) {
         Intent intent = new Intent(context, OrchidIntentService.class);
         intent.setAction(ACTION_UPDATE_WIDGET);
-//        intent.putExtra(EXTRA_PARAM1, param1);
-//        intent.putExtra(EXTRA_PARAM2, param2);
         context.startService(intent);
     }
 
@@ -54,13 +58,7 @@ public class OrchidIntentService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_UPDATE_WIDGET.equals(action)) {
-//                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-//                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                try {
                     handleActionUpdateWidgets();
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
@@ -70,12 +68,33 @@ public class OrchidIntentService extends IntentService {
      * Handle action update widget in the provided background thread with the provided
      * parameters.
      */
-    private void handleActionUpdateWidgets() throws ExecutionException, InterruptedException {
+    private void handleActionUpdateWidgets() {
+        showRandomOrchid();
+    }
 
-        Context context = getApplicationContext();
-        String url = "https://firebasestorage.googleapis.com/v0/b/orchidarium-7df3d.appspot.com/o/orchid_photos%2Fimage%3A5418?alt=media&token=2bbdf645-4dcb-41f6-acbf-b10b7bbfe828";
+    public void showRandomOrchid() {
+        final ArrayList<OrchidEntity> orchidList = new ArrayList<>();
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("orchids");
 
-        OrchidWidgetProvider.updateWidgets(context, url);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot orchidSnapshot : dataSnapshot.getChildren()) {
+                    orchidList.add(orchidSnapshot.getValue(OrchidEntity.class));
+                }
+                int i = (int) (Math.random() * orchidList.size());
+                OrchidWidgetProvider.
+                        updateWidgetsInMainUiTread(getApplicationContext(), orchidList.get(i));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Timber.d("Error trying to get data for order" +
+                        "" + databaseError);
+            }
+        });
     }
 
 

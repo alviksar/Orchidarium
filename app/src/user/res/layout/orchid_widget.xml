@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/purple900"
     android:padding="@dimen/widget_margin">
 
@@ -11,7 +12,7 @@
         android:layout_margin="@dimen/widget_image_margin"
         android:contentDescription="@string/appwidget_text"
         android:scaleType="centerCrop"
-        android:src="@drawable/phragmipedium_besseae_nice" />
+        tools:src="@drawable/phragmipedium_besseae_nice" />
 
     <!--View
         android:layout_width="match_parent"
@@ -20,12 +21,13 @@
         android:background="@drawable/scrim_bottom" /-->
 
     <TextView
+        android:id="@+id/tv_orchid_name"
         android:layout_margin="@dimen/widget_text_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:textColor="@color/white"
         android:textSize="12sp"
-        android:text="Orchid" />
+        tools:text="Orchid" />
 
 </FrameLayout>

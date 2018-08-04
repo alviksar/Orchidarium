@@ -441,7 +441,8 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.order_address)});
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_subject));
 
-        StringBuilder body = new StringBuilder(getString(R.string.order_mail_body));
+        StringBuilder body =
+                new StringBuilder(getString(R.string.order_mail_body));
         int n = 1;
         for (OrchidEntity orchid : orchidList) {
             body.append(String.format(Locale.getDefault(), "\n%d. %8s %s",

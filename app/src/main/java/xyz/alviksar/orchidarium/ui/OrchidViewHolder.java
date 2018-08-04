@@ -17,15 +17,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.alviksar.orchidarium.BuildConfig;
 import xyz.alviksar.orchidarium.R;
-import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 import xyz.alviksar.orchidarium.util.DateFormatter;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
 
 public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private static final int MAX_WIDTH = 400;
-    private static final int MAX_HEIGHT = 400;
 
     private Context mContext;
     private Activity mActivity;

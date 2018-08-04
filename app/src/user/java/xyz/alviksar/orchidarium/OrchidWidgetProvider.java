@@ -6,12 +6,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.request.target.AppWidgetTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.util.concurrent.ExecutionException;
 
+import xyz.alviksar.orchidarium.model.OrchidEntity;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
 /**
@@ -19,61 +22,77 @@ import xyz.alviksar.orchidarium.util.GlideApp;
  */
 public class OrchidWidgetProvider extends AppWidgetProvider {
 
-//    private AppWidgetTarget appWidgetTarget;
-//
-//    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-//                                int appWidgetId) {
-//
-//        CharSequence widgetText = context.getString(R.string.appwidget_text);
-//        // Construct the RemoteViews object
-//        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.orchid_widget);
-//
-//    //    views.setTextViewText(R.id.appwidget_text, widgetText);
-//
-//        // Instruct the widget manager to update the widget
-//        appWidgetManager.updateAppWidget(appWidgetId, views);
-//    }
-//
-//    public static void pushWidgetUpdate(Context context, RemoteViews remoteViews) {
-//        ComponentName myWidget = new ComponentName(context, OrchidWidgetProvider.class);
-//        AppWidgetManager manager = AppWidgetManager.getInstance(context);
-//        manager.updateAppWidget(myWidget, remoteViews);
-//    }
+    public static void pushWidgetUpdate(Context context, RemoteViews remoteViews) {
+        ComponentName myWidget = new ComponentName(context, OrchidWidgetProvider.class);
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
+        manager.updateAppWidget(myWidget, remoteViews);
+    }
 
-    public static void updateWidgets(Context context, String url)
-            throws InterruptedException, ExecutionException {
+    public static void updateWidgetsInMainUiTread(final Context context, OrchidEntity orchid) {
+        /*
+        https://futurestud.io/tutorials/glide-loading-images-into-notifications-and-appwidgets
+         */
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.orchid_widget);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                 new ComponentName(context, OrchidWidgetProvider.class));
-        int maxWidth = 160, maxHeight = 160;  // For the first time, why not...
-        for (int appWidgetId : appWidgetIds) {
-            Bundle widgetOptions = appWidgetManager.getAppWidgetOptions(appWidgetId);
-            int width = widgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-            int height = widgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
-            if (width > maxWidth) maxWidth = width;
-            if (height > maxHeight) maxHeight = height;
-        }
-        /*
-        https://github.com/bumptech/glide/wiki/Loading-and-Caching-on-Background-Threads
-        */
-        Bitmap myBitmap = GlideApp.with(context)
+        AppWidgetTarget appWidgetTarget =
+                new AppWidgetTarget(context, R.id.iv_orchid, remoteViews, appWidgetIds) {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource,
+                                        Transition<? super Bitmap> transition) {
+                super.onResourceReady(resource, transition);
+            }
+        };
+
+        GlideApp
+                .with(context.getApplicationContext())
                 .asBitmap()
-                .load(url)
-                .centerCrop()
-                .submit(maxWidth, maxHeight)
-                .get();
-        for (int appWidgetId : appWidgetIds) {
-            remoteViews.setImageViewBitmap(R.id.iv_orchid, myBitmap);
-            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-        }
+                .load(orchid.getNicePhoto())
+                .into(appWidgetTarget);
+        remoteViews.setTextViewText(R.id.tv_orchid_name, orchid.getName());
+        pushWidgetUpdate(context, remoteViews);
     }
 
+
+//    public static void updateWidgetsInBackground(Context context, OrchidEntity orchid)
+//    {
+//        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.orchid_widget);
+//        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+//        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
+//                new ComponentName(context, OrchidWidgetProvider.class));
+//        int maxWidth = 110, maxHeight = 110;  // for the first time, why not...
+//        for (int appWidgetId : appWidgetIds) {
+//            Bundle widgetOptions = appWidgetManager.getAppWidgetOptions(appWidgetId);
+//            int width = widgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+//            int height = widgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+//            if (width > maxWidth) maxWidth = width;
+//            if (height > maxHeight) maxHeight = height;
+//        }
+//        /*
+//        https://github.com/bumptech/glide/wiki/Loading-and-Caching-on-Background-Threads
+//        */
+//        Bitmap widgetBitmap = null;
+//        try {
+//            widgetBitmap = GlideApp.with(context)
+//                    .asBitmap()
+//                    .load(orchid.getNicePhoto())
+//                    .centerCrop()
+//                    .submit(maxWidth, maxHeight)
+//                    .get();
+//        } catch (InterruptedException | ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//        for (int appWidgetId : appWidgetIds) {
+//            remoteViews.setImageViewBitmap(R.id.iv_orchid, widgetBitmap);
+//            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+//        }
+//    }
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
-        OrchidIntentService.startActionUpdateWidgets(context);
+  //      OrchidIntentService.startActionUpdateWidgets(context);
     }
 
     @Override
