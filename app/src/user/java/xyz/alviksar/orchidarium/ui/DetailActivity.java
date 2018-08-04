@@ -25,11 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -44,7 +39,7 @@ import xyz.alviksar.orchidarium.util.GlideApp;
 
 public class DetailActivity extends AppCompatActivity
         implements BannerAdapter.BannerAdapterOnClickHandler,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private OrchidEntity mOrchid;
 
@@ -61,13 +56,10 @@ public class DetailActivity extends AppCompatActivity
     TextView mPotSizeTextView;
 
     @BindView(R.id.tv_retail_price)
-    TextView mRetailPriceTextView;
+    TextView mPriceTextView;
 
     @BindView(R.id.tv_description)
     TextView mDescriptionTextView;
-
-    @BindView(R.id.tv_currency)
-    TextView mCurrencySymbolTextView;
 
     @BindView(R.id.pb_load_photo)
     ProgressBar mProgressBar;
@@ -83,12 +75,6 @@ public class DetailActivity extends AppCompatActivity
     LinearLayoutManager mLayoutManager;
     BannerAdapter mBannerAdapter;
 
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDatabaseReference;
-
-    private FirebaseStorage mFirebaseStorage;
-    private StorageReference mStorageReference;
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -101,7 +87,6 @@ public class DetailActivity extends AppCompatActivity
         super.onDestroy();
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
-
     }
 
     @Override
@@ -110,11 +95,6 @@ public class DetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_detail);
 
         ButterKnife.bind(this);
-
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("orchids");
-        mFirebaseStorage = FirebaseStorage.getInstance();
-        mStorageReference = mFirebaseStorage.getReference("orchid_photos");
 
         String title;
         if (savedInstanceState == null || !savedInstanceState.containsKey(OrchidEntity.EXTRA_ORCHID)) {
@@ -188,13 +168,21 @@ public class DetailActivity extends AppCompatActivity
 
         mPotSizeTextView.setText(mOrchid.getPotSize());
 
-        if (mOrchid.getRetailPrice() != 0)
-            mRetailPriceTextView.setText(String.format(Locale.getDefault(),
-                    "%.2f", mOrchid.getRetailPrice()));
-        else
-            mRetailPriceTextView.setText("");
-
-        mCurrencySymbolTextView.setText(mOrchid.getCurrencySymbol());
+        if (mOrchid.getRetailPrice() != 0) {
+            if (mOrchid.getCurrencySymbol().equals(getString(R.string.sign_usd))) {
+                mPriceTextView.setText(String.format(Locale.getDefault(),
+                        "$ %.2f", mOrchid.getRetailPrice()));
+            } else {
+                if (mOrchid.getCurrencySymbol().equals(getString(R.string.sign_rur))) {
+                    mPriceTextView.setText(String.format(Locale.getDefault(),
+                            "%.0f %s", mOrchid.getRetailPrice(), mOrchid.getCurrencySymbol()));
+                } else {
+                    mPriceTextView.setText(String.format(Locale.getDefault(),
+                            "%.2f %s", mOrchid.getRetailPrice(), mOrchid.getCurrencySymbol()));
+                }
+            }
+        } else
+            mPriceTextView.setText("");
 
         mDescriptionTextView.setText(mOrchid.getDescription());
 

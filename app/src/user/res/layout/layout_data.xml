@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!-- layout_data for user -->
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -90,18 +89,8 @@
         tools:text="12345" />
 
     <TextView
-        android:id="@+id/tv_currency"
-        style="@style/DataTextAppearanceStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_retail_price"
-        app:layout_constraintStart_toEndOf="@+id/tv_retail_price"
-        tools:text="@string/pot_size_3_5" />
-
-    <TextView
-        style="@style/Base.TextAppearance.AppCompat.Medium"
         android:id="@+id/tv_description"
+        style="@style/Base.TextAppearance.AppCompat.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"

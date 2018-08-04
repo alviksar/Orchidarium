@@ -2,7 +2,10 @@ package xyz.alviksar.orchidarium.ui;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.Fragment;
@@ -10,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +52,7 @@ public class PhotoGalleryActivity extends AppCompatActivity {
 
     private static ArrayList<String> mPhotos;
     private int mPosition;
+    private String mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,20 +60,28 @@ public class PhotoGalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_photo_gallery);
         Timber.i("Activity started");
 
-        String title;
         if (savedInstanceState == null) {
-            title = getIntent().getStringExtra(OrchidEntity.EXTRA_ORCHID_NAME);
+            mTitle = getIntent().getStringExtra(OrchidEntity.EXTRA_ORCHID_NAME);
             mPosition = getIntent().
                     getIntExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST_POSITION, 0);
             mPhotos = getIntent().getStringArrayListExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST);
             mPhotos.remove(mPhotos.size() - 1);  // Remove last (empty) item.
         } else {
-            title = savedInstanceState.getString(OrchidEntity.EXTRA_ORCHID_NAME);
+            mTitle = savedInstanceState.getString(OrchidEntity.EXTRA_ORCHID_NAME);
             mPosition = savedInstanceState.
                     getInt(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST_POSITION, 0);
             mPhotos = savedInstanceState.getStringArrayList(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST);
         }
-        setTitle(title);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            toolbar.setTitle(mTitle);
+
+        } else
+            setTitle(mTitle);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -85,7 +98,7 @@ public class PhotoGalleryActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(OrchidEntity.EXTRA_ORCHID_NAME, this.getTitle().toString());
+        outState.putString(OrchidEntity.EXTRA_ORCHID_NAME, mTitle);
         outState.putInt(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST_POSITION, mViewPager.getCurrentItem());
         outState.putStringArrayList(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST, mPhotos);
     }

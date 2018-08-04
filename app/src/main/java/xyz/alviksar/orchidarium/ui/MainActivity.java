@@ -46,6 +46,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 import xyz.alviksar.orchidarium.BuildConfig;
+import xyz.alviksar.orchidarium.OrchidariumContract;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
@@ -156,18 +157,20 @@ public class MainActivity extends AppCompatActivity
             if (mHiddenOnly) {
                 query = FirebaseDatabase.getInstance()
                         .getReference()
-                        .child("orchids")
+                        .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
                         .orderByChild("isVisibleForSale")
                         .equalTo(false);
             } else {
                 if (TextUtils.isEmpty(searchQuery)) {
                     query = FirebaseDatabase.getInstance()
                             .getReference()
-                            .child("orchids").orderByChild("forSaleTime");
+                            .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
+                            .orderByChild("forSaleTime");
                 } else {
                     query = FirebaseDatabase.getInstance()
                             .getReference()
-                            .child("orchids").orderByChild("name")
+                            .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
+                            .orderByChild("name")
                             .startAt(searchQuery)
                             .endAt(searchQuery + "\uf8ff");
                 }
@@ -176,7 +179,7 @@ public class MainActivity extends AppCompatActivity
         if (BuildConfig.FLAVOR == "user") {
             query = FirebaseDatabase.getInstance()
                     .getReference()
-                    .child("orchids")
+                    .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
                     .orderByChild("isVisibleForSale")
                     .equalTo(true);
         }
@@ -466,7 +469,7 @@ public class MainActivity extends AppCompatActivity
         final ArrayList<OrchidEntity> orchidList = new ArrayList<>();
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("orchids");
+                .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
