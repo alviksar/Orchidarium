@@ -57,6 +57,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.alviksar.orchidarium.BuildConfig;
+import xyz.alviksar.orchidarium.OrchidariumContract;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
@@ -157,9 +158,11 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         }
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("orchids");
+        mDatabaseReference = mFirebaseDatabase
+                .getReference().child(OrchidariumContract.REFERENCE_ORCHIDS_DATA);
         mFirebaseStorage = FirebaseStorage.getInstance();
-        mStorageReference = mFirebaseStorage.getReference("orchid_photos");
+        mStorageReference = mFirebaseStorage
+                .getReference(OrchidariumContract.REFERENCE_ORCHIDS_PHOTOS);
 
         String title;
         if (savedInstanceState == null || !savedInstanceState.containsKey(OrchidEntity.EXTRA_ORCHID)) {
@@ -389,7 +392,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
-                Snackbar.make(findViewById(R.id.coordinatorlayout), "Sign in canceled",
+                Snackbar.make(findViewById(R.id.coordinatorlayout), R.string.msg_sign_in_canceled,
                         Snackbar.LENGTH_LONG).show();
                 finish();
 
@@ -397,7 +400,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                 // Sign in failed
                 if (response == null) {
                     Snackbar.make(findViewById(R.id.coordinatorlayout),
-                            "Sign in canceled",
+                            R.string.msg_sign_in_canceled,
                             Snackbar.LENGTH_LONG).show();
                     return;
                 }
@@ -407,8 +410,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                             Snackbar.LENGTH_LONG).show();
                     return;
                 }
-                Snackbar.make(findViewById(R.id.coordinatorlayout),
-                        String.format("Sign in error: $s", response.getError()),
+                Snackbar.make(findViewById(R.id.coordinatorlayout), response.getError().getMessage(),
                         Snackbar.LENGTH_LONG).show();
             }
         } else if (requestCode == RC_NICE_PHOTO_PICKER && resultCode == RESULT_OK) {
@@ -440,14 +442,19 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         mOrchid.setCurrencySymbol(mCurrencySymbol.getSelectedItem().toString());
         mOrchid.setWriter(mUserName);
         mOrchid.setSaveTime(System.currentTimeMillis());
-
-        mProgressBar.setVisibility(View.VISIBLE);
         // Save a chosen currency symbol
         OrchidariumPreferences.setCurrencySymbol(this, mOrchid.getCurrencySymbol());
+        if (dataIsCorrect(mOrchid)) {
+            mProgressBar.setVisibility(View.VISIBLE);
+            changeListOfPhotosAndSaveDataToDb(
+                    getToDelete(mOrchid.getRealPhotos(), mBannerAdapter.getData()));
+        }
 
-        changeListOfPhotosAndSaveDataToDb(
-                getToDelete(mOrchid.getRealPhotos(), mBannerAdapter.getData()));
+    }
 
+    private boolean dataIsCorrect(OrchidEntity mOrchid) {
+
+        return true;
     }
 
     private void uploadNicePhotoAndSaveDataToDb() {
@@ -471,7 +478,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        String errMsg = String.format("Failure: %s", exception.getMessage());
+                        String errMsg = exception.getMessage();
                         Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
                                 Snackbar.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
@@ -603,7 +610,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        String errMsg = String.format("Failure: %s", exception.getMessage());
+                        String errMsg = exception.getMessage();
                         Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
                                 Snackbar.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
@@ -762,7 +769,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        String errMsg = String.format("Failure: %s", exception.getMessage());
+                        String errMsg = exception.getMessage();
                         Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
                                 Snackbar.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
@@ -798,7 +805,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        String errMsg = String.format("Failure: %s", exception.getMessage());
+                        String errMsg = exception.getMessage();
                         Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
                                 Snackbar.LENGTH_LONG).show();
                         int errorCode = ((StorageException) exception).getErrorCode();
@@ -841,7 +848,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                     public void onFailure(@NonNull Exception exception) {
                         mProgressBar.setVisibility(View.INVISIBLE);
                         mSaveMenuItem.setEnabled(true);
-                        String errMsg = String.format("Failure: %s", exception.getMessage());
+                        String errMsg = exception.getMessage();
                         Snackbar.make(findViewById(R.id.coordinatorlayout), errMsg,
                                 Snackbar.LENGTH_LONG).show();
                     }
@@ -859,7 +866,6 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
                                 // Upload next one
                                 uploadListOfPhotosAndSaveDataToDb(toUpload);
-
                             }
                         });
                     }

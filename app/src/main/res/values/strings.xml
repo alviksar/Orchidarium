@@ -92,4 +92,5 @@
     <string name="order_address" translatable="false">order.orchidarium@gmail.com</string>
     <string name="order_mail_body">Dear florists, \n\n  I would like to order orchids according to the following list:</string>
     <string name="order_disclaimer">*** Unfortunately this is a test version of the program and at the moment we will not be able to accept your order.***\n\n\n</string>
+    <string name="msg_sign_in_canceled">Sign in canceled</string>
 </resources>
