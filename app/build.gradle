@@ -15,16 +15,14 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
-    // Specifies one flavor dimension.
     flavorDimensions "version"
     productFlavors {
         admin {
-            // Assigns this product flavor to the "version" flavor dimension.
             dimension "version"
             applicationIdSuffix ".admin"
             versionNameSuffix "-admin"

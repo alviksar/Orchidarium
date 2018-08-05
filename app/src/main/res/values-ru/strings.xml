@@ -56,6 +56,7 @@
     <string name="title_invisible_to_customers">Только скрытые</string>
     <string name="make_an_order_by_email">Оформить заказ</string>
     <string name="order_subject">Заказ для Орхидариума</string>
-    <string name="order_mail_body">Уважаемые цветоводы! \n  Хочу приобрети у вас следующиие орхидеи:</string>
+    <string name="order_mail_body">Уважаемые цветоводы! \n\n  Хочу приобрети у вас орхидеи:\n</string>
+    <string name="order_disclaimer">*** К сожалению это тестовый вариант программы и в настоящий момент мы не сможем принять Ваш заказ. Если Вас заинтересовали орхидеи, можете обратиться в нашу группу ВКонтакте.\n https://vk.com/ph.gigantea ***\n\n\n</string>
 
 </resources>

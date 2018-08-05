@@ -445,10 +445,12 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_subject));
 
         StringBuilder body =
-                new StringBuilder(getString(R.string.order_mail_body));
+                new StringBuilder();
+        body.append(getString(R.string.order_disclaimer));
+        body.append(getString(R.string.order_mail_body));
         int n = 1;
         for (OrchidEntity orchid : orchidList) {
-            body.append(String.format(Locale.getDefault(), "\n%d. %8s %s",
+            body.append(String.format(Locale.getDefault(), "\n%d.[%8s] %s",
                     n, orchid.getCode(), orchid.getName()));
             n++;
         }
@@ -485,7 +487,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Timber.d("Error trying to get data for order" +
+                Timber.d("Error trying to get data for the order" +
                         "" + databaseError);
             }
         });

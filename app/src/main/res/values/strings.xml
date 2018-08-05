@@ -36,10 +36,6 @@
     <!-- Button which load real images. [CHAR LIMIT=30] -->
     <string name="btn_add_change_real_photo">Add/Change real photo</string>
 
-    <!-- Mocks -->
-    <string name="mock_detail_title" translatable="false">Phragmipedium besseae</string>
-    <string name="mock_description" translatable="false">Phragmipedium besseae is a warm growing litophyte/terrestrial species come from the wet montane forests on the eastern slopes of the Colombian, Ecuadorian and Peruvian Andes where it grows at altitudes of 100 to 1500 meters.</string>
-
     <string name="label_appearance">Put up for sale</string> 
     <string name="label_hidden">Hidden</string>
     <string name="label_available_for_order">Available</string>
@@ -82,7 +78,6 @@
     <string name="msg_choose_image">Choose the image</string>
     <string name="action_delete_photo">Delete</string>
     <string name="title_activity_photo_gallery">Photo Gallery</string>
-    <!--string name="section_format">Hello World from section: %1$d</string-->
 
     <string name="transition_real_photo" translatable="false">transition_real_photo</string>
     <string name="transition_nice_photo" translatable="false">transition_nice_photo</string>
@@ -92,11 +87,9 @@
     <string name="action_show_hidden">Show hidden only</string>
     <string name="invisible_to_buyers">Invisible to buyers</string>
     <string name="title_invisible_to_customers">Only invisible to customers</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="make_an_order_by_email">Make an order by email</string>
     <string name="order_subject">Orchdarium purchase order</string>
     <string name="order_address" translatable="false">order.orchidarium@gmail.com</string>
-    <string name="order_mail_body">Dear florists, \n  I would like to order orchids according to the following list:</string>
-
+    <string name="order_mail_body">Dear florists, \n\n  I would like to order orchids according to the following list:</string>
+    <string name="order_disclaimer">*** Unfortunately this is a test version of the program and at the moment we will not be able to accept your order.***\n\n\n</string>
 </resources>
