@@ -15,7 +15,8 @@
 
         <service
             android:name=".OrchidIntentService"
-            android:exported="false"></service>
+            android:exported="false">
+        </service>
 
     </application>
 

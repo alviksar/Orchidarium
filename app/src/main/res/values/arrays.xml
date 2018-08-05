@@ -27,18 +27,4 @@
         <item>@string/sign_usd</item>     
     </string-array>
 
-    <string-array name="pref_order_list_entries">
-        <item>@string/sort_first_new</item>
-        <item>@string/sort_new_at_the_end</item>
-        <item>@string/sort_ascending_price</item>
-        <item>@string/sort_descending_price</item>
-    </string-array>
-
-    <string-array name="pref_order_list_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
 </resources>

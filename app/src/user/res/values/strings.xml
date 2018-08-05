@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Orchidarium</string>
-    <string name="appwidget_text">Orchid</string>
-    <string name="add_widget">Add widget</string>
+    <string name="appwidget_text">Orchidarium widget</string>
+    <!-- string name="add_widget">Add widget</string-->
 </resources>
