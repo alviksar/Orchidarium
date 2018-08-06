@@ -31,7 +31,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -216,19 +215,22 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         String s = "";
         switch (mOrchid.getAge()) {
             case OrchidEntity.AGE_BLOOMING:
-                s = getResources().getString(R.string.plant_age_blooming);
+                s = getString(R.string.plant_age_blooming);
                 break;
             case OrchidEntity.AGE_FLOWERING:
-                s = getResources().getString(R.string.plant_age_flowering);
+                s = getString(R.string.plant_age_flowering);
                 break;
             case OrchidEntity.AGE_ONE_YEARS_BEFORE:
-                s = getResources().getString(R.string.plant_age_one_years_before);
+                s = getString(R.string.plant_age_one_years_before);
                 break;
             case OrchidEntity.AGE_TWO_YEARS_BEFORE:
-                s = getResources().getString(R.string.plant_age_two_years_before);
+                s = getString(R.string.plant_age_two_years_before);
+                break;
+            case OrchidEntity.AGE_UNKNOWN:
+                s = getString(R.string.empty);
                 break;
             default:
-                s = "";
+                s = getString(R.string.empty);
         }
         mPlantAgeSpinner.setSelection(((ArrayAdapter<String>) mPlantAgeSpinner.getAdapter())
                 .getPosition(s));
@@ -298,6 +300,8 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                     } else {
                         mPlantAge = OrchidEntity.AGE_UNKNOWN;
                     }
+                } else {
+                    mPlantAge = OrchidEntity.AGE_UNKNOWN;
                 }
             }
 
@@ -620,6 +624,8 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                         }
                     }
                 });
+            } else {
+                mDatabaseReference.child(mOrchid.getId()).removeValue();
             }
         }
     }
@@ -683,6 +689,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
     @OnClick(R.id.iv_nice_photo)
     public void onClickImage(View view) {
+        if (TextUtils.isEmpty(mOrchid.getNicePhoto())) return;
         Intent intent = new Intent();
         intent.setAction(android.content.Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.parse(mOrchid.getNicePhoto()), "image/*");
