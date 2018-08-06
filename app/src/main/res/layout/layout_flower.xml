@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/label_nice_image"
         android:scaleType="fitXY"
-        android:src="@drawable/phragmipedium_besseae_nice"
         app:layout_collapseMode="parallax"
         app:layout_collapseParallaxMultiplier="0.5"
         android:transitionName="@string/transition_nice_photo" />

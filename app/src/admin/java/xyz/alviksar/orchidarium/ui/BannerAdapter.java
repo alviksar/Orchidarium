@@ -1,21 +1,17 @@
 package xyz.alviksar.orchidarium.ui;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
 
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.util.GlideApp;
@@ -46,8 +42,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
         // create a new view
         ImageView v = (ImageView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_banner, parent, false);
-        BannerAdapterViewHolder vh = new BannerAdapterViewHolder(v);
-        return vh;
+        return new BannerAdapterViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)

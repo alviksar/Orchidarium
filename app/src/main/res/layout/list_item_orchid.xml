@@ -16,8 +16,7 @@
             android:layout_height="180dp"
             android:contentDescription="@string/desc_nice_orchid_photo"
             android:scaleType="centerCrop"
-            android:transitionName="@string/transition_nice_photo"
-            tools:src="@drawable/phragmipedium_besseae_nice" />
+            android:transitionName="@string/transition_nice_photo" />
 
         <View
             android:layout_width="match_parent"
@@ -65,8 +64,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:textColor="@color/white"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/white"
             tools:text="Phragmipedium besseae" />
 
         <TextView

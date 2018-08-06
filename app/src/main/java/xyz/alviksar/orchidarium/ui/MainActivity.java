@@ -120,15 +120,15 @@ public class MainActivity extends AppCompatActivity
         }
 
         mCart = OrchidariumPreferences.getCartContent(this);
-        if (BuildConfig.FLAVOR == "user") {
+
+        if (BuildConfig.FLAVOR.equals("admin")) {
+            mMakeOrderButton.setVisibility(View.GONE);
+        } else {
             if (mCart.isEmpty()) {
                 mMakeOrderButton.setVisibility(View.GONE);
             } else {
                 mMakeOrderButton.setVisibility(View.VISIBLE);
             }
-        }
-        if (BuildConfig.FLAVOR == "admin") {
-            mMakeOrderButton.setVisibility(View.GONE);
         }
 
         // Subscribe to notification
@@ -153,34 +153,33 @@ public class MainActivity extends AppCompatActivity
 
 //        Toast.makeText(this, "Search for'" + searchQuery + "' started.", Toast.LENGTH_LONG).show();
         Query query;
-        if (BuildConfig.FLAVOR == "admin") {
+        if (BuildConfig.FLAVOR.equals("admin")) {
             if (mHiddenOnly) {
                 query = FirebaseDatabase.getInstance()
                         .getReference()
                         .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
-                        .orderByChild("isVisibleForSale")
+                        .orderByChild(OrchidariumContract.FIELD_ISVISIBLEFORSALE)
                         .equalTo(false);
             } else {
                 if (TextUtils.isEmpty(searchQuery)) {
                     query = FirebaseDatabase.getInstance()
                             .getReference()
                             .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
-                            .orderByChild("forSaleTime");
+                            .orderByChild(OrchidariumContract.FIELD_FORSALETIME);
                 } else {
                     query = FirebaseDatabase.getInstance()
                             .getReference()
                             .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
-                            .orderByChild("name")
+                            .orderByChild(OrchidariumContract.FIELD_NAME)
                             .startAt(searchQuery)
                             .endAt(searchQuery + "\uf8ff");
                 }
             }
-        }
-        if (BuildConfig.FLAVOR == "user") {
+        } else {
             query = FirebaseDatabase.getInstance()
                     .getReference()
                     .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
-                    .orderByChild("isVisibleForSale")
+                    .orderByChild(OrchidariumContract.FIELD_ISVISIBLEFORSALE)
                     .equalTo(true);
         }
         /*
@@ -229,7 +228,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onError(DatabaseError e) {
+            public void onError(@NonNull DatabaseError e) {
                 showErrorMessage(R.string.msg_error_getting_data);
             }
 
@@ -340,12 +339,12 @@ public class MainActivity extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         // If this is a new orchid, hide the "Delete" menu item.
-        if (BuildConfig.FLAVOR == "user") {
+        if (BuildConfig.FLAVOR.equals("user")) {
             menu.findItem(R.id.action_add_new).setVisible(false);
             menu.findItem(R.id.action_show_hidden).setVisible(false);
             menu.findItem(R.id.action_sign_out).setVisible(false);
         }
-        if (BuildConfig.FLAVOR == "admin") {
+        if (BuildConfig.FLAVOR.equals("admin")) {
             if (mHiddenOnly) {
                 setTitle(getString(R.string.title_invisible_to_customers));
                 menu.findItem(R.id.action_search).setVisible(false);
@@ -428,7 +427,7 @@ public class MainActivity extends AppCompatActivity
         if (s.equals(OrchidariumPreferences.PREF_CONTENTS_OF_THE_CART)) {
             mCart = OrchidariumPreferences.getCartContent(this);
             mFirebaseRecyclerAdapter.notifyDataSetChanged();
-            if (BuildConfig.FLAVOR == "user") {
+            if (BuildConfig.FLAVOR.equals("user")) {
                 if (mCart.isEmpty()) {
                     mMakeOrderButton.setVisibility(View.GONE);
                 } else {

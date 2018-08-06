@@ -9,15 +9,9 @@
     <string name="action_delete_orchid">Delete</string>
 
     <!-- Filer modes in MainActivity -->
-    <string name="pref_mode_all">All</string>
-    <string name="pref_mode_my_cart_only">My cart only</string>
     <string name="pref_mode_default">All</string>
 
     <!-- Preferences -->
-    <string name="sort_first_new">first new</string>
-    <string name="sort_new_at_the_end">new at the end</string>
-    <string name="sort_ascending_price">ascending price</string>
-    <string name="sort_descending_price">descending price</string>
 
     <string name="pref_key_currency_symbol" translatable="false">pref_key_currency_symbol</string>
 
@@ -30,11 +24,8 @@
 
     <!-- DetailActivity -->
     <string name="label_nice_image">The nice image</string>
-    <string name="label_real_image">The real image</string>
     <!-- Button which load a nice image. [CHAR LIMIT=30] -->
-    <string name="btn_add_change_nice_photo">Add/Change nice photo</string>
     <!-- Button which load real images. [CHAR LIMIT=30] -->
-    <string name="btn_add_change_real_photo">Add/Change real photo</string>
 
     <string name="label_appearance">Put up for sale</string> 
     <string name="label_hidden">Hidden</string>
@@ -55,7 +46,6 @@
     <string name="plant_age_flowering">flowering age</string>     
     <string name="plant_age_blooming">blooming</string>
     <string name="title_new_orchid">New orchid</string>
-    <string name="title_edit_orchid">Change data</string>
     <string name="msg_delete_dialog">Delete orchid?</string>
     <string name="btn_delete">Delete</string>
     <string name="btn_cancel">Cancel</string>
@@ -64,7 +54,6 @@
     <string name="btn_keep_editing">Keep editing</string>
     <string name="desc_nice_orchid_photo">The photo of a blooming orchid</string>
     <string name="desc_real_orchid_photo">The real orchid photo</string>
-    <string name="desc_selected_for_purchase">Selected for purchase</string>
 
     <string name="msg_no_connection_error">Please check your Internet connection.</string>
     <string name="msg_error_getting_data">Error getting data.</string>

@@ -5,12 +5,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
-import java.util.List;
 import java.util.Locale;
 
 import xyz.alviksar.orchidarium.R;

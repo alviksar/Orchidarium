@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="maint_activity_menu_spinner_items">
-        <item>@string/pref_mode_all</item>
-        <item>@string/pref_mode_my_cart_only</item>
-    </string-array>
-
     <string-array name="pot_sizes">
         <item>@string/pot_size_1_7</item>
         <item>@string/pot_size_2_5</item>

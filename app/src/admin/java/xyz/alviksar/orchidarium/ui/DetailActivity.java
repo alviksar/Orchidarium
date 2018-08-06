@@ -1,5 +1,6 @@
 package xyz.alviksar.orchidarium.ui;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -111,7 +112,6 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
     private int mPlantAge;
     private Uri mSelectedImageUri = null;
 
-    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
 
     private FirebaseAuth mFirebaseAuth;
@@ -131,6 +131,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         super.onSaveInstanceState(outState);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,8 +157,8 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
             mUserName = mFirebaseAuth.getCurrentUser().getUid();
         }
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = firebaseDatabase
                 .getReference().child(OrchidariumContract.REFERENCE_ORCHIDS_DATA);
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage
@@ -183,7 +184,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         if (collapsingToolbarLayout != null)
             collapsingToolbarLayout.setTitle(title);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             ActionBar actionBar = getSupportActionBar();

@@ -2,25 +2,16 @@
 <resources>
     <string name="app_name">Орхидариум</string>
     <string name="label_nice_image">Цветущий вид</string>
-    <string name="label_real_image">Реальный вид</string>
     <string name="label_appearance">Выставить на продажу</string>
     <string name="label_available_for_order">Доступно для заказа</string>
     <string name="label_hidden">Скрыто</string>
     <string name="label_name">Название</string>
     <string name="hint_id">Код товара</string>
     <string name="label_description">Описание</string>
-    <string name="btn_add_change_nice_photo">Добавить/Заменить фото</string>
-    <string name="btn_add_change_real_photo">Добавить/Заменить фото</string>
     <string name="pref_sum_notification_is_on">Подписка на сообщения включена</string>
     <string name="pref_sum_notification_is_off">Сообщения отключены</string>
     <string name="label_notify_me">Присылать сообщения</string>
-    <string name="sort_descending_price">по убыванию цены</string>
-    <string name="sort_ascending_price">по возрастанию цены</string>
-    <string name="sort_new_at_the_end">новые в конце</string>
-    <string name="sort_first_new">сначала новые</string>
     <string name="pref_mode_default">Все</string>
-    <string name="pref_mode_my_cart_only">Корзина</string>
-    <string name="pref_mode_all">Все</string>
     <string name="action_add_new">Добавить</string>
     <string name="action_make_order">Оформить заказ</string>
     <string name="action_settings">Настройки</string>
@@ -35,7 +26,6 @@
     <string name="action_save_orchid">Сохранить</string>
     <string name="action_delete_orchid">Удалить</string>
     <string name="title_new_orchid">Новая</string>
-    <string name="title_edit_orchid">Исправить</string>
     <string name="msg_delete_dialog">Удалить?</string>
     <string name="btn_delete">Удалить</string>
     <string name="btn_cancel">Отменить</string>
@@ -43,7 +33,6 @@
     <string name="btn_discard">Отменить изменения</string>
     <string name="btn_keep_editing">Продолжить редактирование</string>
     <string name="desc_nice_orchid_photo">Вид цветущей орхидеи</string>
-    <string name="desc_selected_for_purchase">Отобрана для заказа</string>
     <string name="msg_error_getting_data">Ошибка загрузки данных.</string>
     <string name="msg_choose_image">Выберите фото</string>
     <string name="action_delete_photo">Удалить</string>
@@ -58,5 +47,6 @@
     <string name="order_subject">Заказ для Орхидариума</string>
     <string name="order_mail_body">Уважаемые цветоводы! \n\n  Хочу приобрети у вас орхидеи:\n</string>
     <string name="order_disclaimer">*** К сожалению это тестовый вариант программы и в настоящий момент мы не сможем принять Ваш заказ. Если Вас заинтересовали орхидеи, можете обратиться в нашу группу ВКонтакте.\n https://vk.com/ph.gigantea ***\n\n\n</string>
+    <string name="msg_sign_in_canceled">Вход отменён</string>
 
 </resources>
