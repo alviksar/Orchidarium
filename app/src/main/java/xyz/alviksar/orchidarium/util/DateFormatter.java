@@ -14,7 +14,7 @@ public class DateFormatter {
     private static final long DAY_MILLIS = 24 * HOUR_MILLIS;
 
     public static String timeFrom(long dateMillis) {
-        String date = "";
+        String date;
         long now = System.currentTimeMillis();
 
         // Change how the date is displayed depending on whether it was done in the last minute,

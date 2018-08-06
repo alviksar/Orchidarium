@@ -213,7 +213,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         mCodeEditText.setText(mOrchid.getCode());
         mNameEditText.setText(mOrchid.getName());
 
-        String s = "";
+        String s;
         switch (mOrchid.getAge()) {
             case OrchidEntity.AGE_BLOOMING:
                 s = getString(R.string.plant_age_blooming);

@@ -27,14 +27,15 @@
                 android:layout_height="320dp"
                 android:contentDescription="@string/label_nice_image"
                 android:scaleType="centerCrop"
+                android:transitionName="@string/transition_nice_photo"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.5" />
 
-            <!--View
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="bottom"
-                android:background="@drawable/scrim_top_and_bottom" /-->
+                android:background="@drawable/scrim_top_and_bottom" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

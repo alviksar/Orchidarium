@@ -28,22 +28,11 @@ import xyz.alviksar.orchidarium.util.GlideApp;
 public class PhotoGalleryActivity extends AppCompatActivity {
 
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
 
     private static ArrayList<String> mPhotos;
-    private int mPosition;
     private String mTitle;
 
     @Override
@@ -52,16 +41,17 @@ public class PhotoGalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_photo_gallery);
         Timber.i("Activity started");
 
+        int currentPosition;
         if (savedInstanceState == null) {
             mTitle = getIntent().getStringExtra(OrchidEntity.EXTRA_ORCHID_NAME);
-            mPosition = getIntent().
+            currentPosition = getIntent().
                     getIntExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST_POSITION, 0);
             mPhotos = getIntent().getStringArrayListExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST);
             if (TextUtils.isEmpty(mPhotos.get(mPhotos.size() - 1)))
                 mPhotos.remove(mPhotos.size() - 1);  // Remove last (empty) item.
         } else {
             mTitle = savedInstanceState.getString(OrchidEntity.EXTRA_ORCHID_NAME);
-            mPosition = savedInstanceState.
+            currentPosition = savedInstanceState.
                     getInt(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST_POSITION, 0);
             mPhotos = savedInstanceState.getStringArrayList(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST);
         }
@@ -78,13 +68,13 @@ public class PhotoGalleryActivity extends AppCompatActivity {
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.tv_container);
 
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(mPosition);
+        mViewPager.setAdapter(sectionsPagerAdapter);
+        mViewPager.setCurrentItem(currentPosition);
 
     }
 

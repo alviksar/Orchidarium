@@ -77,21 +77,4 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    /**
-     * Updates the summary for the preference
-     *
-     * @param preference The preference to be updated
-     * @param value      The value that the preference was updated to
-     */
-    private void setPreferenceSummary(Preference preference, String value) {
-//        if (preference instanceof ListPreference) {
-//            // For list preferences, figure out the label of the selected value
-//            ListPreference listPreference = (ListPreference) preference;
-//            int prefIndex = listPreference.findIndexOfValue(value);
-//            if (prefIndex >= 0) {
-//                // Set the summary to that label
-//                listPreference.setSummary(listPreference.getEntries()[prefIndex]);
-//            }
-//        }
-    }
 }

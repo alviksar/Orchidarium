@@ -17,7 +17,6 @@ import butterknife.ButterKnife;
 import xyz.alviksar.orchidarium.BuildConfig;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
-import xyz.alviksar.orchidarium.util.DateFormatter;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
 
@@ -34,12 +33,6 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
 
     @BindView(R.id.tv_name)
     TextView mNameTextView;
-
-    @BindView(R.id.tv_for_sale_time)
-    TextView mForSaleTimeTextView;
-
-    @BindView(R.id.scrim_top_right)
-    View mTopRightScrim;
 
     @BindView(R.id.iv_state)
     ImageView mStateImageView;
@@ -73,16 +66,11 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
             }
         }
 
-        if (orchid.getForSaleTime() > 0)
-            mForSaleTimeTextView.setText(DateFormatter.timeFrom(orchid.getForSaleTime()));
-
         if (BuildConfig.FLAVOR.equals("admin")) {
             mStateImageView.setImageResource(R.drawable.ic_visibility_off_white_24dp);
             if (mOrchidItem.getIsVisibleForSale()) {
-                mTopRightScrim.setVisibility(View.GONE);
                 mStateImageView.setVisibility(View.GONE);
             } else {
-                mTopRightScrim.setVisibility(View.VISIBLE);
                 mStateImageView.setVisibility(View.VISIBLE);
             }
         }
@@ -90,10 +78,8 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
         if (BuildConfig.FLAVOR.equals("user")) {
             mStateImageView.setImageResource(R.drawable.ic_shopping_cart_yellow_24dp);
             if (inCart) {
-                mTopRightScrim.setVisibility(View.VISIBLE);
                 mStateImageView.setVisibility(View.VISIBLE);
             } else {
-                mTopRightScrim.setVisibility(View.GONE);
                 mStateImageView.setVisibility(View.GONE);
             }
         }

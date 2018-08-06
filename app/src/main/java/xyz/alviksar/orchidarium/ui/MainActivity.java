@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final Float TILE_WIDTH_INCHES = 1.2f;
+    private static final Float TILE_WIDTH_INCHES = 1.15f;
 
     @BindView(R.id.rv_orchids)
     RecyclerView mRecyclerView;
@@ -195,8 +195,9 @@ public class MainActivity extends AppCompatActivity
             @NonNull
             @Override
             public OrchidViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                // Create a new instance of the BannerAdapterViewHolder, in this case we are using
+                // Create a new instance of the OrchidViewHolder, in this case we are using
                 // a custom layout called R.layout.list_item_orchid for each item
+                // !!!
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_orchid, parent, false);
 
