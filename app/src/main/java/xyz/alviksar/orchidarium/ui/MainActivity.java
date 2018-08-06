@@ -61,8 +61,6 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.rv_orchids)
     RecyclerView mRecyclerView;
-    // For saving state
-    private static final String BUNDLE_RECYCLER_LAYOUT = "MainActivity.mRecyclerView.layout";
 
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
@@ -86,6 +84,8 @@ public class MainActivity extends AppCompatActivity
     private boolean mHiddenOnly = false;
     private static final String BUNDLE_HIDDEN_ONLY = "MainActivity.mHiddenOnly";
 
+    // For saving state
+    private static final String BUNDLE_RECYCLER_LAYOUT = "MainActivity.mRecyclerView.layout";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -344,8 +344,10 @@ public class MainActivity extends AppCompatActivity
             menu.findItem(R.id.action_add_new).setVisible(false);
             menu.findItem(R.id.action_show_hidden).setVisible(false);
             menu.findItem(R.id.action_sign_out).setVisible(false);
+           menu.findItem(R.id.action_search).setVisible(false);
         }
         if (BuildConfig.FLAVOR.equals("admin")) {
+            menu.findItem(R.id.action_search).setVisible(true);
             if (mHiddenOnly) {
                 setTitle(getString(R.string.title_invisible_to_customers));
                 menu.findItem(R.id.action_search).setVisible(false);
