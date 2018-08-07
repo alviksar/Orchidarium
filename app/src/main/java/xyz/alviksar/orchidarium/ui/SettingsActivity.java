@@ -7,6 +7,9 @@ import android.view.MenuItem;
 
 import xyz.alviksar.orchidarium.R;
 
+/**
+ * Provides UI for setting user preferences.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     @Override

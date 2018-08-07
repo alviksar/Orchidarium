@@ -8,15 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.request.target.AppWidgetTarget;
 import com.bumptech.glide.request.transition.Transition;
-
-import java.util.concurrent.ExecutionException;
 
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 import xyz.alviksar.orchidarium.ui.DetailActivity;
@@ -27,12 +24,24 @@ import xyz.alviksar.orchidarium.util.GlideApp;
  */
 public class OrchidWidgetProvider extends AppWidgetProvider {
 
+    /**
+     * Updates widget
+     *
+     * @param context  Context used to get the widget
+     * @param remoteViews Widget views
+     */
     public static void pushWidgetUpdate(Context context, RemoteViews remoteViews) {
         ComponentName myWidget = new ComponentName(context, OrchidWidgetProvider.class);
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         manager.updateAppWidget(myWidget, remoteViews);
     }
 
+    /**
+     *  Updates widget image and set OnClickPendingIntent.
+     *
+     * @param context
+     * @param orchid
+     */
     public static void updateWidgetsInMainUiTread(final Context context, OrchidEntity orchid) {
         /*
         https://futurestud.io/tutorials/glide-loading-images-into-notifications-and-appwidgets
@@ -50,6 +59,7 @@ public class OrchidWidgetProvider extends AppWidgetProvider {
             }
         };
 
+        // Show a new photo
         GlideApp
                 .with(context.getApplicationContext())
                 .asBitmap()
@@ -57,25 +67,26 @@ public class OrchidWidgetProvider extends AppWidgetProvider {
                 .into(appWidgetTarget);
         remoteViews.setTextViewText(R.id.tv_orchid_name, orchid.getName());
 
+        // Make intent to start an appropriate detail activity
         Intent intent = new Intent(context, DetailActivity.class);
+
         // Make the pending intent unique
         // https://stackoverflow.com/a/5158408/9682456
-//        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        // Identifies the particular widget
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-
         intent.putExtra(OrchidEntity.EXTRA_ORCHID, orchid);
 
         // Create the TaskStackBuilder and add the intent, which inflates the back stack
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addNextIntentWithParentStack(intent);
+
         // Get the PendingIntent containing the entire back stack
         PendingIntent pendIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         remoteViews.setOnClickPendingIntent(R.id.iv_orchid, pendIntent);
 
+        // Update widget
         pushWidgetUpdate(context, remoteViews);
     }
 
@@ -115,24 +126,11 @@ public class OrchidWidgetProvider extends AppWidgetProvider {
 //    }
 
     @Override
-    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
-        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
-  //      OrchidIntentService.startActionUpdateWidgets(context);
-    }
-
-    @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        // Call IntentService to gat new data and update itself
         OrchidIntentService.startActionUpdateWidgets(context);
     }
 
-    @Override
-    public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
-    }
 
-    @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
-    }
 }
 

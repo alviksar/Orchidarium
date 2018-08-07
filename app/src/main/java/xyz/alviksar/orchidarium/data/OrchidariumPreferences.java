@@ -13,51 +13,30 @@ import java.util.Locale;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 
+/**
+ * Provides persistent data for shop settings and shopping cart contents.
+ */
 public class OrchidariumPreferences {
 
     public static final String PREF_CONTENTS_OF_THE_CART = "pref_contents_of_the_cart";
     private static final String PREF_GOODS_DELIMITER = "#";
 
-    public static final String NOTIFICATION_TOPIC = "news";
-
-
     /**
-     * Helper method to handle setting the mode for the main activity in Preferences
+     * Helper method to check notification setting
      *
      * @param context Context used to get the SharedPreferences
-     * @param mode    the mode of showing
      */
-    public static void setMode(Context context, String mode) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(context.getString(R.string.pref_key_mode), mode);
-        editor.apply();
-    }
-
-    /**
-     * Returns the mode currently set in Preferences
-     *
-     * @param context Context used to access SharedPreferences
-     * @return The mode that current user has set in SharedPreferences or default value.
-     */
-    public static String getMode(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getString(context.getString(R.string.pref_key_mode),
-                context.getString(R.string.pref_mode_default));
-    }
-
     public static boolean isNotificationOn(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(context.getString(R.string.pref_key_notify_me),
                 context.getResources().getBoolean(R.bool.pref_default_notification));
     }
 
-
     /**
-     * Helper method to handle setting the mode for the main activity in Preferences
+     * Helper method to handle setting the preferred currency symbol
      *
      * @param context Context used to get the SharedPreferences
-     * @param symbol  Currency
+     * @param symbol  Currency symbol
      */
     public static void setCurrencySymbol(Context context, String symbol) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -67,10 +46,10 @@ public class OrchidariumPreferences {
     }
 
     /**
-     * Returns the mode currently set in Preferences
+     * Returns the currency symbol currently set in Preferences
      *
      * @param context Context used to access SharedPreferences
-     * @return The currency symbol that current user has set in SharedPreferences or default value
+     * @return The currency symbol that current user has set or default value
      */
     public static String getCurrencySymbol(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -83,7 +62,7 @@ public class OrchidariumPreferences {
      * Puts the orchid into the cart
      *
      * @param context Context used to get the SharedPreferences
-     * @param orchid  Chosen orchid
+     * @param orchid  Chosen orchid entity
      */
     public static void addToCart(Context context, OrchidEntity orchid) {
         if (inCart(context, orchid)) return;
@@ -99,7 +78,7 @@ public class OrchidariumPreferences {
      * Removes the orchid from the cart
      *
      * @param context Context used to get the SharedPreferences
-     * @param orchid  Chosen orchid
+     * @param orchid  Chosen orchid entity
      */
     public static void removeFromCart(Context context, OrchidEntity orchid) {
         if (!inCart(context, orchid)) return;
@@ -118,7 +97,7 @@ public class OrchidariumPreferences {
     }
 
     /**
-     * Checks if orchid placed in cart
+     * Checks if orchid is placed in cart
      *
      * @param context Context used to access SharedPreferences
      * @return true if orchid placed in cart, false otherwise
@@ -126,18 +105,27 @@ public class OrchidariumPreferences {
     public static boolean inCart(Context context, OrchidEntity orchid) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String cart = sp.getString(PREF_CONTENTS_OF_THE_CART, "");
+
+        String goods[] = cart.split(PREF_GOODS_DELIMITER);
         /*
+        PREF_GOODS_DELIMITER must'n be a part of key.
+
         If you create your own keys, they must be UTF-8 encoded, can be a maximum of 768 bytes,
         and cannot contain ., $, #, [, ], /, or ASCII control characters 0-31 or 127
         https://firebase.google.com/docs/database/ios/structure-data
         */
-        String goods[] = cart.split(PREF_GOODS_DELIMITER);
+
         for (String good_key : goods) {
             if (good_key.equals(orchid.getId())) return true;
         }
         return false;
     }
-
+    /**
+     * Returns the current shopping cart content
+     *
+     * @param context Context used to access SharedPreferences
+     * @return List of orchids in cart
+     */
     @NonNull
     public static ArrayList<String> getCartContent(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);

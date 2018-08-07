@@ -1,20 +1,10 @@
 package xyz.alviksar.orchidarium;
 
-import android.app.Activity;
 import android.app.IntentService;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
-import android.content.Intent;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.Bundle;
+import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.widget.RemoteViews;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.AppWidgetTarget;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +12,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import timber.log.Timber;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
@@ -58,7 +47,7 @@ public class OrchidIntentService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_UPDATE_WIDGET.equals(action)) {
-                    handleActionUpdateWidgets();
+                handleActionUpdateWidgets();
             }
         }
     }
@@ -72,6 +61,9 @@ public class OrchidIntentService extends IntentService {
         showRandomOrchid();
     }
 
+    /**
+     * Selects randomly an orchid from the database and update widget by its photo.
+     */
     public void showRandomOrchid() {
         final ArrayList<OrchidEntity> orchidList = new ArrayList<>();
         DatabaseReference ref = FirebaseDatabase.getInstance()
@@ -82,7 +74,10 @@ public class OrchidIntentService extends IntentService {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot orchidSnapshot : dataSnapshot.getChildren()) {
-                    orchidList.add(orchidSnapshot.getValue(OrchidEntity.class));
+                    OrchidEntity orchid = orchidSnapshot.getValue(OrchidEntity.class);
+                    if (orchid != null && orchid.getIsVisibleForSale()) {
+                        orchidList.add(orchid);
+                    }
                 }
                 int i = (int) (Math.random() * orchidList.size());
                 OrchidWidgetProvider.
@@ -96,6 +91,5 @@ public class OrchidIntentService extends IntentService {
             }
         });
     }
-
 
 }

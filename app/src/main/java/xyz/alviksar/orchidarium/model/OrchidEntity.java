@@ -9,10 +9,14 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Provides the orchid entity object
+ */
+
 @IgnoreExtraProperties
 public class OrchidEntity implements Parcelable {
 
-    // String to pass an orchid data to activity
+    // String to pass an orchid entity to activity
     public static final String EXTRA_ORCHID = "extra_orchid";
     public static final String EXTRA_ORCHID_NAME = "extra_orchid_name";
     public static final String EXTRA_ORCHID_PHOTO_LIST = "extra_orchid_photo_list";
@@ -32,16 +36,13 @@ public class OrchidEntity implements Parcelable {
     private String potSize;
     private double retailPrice;
     private String description;
-    private String nicePhoto;
-    private List<String> realPhotos;
+    private String nicePhoto;           // a photo of a blooming orchid
+    private List<String> realPhotos;    // a goods photo as is
     private int isVisibleForSale;
-    // The time when an orchid was shown for order
-    private long forSaleTime = 0;
+    private long forSaleTime = 0;       // time when good was put on for sale
     private String currencySymbol;
-    // Who wrote this data
-    private String writer;
-    // The time when it was written
-    private long saveTime;
+    private String writer;              // who wrote this data
+    private long saveTime;              // when it was written
 
     public OrchidEntity() {
         age = OrchidEntity.AGE_UNKNOWN;
@@ -165,7 +166,7 @@ public class OrchidEntity implements Parcelable {
     public void setIsVisibleForSale(boolean state) {
         if (state) {
             this.isVisibleForSale = 1;
-            forSaleTime = (-1)*System.currentTimeMillis();
+            forSaleTime = (-1) * System.currentTimeMillis();
         } else {
             this.isVisibleForSale = 0;
         }
@@ -218,6 +219,5 @@ public class OrchidEntity implements Parcelable {
         parcel.writeLong(saveTime);
 
     }
-
 
 }

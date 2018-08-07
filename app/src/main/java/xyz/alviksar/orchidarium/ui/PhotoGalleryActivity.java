@@ -25,13 +25,15 @@ import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
+/**
+ * Shws a gallery of real orchid photos
+ */
 public class PhotoGalleryActivity extends AppCompatActivity {
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
+    // The ViewPager that will host the section photo
     private ViewPager mViewPager;
 
+    // List of real photos
     private static ArrayList<String> mPhotos;
     private String mTitle;
 
@@ -66,8 +68,7 @@ public class PhotoGalleryActivity extends AppCompatActivity {
         } else
             setTitle(mTitle);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+        // Create the adapter that will return a fragment for each of  sections of the activity.
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -99,30 +100,12 @@ public class PhotoGalleryActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // User clicked on a menu option in the app bar overflow menu
-//            switch (item.getItemId()) {
-//                // Respond to a click on the "Up" arrow button in the app bar
-//                case android.R.id.home:
-//                    // Hook up the up button
-//                    // If the orchid hasn't changed, continue with navigating up to parent activity
-//                    NavUtils.navigateUpFromSameTask(PhotoGalleryActivity.this);
-//                    return true;
-//                    default:
-//            }
-//        }
-//    }
-//
-
     /**
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
+
+        // The fragment argument representing the section number for this fragment.
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
@@ -140,7 +123,6 @@ public class PhotoGalleryActivity extends AppCompatActivity {
             return fragment;
         }
 
-
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -154,6 +136,8 @@ public class PhotoGalleryActivity extends AppCompatActivity {
                         .fitCenter()
                         .into(imageView);
             }
+
+            // Starts the implicit intent to show photo by an external viewer
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -168,8 +152,7 @@ public class PhotoGalleryActivity extends AppCompatActivity {
     }
 
     /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -180,7 +163,6 @@ public class PhotoGalleryActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(position);
         }
 

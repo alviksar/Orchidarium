@@ -1,12 +1,9 @@
 package xyz.alviksar.orchidarium.ui;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,6 +13,10 @@ import java.util.ArrayList;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
+/**
+ * The adapter for RecyclerView that shows a list of real photos in DetailActivity.
+ * This is for a user product flavor.
+ */
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdapterViewHolder> {
 
     /**
@@ -39,19 +40,17 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
     @Override
     public BannerAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                       int viewType) {
-        // create a new view
+        // Create a new view
         ImageView v = (ImageView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_banner, parent, false);
         BannerAdapterViewHolder vh = new BannerAdapterViewHolder(v);
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    // Replace the contents of a view
     @Override
     public void onBindViewHolder(@NonNull BannerAdapterViewHolder holder, int position) {
         final int photoPadding = 1;
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
         String photoUrl = mDataset.get(position);
         holder.mImageView.setCropToPadding(true);
 
@@ -65,7 +64,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
 
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+    // Return the size of dataset
     @Override
     public int getItemCount() {
         if (mDataset != null) {
@@ -75,20 +74,8 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
         }
     }
 
-    public ArrayList<String> getmDataset() {
-        return mDataset;
-    }
-
     ArrayList<String> getData() {
         return mDataset;
-    }
-
-    public void addImage(String imageUri) {
-        if (mDataset != null && mDataset.size() > 0) {
-            mDataset.add(mDataset.size() - 1, imageUri);
-            // After the new data is set, call notifyDataSetChanged
-            notifyDataSetChanged();
-        }
     }
 
     class BannerAdapterViewHolder extends RecyclerView.ViewHolder

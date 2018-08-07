@@ -19,6 +19,9 @@ import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
+/**
+ * The ViewHolder for FirebaseRecyclerAdapter in MainActivity.
+ */
 
 public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -45,7 +48,6 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
         mActivity = activity;
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener(this);
-
     }
 
     public void bindOrchid(OrchidEntity orchid, String key, Boolean inCart) {
@@ -53,6 +55,8 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
         mOrchidItem.setId(key);
 
         mNameTextView.setText(orchid.getName());
+
+        // Format a price string
         if (orchid.getCurrencySymbol().equals(mContext.getString(R.string.sign_usd))) {
             mPriceTextView.setText(String.format(Locale.getDefault(),
                     "$ %.2f", orchid.getRetailPrice()));
@@ -91,6 +95,7 @@ public class OrchidViewHolder extends RecyclerView.ViewHolder implements View.On
 
     @Override
     public void onClick(View view) {
+        // Start a detail activity
         Intent intent = new Intent(mContext, DetailActivity.class);
         intent.putExtra(OrchidEntity.EXTRA_ORCHID, mOrchidItem);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

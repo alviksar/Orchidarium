@@ -105,7 +105,6 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
     RecyclerView mBannerRecyclerView;
     LinearLayoutManager mLayoutManager;
     BannerAdapter mBannerAdapter;
-//    List<String> mBannerList;
 
     MenuItem mSaveMenuItem;
 

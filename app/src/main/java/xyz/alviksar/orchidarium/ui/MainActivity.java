@@ -16,6 +16,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -23,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v7.widget.SearchView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -53,6 +53,9 @@ import xyz.alviksar.orchidarium.model.OrchidEntity;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
+/**
+ * List of orchid photos
+ */
 public class MainActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -72,19 +75,20 @@ public class MainActivity extends AppCompatActivity
     FloatingActionButton mMakeOrderButton;
 
     SearchView mSearchView;
-    ArrayList<String> mCart;
 
-    // Firebase
     private FirebaseRecyclerAdapter mFirebaseRecyclerAdapter;
 
-    private Parcelable mSavedRecyclerLayoutState = null;
+    // Shopping cart
+    ArrayList<String> mCart;
+
+    // Vars for current state
     private String mSearchQuery = null;
-    private static final String BUNDLE_SEARCH_QUERY = "MainActivity.mSearchQuery";
-
     private boolean mHiddenOnly = false;
-    private static final String BUNDLE_HIDDEN_ONLY = "MainActivity.mHiddenOnly";
+    private Parcelable mSavedRecyclerLayoutState = null;
 
-    // For saving state
+    // Consts for saving curent state
+    private static final String BUNDLE_SEARCH_QUERY = "MainActivity.mSearchQuery";
+    private static final String BUNDLE_HIDDEN_ONLY = "MainActivity.mHiddenOnly";
     private static final String BUNDLE_RECYCLER_LAYOUT = "MainActivity.mRecyclerView.layout";
 
     @Override
@@ -134,10 +138,10 @@ public class MainActivity extends AppCompatActivity
         // Subscribe to notification
         if (OrchidariumPreferences.isNotificationOn(this)) {
             FirebaseMessaging
-                    .getInstance().subscribeToTopic(OrchidariumPreferences.NOTIFICATION_TOPIC);
+                    .getInstance().subscribeToTopic(OrchidariumContract.NOTIFICATION_TOPIC);
         } else {
             FirebaseMessaging
-                    .getInstance().unsubscribeFromTopic(OrchidariumPreferences.NOTIFICATION_TOPIC);
+                    .getInstance().unsubscribeFromTopic(OrchidariumContract.NOTIFICATION_TOPIC);
         }
 
         PreferenceManager.getDefaultSharedPreferences(this)
@@ -150,11 +154,11 @@ public class MainActivity extends AppCompatActivity
         if (mFirebaseRecyclerAdapter != null)
             mFirebaseRecyclerAdapter.stopListening();
         showLoading();
-
-//        Toast.makeText(this, "Search for'" + searchQuery + "' started.", Toast.LENGTH_LONG).show();
+        Timber.i("Search for '" + searchQuery + "' started.");
         Query query;
         if (BuildConfig.FLAVOR.equals("admin")) {
             if (mHiddenOnly) {
+                // Show only invisible to customers
                 query = FirebaseDatabase.getInstance()
                         .getReference()
                         .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
@@ -162,11 +166,13 @@ public class MainActivity extends AppCompatActivity
                         .equalTo(false);
             } else {
                 if (TextUtils.isEmpty(searchQuery)) {
+                    // Show all orchids
                     query = FirebaseDatabase.getInstance()
                             .getReference()
                             .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
                             .orderByChild(OrchidariumContract.FIELD_FORSALETIME);
                 } else {
+                    // Show only that names start with searchQuery string
                     query = FirebaseDatabase.getInstance()
                             .getReference()
                             .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
@@ -176,6 +182,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         } else {
+            // Show only visible for customers
             query = FirebaseDatabase.getInstance()
                     .getReference()
                     .child(OrchidariumContract.REFERENCE_ORCHIDS_DATA)
@@ -197,7 +204,6 @@ public class MainActivity extends AppCompatActivity
             public OrchidViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 // Create a new instance of the OrchidViewHolder, in this case we are using
                 // a custom layout called R.layout.list_item_orchid for each item
-                // !!!
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_orchid, parent, false);
 
@@ -209,7 +215,6 @@ public class MainActivity extends AppCompatActivity
                                             @NonNull OrchidEntity model) {
                 // Bind the OrchidEntity object to the OrchidViewHolder
                 String key = getRef(position).getKey();
-//                String key = getRef(getItemCount() - (position + 1)).getKey();
 
                 if (BuildConfig.FLAVOR.equals("user")) {
                     holder.bindOrchid(model, key, mCart.contains(key));
@@ -220,8 +225,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onDataChanged() {
-                // Called each time there is a new data snapshot. You may want to use this method
-                // to hide a loading spinner or check for the "no documents" state and update your UI.
+                // Called each time there is a new data snapshot
                 showData();
                 if (mSavedRecyclerLayoutState != null) {
                     mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
@@ -232,18 +236,8 @@ public class MainActivity extends AppCompatActivity
             public void onError(@NonNull DatabaseError e) {
                 showErrorMessage(R.string.msg_error_getting_data);
             }
-
-            // New ones at the top of the list
-            // https://stackoverflow.com/questions/34156996/firebase-data-desc-sorting-in-android
-            @NonNull
-            @Override
-            public OrchidEntity getItem(int position) {
-                return super.getItem(position);
-//                return super.getItem(getItemCount() - (position + 1));
-            }
-
-
         };
+
         // Calculate the number of columns in the grid
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int mColumnWidthPixels;
@@ -339,12 +333,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        // If this is a new orchid, hide the "Delete" menu item.
+
         if (BuildConfig.FLAVOR.equals("user")) {
             menu.findItem(R.id.action_add_new).setVisible(false);
             menu.findItem(R.id.action_show_hidden).setVisible(false);
             menu.findItem(R.id.action_sign_out).setVisible(false);
-           menu.findItem(R.id.action_search).setVisible(false);
+            menu.findItem(R.id.action_search).setVisible(false);
         }
         if (BuildConfig.FLAVOR.equals("admin")) {
             menu.findItem(R.id.action_search).setVisible(true);
@@ -440,6 +434,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Makes email to order chosen orchids.
+     * @param orchidList List of orchids for ordering.
+     */
     public void composePurchaseOrder(ArrayList<OrchidEntity> orchidList) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
@@ -469,6 +467,9 @@ public class MainActivity extends AppCompatActivity
         orderByEmail();
     }
 
+    /**
+     *  Collects chosen orchids and makes an order
+     */
     public void orderByEmail() {
         final ArrayList<OrchidEntity> orchidList = new ArrayList<>();
         DatabaseReference ref = FirebaseDatabase.getInstance()
@@ -479,9 +480,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot orchidSnapshot : dataSnapshot.getChildren()) {
+                    OrchidEntity orchid = orchidSnapshot.getValue(OrchidEntity.class);
                     String key = orchidSnapshot.getKey();
-                    if (mCart.contains(key)) {
-                        orchidList.add(orchidSnapshot.getValue(OrchidEntity.class));
+                    if (mCart.contains(key) && orchid != null && orchid.getIsVisibleForSale() ) {
+                        orchidList.add(orchid);
                     }
                 }
                 composePurchaseOrder(orchidList);

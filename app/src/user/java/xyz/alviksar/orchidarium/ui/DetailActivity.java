@@ -36,6 +36,9 @@ import xyz.alviksar.orchidarium.data.OrchidariumPreferences;
 import xyz.alviksar.orchidarium.model.OrchidEntity;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
+/**
+ * Shows photos of orchids and detail data.
+ */
 
 public class DetailActivity extends AppCompatActivity
         implements BannerAdapter.BannerAdapterOnClickHandler,
@@ -104,7 +107,6 @@ public class DetailActivity extends AppCompatActivity
         }
         if (mOrchid == null) {
             title = getString(R.string.title_new_orchid);
-            // Invalidate the options menu, so the "Delete" menu option can be hidden.
             invalidateOptionsMenu();
             mOrchid = new OrchidEntity();
         } else {
@@ -121,13 +123,14 @@ public class DetailActivity extends AppCompatActivity
         if (collapsingToolbarLayout != null)
             collapsingToolbarLayout.setTitle(title);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             ActionBar actionBar = getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         /*
+        Check a current mode if a tablet portrait
         https://stackoverflow.com/questions/9279111/determine-if-the-device-is-a-smartphone-or-tablet
         */
         boolean tabletPort = getResources().getBoolean(R.bool.isTabletPort);
@@ -201,6 +204,7 @@ public class DetailActivity extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         if (mOrchid != null) {
+            // Show an in/out cart icon
             MenuItem menuItem = menu.findItem(R.id.action_cart);
             if (OrchidariumPreferences.inCart(this, mOrchid))
                 menuItem.setVisible(true);
@@ -218,17 +222,12 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // User clicked on a menu option in the app bar overflow menu
         try {
             switch (item.getItemId()) {
                 case android.R.id.home:
                     // Hook up the up button
                     NavUtils.navigateUpFromSameTask(DetailActivity.this);
                     return true;
-                case R.id.action_cart:
-//                    cartTransfer();
-//                    invalidateOptionsMenu();
-//                    return true;
             }
         } catch (IllegalArgumentException e) {
             Snackbar.make(findViewById(R.id.coordinatorlayout),
@@ -237,9 +236,9 @@ public class DetailActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
     @OnClick(R.id.iv_nice_photo)
     public void onClickImage(View view) {
+        // Start an implicit intent to view image
         Intent intent = new Intent();
         intent.setAction(android.content.Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.parse(mOrchid.getNicePhoto()), "image/*");
@@ -247,11 +246,12 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void cartTransfer() {
-        // Swap icons
         if (OrchidariumPreferences.inCart(this, mOrchid)) {
+            // Set icon and remove the orchid from the shopping cart
             mAddToCartButton.setImageResource(R.drawable.ic_add_shopping_cart_white_24dp);
             OrchidariumPreferences.removeFromCart(this, mOrchid);
         } else {
+            // Set icon and put the orchid into the shopping cart
             mAddToCartButton.setImageResource(R.drawable.ic_remove_shopping_cart_white_24dp);
             OrchidariumPreferences.addToCart(this, mOrchid);
         }
@@ -265,6 +265,7 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public void onClickBannerPhoto(View view, String url, int position) {
+        // Start an implicit intent to view image
         Intent intent = new Intent(DetailActivity.this,
                 PhotoGalleryActivity.class);
         intent.setData(Uri.parse(url));
