@@ -38,6 +38,7 @@ import xyz.alviksar.orchidarium.util.GlideApp;
 
 /**
  * Shows photos of orchids and detail data.
+ * This is for a "user" product flavor.
  */
 
 public class DetailActivity extends AppCompatActivity

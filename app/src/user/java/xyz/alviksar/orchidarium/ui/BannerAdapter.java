@@ -15,7 +15,7 @@ import xyz.alviksar.orchidarium.util.GlideApp;
 
 /**
  * The adapter for RecyclerView that shows a list of real photos in DetailActivity.
- * This is for a user product flavor.
+ * This is for a "user" product flavor.
  */
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdapterViewHolder> {
 

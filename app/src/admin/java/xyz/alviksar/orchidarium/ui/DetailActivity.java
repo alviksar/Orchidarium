@@ -65,10 +65,18 @@ import xyz.alviksar.orchidarium.util.GlideApp;
 
 import static com.google.firebase.storage.StorageException.ERROR_OBJECT_NOT_FOUND;
 
+/**
+ * Shows photos of orchids and detail data.
+ * This is for a "admin" product flavor.
+ */
 
-public class DetailActivity extends AppCompatActivity implements BannerAdapter.BannerAdapterOnClickHandler {
+public class DetailActivity extends AppCompatActivity
+        implements BannerAdapter.BannerAdapterOnClickHandler {
 
+    // An orchid that this activity shows
     private OrchidEntity mOrchid;
+
+    // Flag if data was changed
     private boolean mDataHasChanged = false;
 
     @BindView(R.id.et_code)
@@ -103,26 +111,26 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
     @BindView(R.id.rv_banner)
     RecyclerView mBannerRecyclerView;
+
     LinearLayoutManager mLayoutManager;
     BannerAdapter mBannerAdapter;
 
     MenuItem mSaveMenuItem;
 
+    private String mUserName;
     private int mPlantAge;
     private Uri mSelectedImageUri = null;
 
-    private DatabaseReference mDatabaseReference;
-
+    // Firebase vars
     private FirebaseAuth mFirebaseAuth;
-    private String mUserName;
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
+    private DatabaseReference mDatabaseReference;
 
-    // Request codes value
+    // Request codes values
     private static final int RC_AUTH_SIGN_IN = 1;
     private static final int RC_NICE_PHOTO_PICKER = 2;
     private static final int RC_REAL_PHOTO_PICKER = 3;
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -138,6 +146,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
         ButterKnife.bind(this);
 
+        // Get authentication
         mFirebaseAuth = FirebaseAuth.getInstance();
         if (mFirebaseAuth.getCurrentUser() == null) {
             // not signed in
@@ -156,6 +165,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
             mUserName = mFirebaseAuth.getCurrentUser().getUid();
         }
 
+        // Init Firebase
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = firebaseDatabase
                 .getReference().child(OrchidariumContract.REFERENCE_ORCHIDS_DATA);
@@ -163,6 +173,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         mStorageReference = mFirebaseStorage
                 .getReference(OrchidariumContract.REFERENCE_ORCHIDS_PHOTOS);
 
+        // Set an activity title
         String title;
         if (savedInstanceState == null || !savedInstanceState.containsKey(OrchidEntity.EXTRA_ORCHID)) {
             mOrchid = getIntent().getParcelableExtra(OrchidEntity.EXTRA_ORCHID);
@@ -177,41 +188,44 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         } else {
             title = mOrchid.getName();
         }
-
         setTitle(title);
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         if (collapsingToolbarLayout != null)
             collapsingToolbarLayout.setTitle(title);
 
+        // Set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             ActionBar actionBar = getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
         /*
+        Check if a tablet portrait layout or not
         https://stackoverflow.com/questions/9279111/determine-if-the-device-is-a-smartphone-or-tablet
         */
         boolean tabletPort = getResources().getBoolean(R.bool.isTabletPort);
         if (tabletPort) {
             // If a tablet portrait screen, use 2 columns grid
-
             mLayoutManager = new GridLayoutManager(this, 2);
         } else {
             // Use a linear layout manager
             mLayoutManager = new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false);
         }
         mBannerRecyclerView.setLayoutManager(mLayoutManager);
-        // specify an adapter (see also next example)
+
         ArrayList<String> bannerList = new ArrayList<>(mOrchid.getRealPhotos());
         // Add an empty  item for the add photo image
         bannerList.add(getString(R.string.empty));
+
+        // Specify an adapter
         mBannerAdapter = new BannerAdapter(bannerList, this);
         mBannerRecyclerView.setAdapter(mBannerAdapter);
 
+        // Set orchid data
         mCodeEditText.setText(mOrchid.getCode());
         mNameEditText.setText(mOrchid.getName());
-
         String s;
         switch (mOrchid.getAge()) {
             case OrchidEntity.AGE_BLOOMING:
@@ -235,13 +249,13 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         mPlantAgeSpinner.setSelection(((ArrayAdapter<String>) mPlantAgeSpinner.getAdapter())
                 .getPosition(s));
 
-
-        // http://qaru.site/questions/32545/how-to-set-selected-item-of-spinner-by-value-not-by-position
+        /*
+        http://qaru.site/questions/32545/how-to-set-selected-item-of-spinner-by-value-not-by-position
+        */
         if (mOrchid.getPotSize() != null) {
             mPotSizeSpinner.setSelection(((ArrayAdapter<String>) mPotSizeSpinner.getAdapter())
                     .getPosition(mOrchid.getPotSize()));
         }
-
         if (mOrchid.getCurrencySymbol() == null
                 || TextUtils.isEmpty(mOrchid.getCurrencySymbol())) {
             // Take the last chosen currency symbol
@@ -252,6 +266,8 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
             mCurrencySymbol.setSelection(((ArrayAdapter<String>) mCurrencySymbol.getAdapter())
                     .getPosition(mOrchid.getCurrencySymbol()));
         }
+
+        // Format a price string
         if (mOrchid.getRetailPrice() != 0)
             mRetaPriceEditText.setText(String.format(Locale.getDefault(),
                     "%.2f", mOrchid.getRetailPrice()));
@@ -260,6 +276,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
         mDescriptionEditText.setText(mOrchid.getDescription());
 
+        // Set listeners if tap on any TextEdit or Spinner
         mCodeEditText.setOnTouchListener(mTouchListener);
         mPutOnForSaleSwitch.setOnTouchListener(mTouchListener);
         mNameEditText.setOnTouchListener(mTouchListener);
@@ -283,6 +300,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         } else {
             mPutOnForSaleSwitch.setText(mPutOnForSaleSwitch.getTextOff());
         }
+
         // Set the integer to the constant values
         mPlantAgeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -305,7 +323,6 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                 }
             }
 
-            // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 mPlantAge = OrchidEntity.AGE_UNKNOWN;
@@ -324,6 +341,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         mSaveMenuItem = menu.findItem(R.id.action_save);
+
         // If this is a new orchid, hide the "Delete" menu item.
         if (mOrchid == null || getTitle().equals(getString(R.string.title_new_orchid))) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
@@ -340,7 +358,6 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // User clicked on a menu option in the app bar overflow menu
         try {
             switch (item.getItemId()) {
                 // Respond to a click on the "Save" menu option
@@ -360,10 +377,11 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                         NavUtils.navigateUpFromSameTask(DetailActivity.this);
                         return true;
                     }
-
-                    // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-                    // Create a click listener to handle the user confirming that
-                    // changes should be discarded.
+                    /*
+                     If there are unsaved changes, setup a dialog to warn the user.
+                     Create a click listener to handle the user confirming that
+                     changes should be discarded.
+                     */
                     DialogInterface.OnClickListener discardButtonClickListener =
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -378,7 +396,8 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                     return true;
             }
         } catch (IllegalArgumentException e) {
-            Snackbar.make(findViewById(R.id.coordinatorlayout), e.getMessage(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.coordinatorlayout),
+                    e.getMessage(), Snackbar.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -418,6 +437,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                         Snackbar.LENGTH_LONG).show();
             }
         } else if (requestCode == RC_NICE_PHOTO_PICKER && resultCode == RESULT_OK) {
+            // Get a nice photo
             mSelectedImageUri = data.getData();
             GlideApp.with(mNiceImageView.getContext()).clear(mNiceImageView);
             GlideApp.with(mNiceImageView.getContext())
@@ -425,11 +445,15 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                     .centerCrop()
                     .into(mNiceImageView);
         } else if (requestCode == RC_REAL_PHOTO_PICKER && resultCode == RESULT_OK) {
+            // Get one of real photos
             if (data.getData() != null)
                 mBannerAdapter.addImage(data.getData().toString());
         }
     }
 
+    /**
+     * Saves orchid data in database
+     */
     private void saveOrchid() {
         if (mOrchid == null) {
             mOrchid = new OrchidEntity();
@@ -448,22 +472,19 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         mOrchid.setSaveTime(System.currentTimeMillis());
         // Save a chosen currency symbol
         OrchidariumPreferences.setCurrencySymbol(this, mOrchid.getCurrencySymbol());
-        if (dataIsCorrect(mOrchid)) {
-            mProgressBar.setVisibility(View.VISIBLE);
-            changeListOfPhotosAndSaveDataToDb(
-                    getToDelete(mOrchid.getRealPhotos(), mBannerAdapter.getData()));
-        }
+
+        mProgressBar.setVisibility(View.VISIBLE);
+        // Update the list of real photos and save orchid data in database
+        changeListOfPhotosAndSaveDataToDb(
+                getToDelete(mOrchid.getRealPhotos(), mBannerAdapter.getData()));
 
     }
 
-    private boolean dataIsCorrect(OrchidEntity mOrchid) {
-
-        return true;
-    }
-
+    /**
+     * Uploads the nice photo in Firebase Storage and save orchid data in the Database
+     */
     private void uploadNicePhotoAndSaveDataToDb() {
         if (mSelectedImageUri != null) {
-            // Upload a new nice image
 
             mProgressBar.setVisibility(View.VISIBLE);
             mProgressBar.setProgress(0);
@@ -477,6 +498,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                 deleteRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        // Upload a new nice image
                         uploadNicePhotoAndFinish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -493,6 +515,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                     }
                 });
             } else {
+                // Upload a new nice image
                 uploadNicePhotoAndFinish();
             }
 
@@ -503,8 +526,10 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         }
     }
 
+    /**
+     *  Uploads the nice photo into Storage and saves the orchid data into the Database
+     */
     private void uploadNicePhotoAndFinish() {
-        // Upload nice photo and save the object to the database
         final StorageReference photoRef = mStorageReference.child(mSelectedImageUri.getLastPathSegment());
         photoRef.putFile(mSelectedImageUri)
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -525,19 +550,19 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
             @Override
 //                https://gist.github.com/jonathanbcsouza/13929ab81077645f1033bf9ce45beaab
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                //When the image has successfully uploaded, get its download URL
+                // When the image has successfully uploaded, get its download URL
                 photoRef.getDownloadUrl()
                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                // Save new url
+                                // Take a new url
                                 mOrchid.setNicePhoto(uri.toString());
                                 mProgressBar.setVisibility(View.INVISIBLE);
 
-                                // Save object in database
+                                // Save the object in the database
                                 saveOrchidDataToDb();
 
-                                // That is it.
+                                // That is it. Uff...
                                 finish();
                             }
                         });
@@ -597,7 +622,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
     }
 
     /**
-     * Perform the deletion of the orchid in the database.
+     * Deletes the orchid data from the Database.
      */
     private void deleteOrchid() {
         if (mOrchid != null && !TextUtils.isEmpty(mOrchid.getId())) {
@@ -631,7 +656,7 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
     }
 
     /**
-     * Create a “Discard changes” dialog
+     * Creates a “Discard changes” dialog
      */
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
@@ -655,9 +680,6 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         alertDialog.show();
     }
 
-    /**
-     * Hook up the back button
-     */
     @Override
     public void onBackPressed() {
         // If the orchid hasn't changed, continue with handling back button press
@@ -681,7 +703,6 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
-    // Upload an image for a flowering orchid
     @OnClick(R.id.btn_add_nice_photo)
     public void onClickBtn(View view) {
         choosePhoto(RC_NICE_PHOTO_PICKER);
@@ -699,8 +720,10 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
     @Override
     public void onClickBannerPhoto(View view, String url, int position) {
         if (TextUtils.isEmpty(url)) {
+            //  Starts an implicit intent to choose photo from the phone gallery
             choosePhoto(RC_REAL_PHOTO_PICKER);
         } else {
+            //  Starts an implicit intent to show photo by viewer
             Intent intent = new Intent(DetailActivity.this,
                     PhotoGalleryActivity.class);
             intent.setData(Uri.parse(url));
@@ -708,11 +731,6 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
             intent.putStringArrayListExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST,
                     mBannerAdapter.getData());
             intent.putExtra(OrchidEntity.EXTRA_ORCHID_PHOTO_LIST_POSITION, position);
-
-            //        startActivity(intent,
-//                ActivityOptions.makeSceneTransitionAnimation(DetailActivity.this, view,
-//                        view.getTransitionName()).toBundle());
-
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 View sharedView = view.findViewById(R.id.iv_real_photo);
@@ -728,6 +746,12 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         }
     }
 
+    /**
+     * Starts an implicit intent to choose photo from the phone gallery
+     *
+     * @param requestCode
+     */
+
     private void choosePhoto(int requestCode) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/jpeg");
@@ -736,7 +760,12 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
                 requestCode);
     }
 
-
+    /**
+     * Defines the list of added photos which have to be uploaded
+     *
+     * @param afterList The changed list
+     * @return The list of added photos
+     */
     private Stack<String> getToUpload(List<String> afterList) {
         Stack<String> toUpload = new Stack<>();
         for (String s : afterList) {
@@ -747,6 +776,13 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         return toUpload;
     }
 
+    /**
+     * Compares lists and takes the difference
+     *
+     * @param beforeList The old list
+     * @param afterList  The new list
+     * @return The list of strings from the old list not included in the new list
+     */
     private Stack<String> getToDelete(List<String> beforeList, List<String> afterList) {
         Stack<String> toDelete = new Stack<>();
         for (String s : beforeList) {
@@ -755,9 +791,15 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         return toDelete;
     }
 
+    /**
+     * Updates the list of real photos and saves orchid data in database
+     *
+     * @param toDelete List of real photos to be deleted.
+     */
     private void changeListOfPhotosAndSaveDataToDb(final Stack<String> toDelete) {
         if (toDelete.empty()) {
             // Next step
+            // Upload photos to Firebase Storage and save orchid data in database
             uploadListOfPhotosAndSaveDataToDb(getToUpload(mBannerAdapter.getData()));
         } else {
             // Delete list of real photos
@@ -791,6 +833,11 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         }
     }
 
+    /**
+     * Deletes photos form Firebase Storage by list
+     *
+     * @param photosToDelete The list of  photos to be deleted.
+     */
     private void deleteListOfPhotosAndObjectFromDb(final Stack<String> photosToDelete) {
         if (photosToDelete.empty()) {
             // Next step
@@ -827,10 +874,15 @@ public class DetailActivity extends AppCompatActivity implements BannerAdapter.B
         }
     }
 
+    /**
+     * Uploads photos into Firebase Storage and saves orchid data in the Database
+     *
+     * @param toUpload The list of real photos to be upload into Firebase Storage
+     */
     private void uploadListOfPhotosAndSaveDataToDb(final Stack<String> toUpload) {
         mProgressBar.setVisibility(View.VISIBLE);
         if (toUpload.empty()) {
-            // All photos have been saved, so save the nice photo and the object
+            // All photos have been saved, so save the nice photo and the orchid data
             uploadNicePhotoAndSaveDataToDb();
 
         } else {

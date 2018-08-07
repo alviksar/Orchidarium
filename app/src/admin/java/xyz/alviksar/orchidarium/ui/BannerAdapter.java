@@ -16,8 +16,11 @@ import java.util.ArrayList;
 import xyz.alviksar.orchidarium.R;
 import xyz.alviksar.orchidarium.util.GlideApp;
 
+/**
+ * The adapter for RecyclerView that shows a list of real photos in DetailActivity.
+ * This is for a "admin"  product flavor.
+ */
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdapterViewHolder> {
-
     /**
      * The interface to handle clicks on items within this Adapter
      */
@@ -34,7 +37,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
 
     }
 
-    // Create new views (invoked by the layout manager)
+    // Create new views
     @NonNull
     @Override
     public BannerAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
@@ -45,13 +48,11 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
         return new BannerAdapterViewHolder(v);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    // Replace the contents of a view
     @Override
     public void onBindViewHolder(@NonNull BannerAdapterViewHolder holder, int position) {
         final int emptyPadding = 32;
         final int photoPadding = 1;
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
         String photoUrl = mDataset.get(position);
         holder.mImageView.setCropToPadding(true);
 
@@ -68,10 +69,9 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
                     .fitCenter()
                     .into(holder.mImageView);
         }
-
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+    // Return the size of dataset
     @Override
     public int getItemCount() {
         if (mDataset != null) {
@@ -89,6 +89,11 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerAdap
         return mDataset;
     }
 
+    /**
+     * Adds a image in the real photo dataset
+     *
+     * @param imageUri URL of the new image
+     */
     public void addImage(String imageUri) {
         if (mDataset != null && mDataset.size() > 0) {
             mDataset.add(mDataset.size() - 1, imageUri);
