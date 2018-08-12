@@ -223,18 +223,39 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-            switch (item.getItemId()) {
-                case android.R.id.home:
-                    // Hook up the up button
-                    NavUtils.navigateUpFromSameTask(DetailActivity.this);
-                    return true;
-            }
-        } catch (IllegalArgumentException e) {
-            Snackbar.make(findViewById(R.id.coordinatorlayout),
-                    e.getMessage(), Snackbar.LENGTH_LONG).show();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Hook up the up button
+                NavUtils.navigateUpFromSameTask(DetailActivity.this);
+                return true;
+            case R.id.action_share:
+                shareOrchidPhotos(mOrchid);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    private void shareOrchidPhotos(OrchidEntity mOrchid) {
+//        ArrayList<Uri> imageUris = new ArrayList<Uri>();
+//        for(String imageUr1: mOrchid.getRealPhotos()) {
+//            imageUris.add(Uri.parse(imageUr1));
+//        }
+//        Intent shareIntent = new Intent();
+//        shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+//        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
+//        shareIntent.setType("image/*");
+//        startActivity(Intent.createChooser(shareIntent, getString(R.string.msg_share_images)));
+        StringBuilder text = new StringBuilder();
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        text.append(mOrchid.getNicePhoto()).append("\n\n");
+        for (String imageUr1 : mOrchid.getRealPhotos()) {
+            text.append(imageUr1).append("\n\n");
+        }
+        sendIntent.putExtra(Intent.EXTRA_TEXT, text.toString());
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.msg_share_images)));
     }
 
     @OnClick(R.id.iv_nice_photo)

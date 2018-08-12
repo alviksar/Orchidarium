@@ -6,9 +6,17 @@
     tools:context=".ui.DetailActivity">
 
     <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title="@string/action_share"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_cart"
         android:title="@string/action_save_orchid"
         android:icon="@drawable/ic_shopping_cart_yellow_24dp"
         app:showAsAction="always" />
+
 
 </menu>

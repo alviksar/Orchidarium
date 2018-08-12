@@ -432,10 +432,12 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
+        invalidateOptionsMenu();
     }
 
     /**
      * Makes email to order chosen orchids.
+     *
      * @param orchidList List of orchids for ordering.
      */
     public void composePurchaseOrder(ArrayList<OrchidEntity> orchidList) {
@@ -448,6 +450,7 @@ public class MainActivity extends AppCompatActivity
                 new StringBuilder();
         body.append(getString(R.string.order_disclaimer));
         body.append(getString(R.string.order_mail_body));
+
         int n = 1;
         for (OrchidEntity orchid : orchidList) {
             body.append(String.format(Locale.getDefault(), "\n%d.[%8s] %s",
@@ -468,7 +471,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     *  Collects chosen orchids and makes an order
+     * Collects chosen orchids and makes an order
      */
     public void orderByEmail() {
         final ArrayList<OrchidEntity> orchidList = new ArrayList<>();
@@ -482,7 +485,7 @@ public class MainActivity extends AppCompatActivity
                 for (DataSnapshot orchidSnapshot : dataSnapshot.getChildren()) {
                     OrchidEntity orchid = orchidSnapshot.getValue(OrchidEntity.class);
                     String key = orchidSnapshot.getKey();
-                    if (mCart.contains(key) && orchid != null && orchid.getIsVisibleForSale() ) {
+                    if (mCart.contains(key) && orchid != null && orchid.getIsVisibleForSale()) {
                         orchidList.add(orchid);
                     }
                 }
